@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<TestRun id="9169a336-913d-4421-b7de-3f6410e20d83" name="Xi Ge@XIGE-PC 2012-08-20 20:22:12" runUser="XiGe-PC\Xi Ge" xmlns="http://microsoft.com/schemas/VisualStudio/TeamTest/2010">
+  <TestSettings name="IntegrationTests" id="85f80678-5acf-4267-a4f8-e5bf47bd5e87">
+    <Description>This test run configuration uses the VS IDE host type in the test run.</Description>
+    <Deployment enabled="false" runDeploymentRoot="Xi Ge_XIGE-PC 2012-08-20 20_22_12">
+      <DeploymentItem filename="D:\VS workspaces\BeneWar\warnings\warnings\bin\Debug\warnings.dll" />
+      <DeploymentItem filename="D:\VS workspaces\BeneWar\warnings\libs\com.sporadicism.util.Logger.dll" />
+    </Deployment>
+    <Execution>
+      <Hosts>
+        <VSSDKTestHostRunConfig name="VS IDE" HiveKind="DevEnv" HiveName="10.0Exp" xmlns="http://microsoft.com/schemas/VisualStudio/SDK/Tools/IdeHostAdapter/2006/06" />
+      </Hosts>
+      <TestTypeSpecific />
+      <AgentRule name="Execution Agents">
+      </AgentRule>
+    </Execution>
+  </TestSettings>
+  <Times creation="2012-08-20T20:22:12.6985413-04:00" queuing="2012-08-20T20:22:12.8275487-04:00" start="2012-08-20T20:22:12.8995528-04:00" finish="2012-08-20T20:22:14.1356235-04:00" />
+  <ResultSummary outcome="Failed">
+    <Counters total="1" executed="1" error="0" failed="1" timeout="0" aborted="0" inconclusive="0" passedButRunAborted="0" notRunnable="0" notExecuted="0" disconnected="0" warning="0" passed="0" completed="0" inProgress="0" pending="0" />
+  </ResultSummary>
+  <TestDefinitions>
+    <UnitTest name="TestMethod4" storage="d:\vs workspaces\benewar\warnings\warningtest\bin\debug\warningtest.dll" id="81f0e662-0eb0-3cce-b7af-8c1cbac82328">
+      <Execution id="471d531d-247d-494e-855c-2dc743e0e881" />
+      <TestMethod codeBase="D:/VS workspaces/BeneWar/warnings/WarningTest/bin/Debug/WarningTest.DLL" adapterTypeName="Microsoft.VisualStudio.TestTools.TestTypes.Unit.UnitTestAdapter, Microsoft.VisualStudio.QualityTools.Tips.UnitTest.Adapter, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" className="WarningTest.UtilityTest, WarningTest, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" name="TestMethod4" />
+    </UnitTest>
+  </TestDefinitions>
+  <TestLists>
+    <TestList name="Results Not in a List" id="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+    <TestList name="All Loaded Results" id="19431567-8539-422a-85d7-44ee4e166bda" />
+  </TestLists>
+  <TestEntries>
+    <TestEntry testId="81f0e662-0eb0-3cce-b7af-8c1cbac82328" executionId="471d531d-247d-494e-855c-2dc743e0e881" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" />
+  </TestEntries>
+  <Results>
+    <UnitTestResult executionId="471d531d-247d-494e-855c-2dc743e0e881" testId="81f0e662-0eb0-3cce-b7af-8c1cbac82328" testName="TestMethod4" computerName="XIGE-PC" duration="00:00:00.0772351" startTime="2012-08-20T20:22:12.9275544-04:00" endTime="2012-08-20T20:22:13.6765973-04:00" testType="13cdc9d9-ddb5-4fa4-a97d-d965ccfc6d4b" outcome="Failed" testListId="8c84fa94-04c1-424b-9868-57a2d4851a1d" relativeResultsDirectory="471d531d-247d-494e-855c-2dc743e0e881">
+      <Output>
+        <ErrorInfo>
+          <Message>Test method WarningTest.UtilityTest.TestMethod4 threw exception: 
+System.Security.SecurityException: The source was not found, but some or all event logs could not be searched.  Inaccessible logs: Security.</Message>
+          <StackTrace>    at System.Diagnostics.EventLog.FindSourceRegistration(String source, String machineName, Boolean readOnly, Boolean wantToCreate)
+   at System.Diagnostics.EventLog._InternalLogNameFromSourceName(String source, String machineName)
+   at System.Diagnostics.EventLog.LogNameFromSourceName(String source, String machineName)
+   at com.sporadicism.util.logger.EventLogger.createEventLog(String log, String machine, String source)
+   at com.sporadicism.util.logger.LogFactory.getEventLogger(String machine, String log, String source)
+   at WarningTest.UtilityTest.TestMethod4() in D:\VS workspaces\BeneWar\warnings\WarningTest\UtilityTest.cs:line 55
+</StackTrace>
+        </ErrorInfo>
+      </Output>
+    </UnitTestResult>
+  </Results>
+</TestRun>

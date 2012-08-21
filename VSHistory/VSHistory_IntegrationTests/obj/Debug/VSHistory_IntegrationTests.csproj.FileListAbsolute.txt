@@ -1,0 +1,9 @@
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\bin\Debug\VSHistory_IntegrationTests.dll
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\bin\Debug\VSHistory_IntegrationTests.pdb
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\bin\Debug\Microsoft.VSSDK.TestHostFramework.dll
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\bin\Debug\VSHistory.dll
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\bin\Debug\VSHistory.pdb
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\bin\Debug\Microsoft.VSSDK.TestHostFramework.pdb
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\obj\Debug\ResolveAssemblyReference.cache
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\obj\Debug\VSHistory_IntegrationTests.dll
+D:\VS workspaces\BeneWar\warnings\VSHistory\VSHistory_IntegrationTests\obj\Debug\VSHistory_IntegrationTests.pdb

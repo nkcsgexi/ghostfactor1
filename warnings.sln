@@ -1,0 +1,48 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "warnings", "warnings\warnings.csproj", "{D607D17A-326A-47B2-91BD-F4DAD09C55CE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C1C4956-0090-420D-9329-D4B54AC10799}"
+	ProjectSection(SolutionItems) = preProject
+		IntegrationTests.testsettings = IntegrationTests.testsettings
+		UnitTests.testsettings = UnitTests.testsettings
+		warnings.vsmdi = warnings.vsmdi
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WarningTest", "WarningTest\WarningTest.csproj", "{EA60B585-BD4A-4667-863C-21FFFB2599B4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RefactoringIssue", "CodeIssue1\RefactoringIssue.csproj", "{0BA620F3-900B-4418-B5D7-76251829CF63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Threading", "Threading\Threading.csproj", "{D25188E3-079A-4D53-9EBC-CCE721391322}"
+EndProject
+Global
+	GlobalSection(TestCaseManagementSettings) = postSolution
+		CategoryFile = warnings.vsmdi
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D607D17A-326A-47B2-91BD-F4DAD09C55CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D607D17A-326A-47B2-91BD-F4DAD09C55CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D607D17A-326A-47B2-91BD-F4DAD09C55CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D607D17A-326A-47B2-91BD-F4DAD09C55CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA60B585-BD4A-4667-863C-21FFFB2599B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA60B585-BD4A-4667-863C-21FFFB2599B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA60B585-BD4A-4667-863C-21FFFB2599B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA60B585-BD4A-4667-863C-21FFFB2599B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0BA620F3-900B-4418-B5D7-76251829CF63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BA620F3-900B-4418-B5D7-76251829CF63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BA620F3-900B-4418-B5D7-76251829CF63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BA620F3-900B-4418-B5D7-76251829CF63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D25188E3-079A-4D53-9EBC-CCE721391322}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D25188E3-079A-4D53-9EBC-CCE721391322}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D25188E3-079A-4D53-9EBC-CCE721391322}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D25188E3-079A-4D53-9EBC-CCE721391322}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
