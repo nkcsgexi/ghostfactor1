@@ -17,7 +17,9 @@ namespace warnings.refactoring.detection
     public interface IBeforeAndAfterSourceKeeper
     {
         void setSourceBefore(String source);
+        string getSourceBefore();
         void setSourceAfter(String source);
+        string getSourceAfter();
     }
 
     public interface IBeforeAndAfterSyntaxTreeKeeper

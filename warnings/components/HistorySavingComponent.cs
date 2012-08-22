@@ -6,6 +6,7 @@ using System.Text;
 using BlackHen.Threading;
 using NLog;
 using Roslyn.Services;
+using warnings.source;
 using warnings.source.history;
 using warnings.util;
 
@@ -119,6 +120,13 @@ namespace warnings.components
 
                 // Add the new IDocuemnt to the code history.
                 CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
+
+                // Get the latest record of the file just editted.    
+                ICodeHistoryRecord record = CodeHistory.getInstance().getLatestRecord(solutionName, namespaceName, fileName);
+                
+                // After add the new record, search for extract method refactoring.
+                GhostFactorComponents.searchExtractMethodComponent.Enqueue(new SearchExtractMethodWorkitem(record));
+               
             }
         }
     }

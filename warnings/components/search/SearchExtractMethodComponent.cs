@@ -10,6 +10,7 @@ using warnings.util;
 
 namespace warnings.components
 {
+    /* This component is for detecting manual extract method refactoring in the code history. */
     class SearchExtractMethodComponent : IFactorComponent
     {
         /* Singleton this component. */
@@ -21,8 +22,9 @@ namespace warnings.components
         }
 
         /* The maximum number of record it should look back to. */
-        private readonly static int SEARCH_DEPTH = 40;
+        public readonly static int SEARCH_DEPTH = 40;
 
+        /* The queue handles all the detections. */
         private readonly WorkQueue queue;
 
         private readonly Logger log;
@@ -39,7 +41,11 @@ namespace warnings.components
 
         public void Enqueue(IWorkItem item)
         {
-            throw new NotImplementedException();
+            if(queue.Count == 0)
+            {
+                log.Info("enqueue");
+                queue.Add(item);
+            }
         }
 
         public string GetName()
@@ -49,51 +55,63 @@ namespace warnings.components
 
         public int GetWorkQueueLength()
         {
-            throw new NotImplementedException();
+            return queue.Count;
         }
 
         public void Start()
         {
-            throw new NotImplementedException();
+            
         }
 
-        internal class SearchExtractMethodWorkitem : WorkItem
+    }
+
+    /* The kind of work item for search extract method component. No other kind of component is allowed. */
+    public class SearchExtractMethodWorkitem : WorkItem
+    {
+        private readonly ICodeHistoryRecord latestRecrod;
+        private readonly Logger logger;
+
+        public SearchExtractMethodWorkitem(ICodeHistoryRecord latestRecord)
         {
-            private readonly ICodeHistoryRecord latestRecrod;
-            private readonly Logger logger;
+            this.latestRecrod = latestRecrod;
 
-            SearchExtractMethodWorkitem(ICodeHistoryRecord latestRecord)
+            // Initilize the logger.
+            this.logger = NLoggerUtil.getNLogger(typeof (SearchExtractMethodWorkitem));
+        }
+
+        public override void Perform()
+        {
+            IExtractMethodDetector detector = new ExtractMethodDetector();
+
+            // The detector shall always have latestRecord as the source after.
+            detector.setSourceAfter(latestRecrod.getSource());
+
+            // The current record shall be latestRecord initially.
+            ICodeHistoryRecord currentRecord = latestRecrod;
+
+            for (int i = 0; i < SearchExtractMethodComponent.SEARCH_DEPTH; i++)
             {
-                this.latestRecrod = latestRecrod;
-                
-                // Initilize the logger.
-                this.logger = NLoggerUtil.getNLogger(typeof(SearchExtractMethodWorkitem));
-            }
+                // No record before current, then break.s
+                if (!currentRecord.hasPreviousRecord())
+                    break;
+                currentRecord = currentRecord.getPreviousRecord();
 
-            public override void Perform()
-            {
-                IExtractMethodDetector detector = new ExtractMethodDetector();
+                // Set the source before
+                detector.setSourceBefore(currentRecord.getSource());
 
-                // The detector shall always have latestRecord as the source after.
-                detector.setSourceAfter(latestRecrod.getSource());
-
-                // The current record shall be latestRecord initially.
-                ICodeHistoryRecord currentRecord = latestRecrod;
-
-                for (int i = 0; i < SEARCH_DEPTH; i++)
+                // Detect manual refactoring.
+                if (detector.hasRefactoring())
                 {
-                    if (!currentRecord.hasPreviousRecord())
-                        break;
-                    currentRecord = currentRecord.getPreviousRecord();
-                    
-                    // Set the source before
-                    detector.setSourceBefore(currentRecord.getSource());
+                    //TODO: posting warnings and quick fix.
+                    logger.Info("Extract Method dectected.");
+                    logger.Info("Before: \n" + detector.getSourceBefore());
+                    logger.Info("After: \n" + detector.getSourceAfter());
 
-                    // Detect manual refactoring.
-                    if(detector.hasRefactoring())
-                        logger.Info("Extract Method dectected.");
+                    // If refactoring detected, return directly.
+                    return;
                 }
             }
+            logger.Info("No extract method detected.");
         }
     }
 }
