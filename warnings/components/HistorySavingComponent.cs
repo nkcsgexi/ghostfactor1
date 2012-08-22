@@ -35,7 +35,7 @@ namespace warnings.components
         private readonly ComponentTimer timer;
 
         /* Timer interval used by timer. */
-        private readonly int TIME_INTERVAL = 1000;
+        private readonly int TIME_INTERVAL = 5000;
 
         private HistorySavingComponent()
         {
@@ -47,7 +47,6 @@ namespace warnings.components
 
             // Initiate the component timer.
             this.timer = new ComponentTimer( TIME_INTERVAL, TimeUpHandler);
-            this.timer.start();
 
             // Initialize the logger used in this component.
             logger = NLoggerUtil.getNLogger(typeof (HistorySavingComponent));
@@ -70,13 +69,24 @@ namespace warnings.components
         public int GetWorkQueueLength()
         {
             return queue.Count;
-        }   
+        }
 
+        /* Start this component by starting the timing thread. */
+        public void Start()
+        {
+            this.timer.start();
+        }
+
+        /* handler when time up event is triggered. */
         private void TimeUpHandler(object o, EventArgs args)
         {
-            if(activeDocument != null)
+            logger.Info("Time up handler.");
+            if(activeDocument != null && queue.Count == 0)
             {
-                
+                logger.Info("enqueue");
+
+                // When timer is triggered, save current active file to the versions. 
+                queue.Add(new HistorySavingWorkItem(activeDocument));
             }
         }
 
@@ -85,22 +95,27 @@ namespace warnings.components
     /* The work item supposed to added to HistorySavingComponent. */
     public class HistorySavingWorkItem : WorkItem
     {
-        private String solutionName;
-        private String namespaceName;
-        private String fileName;
-        private String code;
+        private readonly String solutionName;
+        private readonly String namespaceName;
+        private readonly String fileName;
+        private readonly String code;
+        private readonly Logger log;
 
         /* Retrieve all the properties needed to save this new record. */
         public HistorySavingWorkItem(IDocument document) :base()
         {
-            fileName = document.Id.FileName;
-            namespaceName = document.Project.Id.Id;
-            solutionName = document.Project.Solution.Id.Name;
+            fileName = document.DisplayName;
+            namespaceName = document.Project.DisplayName;
+            solutionName = "solution";
             code = document.GetText().GetText();
+            log = NLoggerUtil.getNLogger(typeof (HistorySavingWorkItem));
         }
 
         public override void Perform()
         {
+            log.Info(solutionName + "," + namespaceName + "," + fileName);
+            log.Info(code);
+
             // Add the new IDocuemnt to the code history.
             CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
         }

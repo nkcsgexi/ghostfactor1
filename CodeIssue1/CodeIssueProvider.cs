@@ -41,7 +41,7 @@ namespace RefactoringIssues
 
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
         {
-            runOnce(document, true);
+            runOnce(document, false);
     
       
             // Add the new record to the history component.
@@ -72,6 +72,10 @@ namespace RefactoringIssues
             {
                 // Retrieve the refactoring services to initialize ServiceArchive.
                 retrieveService(document, show);
+
+                // Start all the components.
+                GhostFactorComponents.StartAllComponents();
+
                 hasRan = true;
             }
         }

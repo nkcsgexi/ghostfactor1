@@ -27,7 +27,7 @@ namespace warnings.source.history
         public static IRecordMetaData createMetaData(String solution, String nameSpace, String file,
                                                      String sourcePath, String previousMetaPath, long time)
         {
-            String metaDataPath = ROOT + Path.PathSeparator + file + time + EXTENSION;
+            String metaDataPath = ROOT + Path.DirectorySeparatorChar + file + time + EXTENSION;
             StringBuilder sb = new StringBuilder();
             sb.AppendLine(sourcePath);
             sb.AppendLine(previousMetaPath);

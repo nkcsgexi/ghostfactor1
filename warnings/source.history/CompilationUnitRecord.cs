@@ -10,20 +10,27 @@ namespace warnings.source.history
 {
     class CompilationUnitRecord : ICodeHistoryRecord
     {
+        /* The metadata describing this souce version. */
         private readonly IRecordMetaData metaData;
 
+        /* The root folder to where this file is stored. */
         public static readonly String ROOT = "Source";
+
+        /* File extension for the source record. */
         private static readonly String EXTENSION = ".rec";
 
         public static ICodeHistoryRecord createNewCodeRecord(String solution, String package, String file,
                 String source){
+
+            // current time in ticks
             long time = DateTime.Now.Ticks;
+
+            // record file name
             string recordfilename = file + time + EXTENSION;
-            string sourthPath = ROOT + Path.DirectorySeparatorChar + recordfilename;
-            FileStream fs = FileUtil.createFile(sourthPath);
-            FileUtil.writeToFileStream(fs, source);
+            string sourcePath = ROOT + Path.DirectorySeparatorChar + recordfilename;
+            FileUtil.writeToFileStream(FileUtil.createFile(sourcePath), source);
             IRecordMetaData metaData =
-                RecordMetaData.createMetaData(solution, package, file, sourthPath, "", time);
+                RecordMetaData.createMetaData(solution, package, file, sourcePath, "", time);
             return new CompilationUnitRecord(metaData);
         }
 
@@ -73,7 +80,7 @@ namespace warnings.source.history
         {
             long time = DateTime.Now.Ticks;
             string recordfilename = metaData.getFile() + time + EXTENSION;
-            string sourcePath = ROOT + Path.PathSeparator + recordfilename;
+            string sourcePath = ROOT + Path.DirectorySeparatorChar + recordfilename;
             FileStream fs = FileUtil.createFile(sourcePath);
             FileUtil.writeToFileStream(fs, source);
             IRecordMetaData nextMetaData =
