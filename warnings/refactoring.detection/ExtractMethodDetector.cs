@@ -12,11 +12,17 @@ using warnings.util;
 
 namespace warnings.refactoring.detection
 {
+
+    public interface IExtractMethodDetector : IRefactoringDetector, IBeforeAndAfterSourceKeeper
+    {
+         
+    }
+
     /* 
      * This is a detector for extract method refactoring. After setting the code before and after some time interval, the detector should be able to 
      * tell whether there is a reafactoring performed. 
      */
-    public class ExtractMethodDetector : IRefactoringDetector, IBeforeAndAfterSourceKeeper
+    public class ExtractMethodDetector : IExtractMethodDetector
     {
         /* Source code before. */
         private String before;

@@ -8,7 +8,7 @@ namespace warnings.components
 {
     public interface IFactorComponent
     {
-        void Enqueue(object item);
+        void Enqueue(IWorkItem item);
         string GetName();
         int GetWorkQueueLength();
         void Start();

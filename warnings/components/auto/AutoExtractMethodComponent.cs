@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using BlackHen.Threading;
 
 namespace warnings.components
 {
@@ -15,7 +16,7 @@ namespace warnings.components
             return instance;
         }
 
-        public void Enqueue(object item)
+        public void Enqueue(IWorkItem item)
         {
             throw new NotImplementedException();
         }

@@ -54,9 +54,9 @@ namespace warnings.components
 
         /* Add a new work item to the queue. */
         [MethodImpl(MethodImplOptions.Synchronized)]
-        public void Enqueue(object item)
+        public void Enqueue(IWorkItem item)
         {
-            activeDocument = (IDocument) item;
+            activeDocument = ((DocumentWorkItem)item).document;
         }
 
         /* Return the name of this work queue. */
@@ -90,35 +90,53 @@ namespace warnings.components
             }
         }
 
+        /* The work item supposed to added to HistorySavingComponent. */
+        internal class HistorySavingWorkItem : WorkItem
+        {
+            private readonly String solutionName;
+            private readonly String namespaceName;
+            private readonly String fileName;
+            private readonly String code;
+            private readonly Logger log;
+
+            /* Retrieve all the properties needed to save this new record. */
+            internal HistorySavingWorkItem(IDocument document)
+                : base()
+            {
+                fileName = document.DisplayName;
+                namespaceName = document.Project.DisplayName;
+
+                // TODO: can we get the real solution name?
+                solutionName = "solution";
+                code = document.GetText().GetText();
+                log = NLoggerUtil.getNLogger(typeof(HistorySavingWorkItem));
+            }
+
+            public override void Perform()
+            {
+                log.Info(solutionName + "," + namespaceName + "," + fileName);
+                log.Info(code);
+
+                // Add the new IDocuemnt to the code history.
+                CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
+            }
+        }
     }
 
-    /* The work item supposed to added to HistorySavingComponent. */
-    public class HistorySavingWorkItem : WorkItem
+    /* This is a wrapper for IDocument using a WorkItem abstract class. */
+    public class DocumentWorkItem : WorkItem
     {
-        private readonly String solutionName;
-        private readonly String namespaceName;
-        private readonly String fileName;
-        private readonly String code;
-        private readonly Logger log;
+        public IDocument document { get; private set; }
 
-        /* Retrieve all the properties needed to save this new record. */
-        public HistorySavingWorkItem(IDocument document) :base()
+        public DocumentWorkItem (IDocument document)
         {
-            fileName = document.DisplayName;
-            namespaceName = document.Project.DisplayName;
-            solutionName = "solution";
-            code = document.GetText().GetText();
-            log = NLoggerUtil.getNLogger(typeof (HistorySavingWorkItem));
+            this.document = document;
         }
-
         public override void Perform()
         {
-            log.Info(solutionName + "," + namespaceName + "," + fileName);
-            log.Info(code);
-
-            // Add the new IDocuemnt to the code history.
-            CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
         }
     }
+
+
 
 }
