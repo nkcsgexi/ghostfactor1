@@ -1,0 +1,7 @@
+C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Roslyn\Extensions\Microsoft\CodeIssue1\1.0\\CodeIssue1.dll
+C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Roslyn\Extensions\Microsoft\CodeIssue1\1.0\\extension.vsixmanifest
+C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Roslyn\Extensions\Microsoft\CodeIssue1\1.0\\warnings.dll
+C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Roslyn\Extensions\Microsoft\CodeIssue1\1.0\\QuickGraph.Collections.dll
+C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Roslyn\Extensions\Microsoft\CodeIssue1\1.0\\QuickGraph.Concepts.dll
+C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Roslyn\Extensions\Microsoft\CodeIssue1\1.0\\QuickGraph.dll
+C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Roslyn\Extensions\Microsoft\CodeIssue1\1.0\\warnings.pdb
