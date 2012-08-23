@@ -106,6 +106,7 @@
     <Compile Include="components\ComponentTimer.cs" />
     <Compile Include="components\auto\AutoRenameComponent.cs" />
     <Compile Include="components\search\SearchExtractMethodComponent.cs" />
+    <Compile Include="components\search\SearchRefactoringComponent.cs" />
     <Compile Include="components\search\SearchRenameComponent.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

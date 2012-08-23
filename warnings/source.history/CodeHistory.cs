@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
+using NLog;
 using warnings.util;
 
 namespace warnings.source.history
@@ -19,6 +20,8 @@ namespace warnings.source.history
 
         /* Combined key and the latest record under that key. */
         private readonly Dictionary<String, ICodeHistoryRecord> latestRecordDictionary;
+
+        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (CodeHistory));
 
         private CodeHistory()
         {
@@ -67,7 +70,8 @@ namespace warnings.source.history
             Contract.Requires(hasRecord(solution, nameSpace, file));
             String key = combineKey(solution, nameSpace, file);
             ICodeHistoryRecord record;
-            latestRecordDictionary.TryGetValue(key, out record);
+            if(!latestRecordDictionary.TryGetValue(key, out record))
+                logger.Fatal("Try to get record that does not exist.");
             return record;
         }
     }

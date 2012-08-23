@@ -33,8 +33,25 @@ namespace warnings.util
             // Add a rule that any information higher than debug goes to the file.
             var rule = new LoggingRule("*", LogLevel.Debug, target);
             config.LoggingRules.Add(rule);
+
+            // Also log fatal logs to another file.
+            string fatalPath = "GhostFactorFatal.log";
+            if (toDesktop)
+                fatalPath = desktopPath + fatalPath;
+            var fatalTarget = new FileTarget()
+            {
+                FileName = fatalPath
+            };
+            var fatalRule = new LoggingRule("*", LogLevel.Fatal, fatalTarget);
+            config.LoggingRules.Add(fatalRule);
+
             LogManager.Configuration = config;
             return LogManager.GetLogger(t.FullName);
         }
+    }
+
+    public interface ILoggerKeeper
+    {
+        Logger GetLogger();
     }
 }

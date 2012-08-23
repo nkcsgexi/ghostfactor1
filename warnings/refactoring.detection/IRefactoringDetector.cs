@@ -27,4 +27,22 @@ namespace warnings.refactoring.detection
         void setSyntaxTreeBefore(SyntaxTree before);
         void setSyntaxTreeAfter(SyntaxTree after);
     }
+
+    public interface IExternalRefactoringDetector : IRefactoringDetector, IBeforeAndAfterSourceKeeper
+    {
+
+    }
+
+    public static class RefactoringDetectorFactory
+    {
+        public static IExternalRefactoringDetector createRenameDetector()
+        {
+            return new RenameDetector();
+        }
+
+        public static IExternalRefactoringDetector createExtractMethodDetector()
+        {
+            return  new ExtractMethodDetector();
+        }
+    }
 }

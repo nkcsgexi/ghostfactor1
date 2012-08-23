@@ -27,10 +27,10 @@ namespace warnings
 
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
         {
-            // runOnce(document, true);
+            initialize(document, false);
 
             // Add the new record to the history component.
-           // GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
+            GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
 
             var tokens = from nodeOrToken in node.ChildNodesAndTokens()
                          where nodeOrToken.IsToken
@@ -42,26 +42,25 @@ namespace warnings
 
                 if (tokenText.Contains('a'))
                 {
-                    var issueDescription = string.Format("'{0}' contains the letter 'a'", tokenText);
+                    var issueDescription = "warnings is running.";
                     yield return new CodeIssue(CodeIssue.Severity.Warning, token.Span, issueDescription);
                 }
             }
         }
 
-        private bool hasRan = false;
+        private bool initialized = false;
 
         /* Code runs only once when getIssues is called. */
-        private void runOnce(IDocument document, bool show)
+        private void initialize(IDocument document, bool show)
         {
-            if (!hasRan)
+            if (!initialized)
             {
                 // Retrieve the refactoring services to initialize ServiceArchive.
                 retrieveService(document, show);
 
                 // Start all the components.
                 GhostFactorComponents.StartAllComponents();
-
-                hasRan = true;
+                initialized = true;
             }
         }
 

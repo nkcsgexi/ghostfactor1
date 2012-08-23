@@ -13,27 +13,29 @@ using warnings.util;
 namespace warnings.refactoring.detection
 {
 
-    public interface IExtractMethodDetector : IRefactoringDetector, IBeforeAndAfterSourceKeeper
-    {
-         
-    }
-
     /* 
      * This is a detector for extract method refactoring. After setting the code before and after some time interval, the detector should be able to 
      * tell whether there is a reafactoring performed. 
      */
-    public class ExtractMethodDetector : IExtractMethodDetector
+    internal class ExtractMethodDetector : IExternalRefactoringDetector
     {
         /* Source code before. */
         private String before;
+
         /* Source code later. */
         private String after;
+        
         /* Detected manual refactoring.*/
         private IManualRefactoring refactoring;
 
-        public void setSourceBefore(String source)
+        internal ExtractMethodDetector()
         {
-            this.before = source;
+            
+        }
+
+        public void setSourceBefore(String before)
+        {
+            this.before = before;
         }
 
         public string getSourceBefore()
@@ -41,9 +43,9 @@ namespace warnings.refactoring.detection
             return before;
         }
 
-        public void setSourceAfter(String source)
+        public void setSourceAfter(String after)
         {
-            this.after = source;
+            this.after = after;
         }
 
         public string getSourceAfter()

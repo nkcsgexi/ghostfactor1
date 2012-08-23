@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using BlackHen.Threading;
 
@@ -8,6 +9,7 @@ namespace warnings.components
 {
     public interface IFactorComponent
     {
+        [MethodImpl(MethodImplOptions.Synchronized)]
         void Enqueue(IWorkItem item);
         string GetName();
         int GetWorkQueueLength();

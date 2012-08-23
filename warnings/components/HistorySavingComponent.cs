@@ -46,6 +46,9 @@ namespace warnings.components
             // Disallow the concurrency for this component.
             this.queue.ConcurrentLimit = 1;
 
+            // Log the event if an item failed.
+            this.queue.FailedWorkItem += onFailedWorkItem;
+
             // Initiate the component timer.
             this.timer = new ComponentTimer( TIME_INTERVAL, TimeUpHandler);
 
@@ -91,6 +94,12 @@ namespace warnings.components
             }
         }
 
+        /* Method called when a workitem failed. */
+        private void onFailedWorkItem(object sender, WorkItemEventArgs workItemEventArgs)
+        {
+            logger.Fatal("WorkItem failed.");
+        }
+
         /* The work item supposed to added to HistorySavingComponent. */
         internal class HistorySavingWorkItem : WorkItem
         {
@@ -98,7 +107,7 @@ namespace warnings.components
             private readonly String namespaceName;
             private readonly String fileName;
             private readonly String code;
-            private readonly Logger log;
+            private readonly Logger logger;
 
             /* Retrieve all the properties needed to save this new record. */
             internal HistorySavingWorkItem(IDocument document)
@@ -110,23 +119,33 @@ namespace warnings.components
                 // TODO: can we get the real solution name?
                 solutionName = "solution";
                 code = document.GetText().GetText();
-                log = NLoggerUtil.getNLogger(typeof(HistorySavingWorkItem));
+                logger = NLoggerUtil.getNLogger(typeof(HistorySavingWorkItem));
             }
 
             public override void Perform()
             {
-                log.Info(solutionName + "," + namespaceName + "," + fileName);
-                log.Info(code);
+                try
+                {
+                    logger.Info(solutionName + "," + namespaceName + "," + fileName);
+                    logger.Info(Environment.NewLine + code);
 
-                // Add the new IDocuemnt to the code history.
-                CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
+                    // Add the new IDocuemnt to the code history.
+                    CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
 
-                // Get the latest record of the file just editted.    
-                ICodeHistoryRecord record = CodeHistory.getInstance().getLatestRecord(solutionName, namespaceName, fileName);
-                
-                // After add the new record, search for extract method refactoring.
-                GhostFactorComponents.searchExtractMethodComponent.Enqueue(new SearchExtractMethodWorkitem(record));
-               
+                    // Get the latest record of the file just editted.    
+                    ICodeHistoryRecord record = CodeHistory.getInstance().getLatestRecord(solutionName, namespaceName, fileName);
+
+                    // After add the new record, search for extract method refactoring.
+                    GhostFactorComponents.searchExtractMethodComponent.Enqueue(new SearchExtractMethodWorkitem(record));
+
+                    // After detecting extract method refactoring, search for rename refacotoring.
+                    GhostFactorComponents.searchRenameComponent.Enqueue(new SearchRenameWorkItem(record));
+                }
+                catch (Exception e)
+                {
+                    // Stacktrace of Exception will be logged.
+                    logger.Fatal(e.StackTrace);
+                }
             }
         }
     }
