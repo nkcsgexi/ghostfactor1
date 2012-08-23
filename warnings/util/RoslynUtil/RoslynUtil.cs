@@ -25,13 +25,13 @@ namespace warnings.util
         /* Get the instance of a project in the solution who has the given name.*/
         public static IProject GetProject(ISolution solution, String name)
         {
-            return solution.Projects.First(p => p.DisplayName.Equals(name));
+            return solution.Projects.First(p => p.Name.Equals(name));
         }
 
         /* Get the document with the specified name in the project.*/
         public static IDocument GetDocument(IProject project, String name)
         {
-            return project.Documents.First(d => d.DisplayName.Equals(name));
+            return project.Documents.First(d => d.SimplifyNames().Equals(name));
          }
 
         /* 
@@ -41,7 +41,7 @@ namespace warnings.util
         public static ISolution UpdateDocumentToString(IDocument document, String s)
         {
             IText text = new StringText(s);
-            CommonSyntaxNode node = ASTUtil.getSyntaxTreeFromSource(s).Root;
+            CommonSyntaxNode node = ASTUtil.getSyntaxTreeFromSource(s).GetRoot();
             return document.Project.Solution.UpdateDocument(document.Id, text);
         }
     }

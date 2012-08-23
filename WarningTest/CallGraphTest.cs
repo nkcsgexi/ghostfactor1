@@ -32,7 +32,7 @@ namespace WarningTest
         {
             source = FileUtil.readAllText(path);
             tree = ASTUtil.getSyntaxTreeFromSource(source);
-            classDeclaration = tree.Root.DescendentNodes().OfType<ClassDeclarationSyntax>().
+            classDeclaration = tree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().
                 First(c => c.Identifier.Value.Equals("CallGraphTest"));
             graph = new CallGraphBuilder(classDeclaration, tree).buildCallGraph();
 

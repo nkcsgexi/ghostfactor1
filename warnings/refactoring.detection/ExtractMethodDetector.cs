@@ -57,8 +57,8 @@ namespace warnings.refactoring.detection
             SyntaxTree treeAfter = SyntaxTree.ParseCompilationUnit(after);
 
             // Get the classes in the code before and after.
-            var classesBefore = treeBefore.Root.DescendentNodes().OfType<ClassDeclarationSyntax>();
-            var classesAfter = treeAfter.Root.DescendentNodes().OfType<ClassDeclarationSyntax>();
+            var classesBefore = treeBefore.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
+            var classesAfter = treeAfter.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
             
             // Get the pairs of class declaration in the code before and after
             var paris = getClassDeclarationPairs(classesBefore, classesAfter);

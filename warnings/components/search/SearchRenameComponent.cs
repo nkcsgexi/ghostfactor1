@@ -38,7 +38,7 @@ namespace warnings.components
 
         public void Start()
         {
-            throw new NotImplementedException();
+      
         }
     }
 }

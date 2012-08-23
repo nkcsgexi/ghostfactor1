@@ -1,4 +1,0 @@
-C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Xi Ge@North Carolina State University\VSHistory\1.0\\VSHistory.dll
-C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Xi Ge@North Carolina State University\VSHistory\1.0\\VSHistory.pkgdef
-C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Xi Ge@North Carolina State University\VSHistory\1.0\\extension.vsixmanifest
-C:\Users\Xi Ge\AppData\Local\Microsoft\VisualStudio\10.0Exp\Extensions\Xi Ge@North Carolina State University\VSHistory\1.0\\VSHistory.pdb

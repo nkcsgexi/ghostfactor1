@@ -44,7 +44,6 @@ namespace warnings.refactoring.refactoring.auto
         {
             ICodeRefactoringProvider p;
             IDocument d;
-            IWorkspaceDiscoveryService s;
        
             
             

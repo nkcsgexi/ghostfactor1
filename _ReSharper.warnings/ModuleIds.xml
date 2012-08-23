@@ -3,5 +3,5 @@
   <Module PersistentId="EA60B585-BD4A-4667-863C-21FFFB2599B4" ModuleId="WarningTest" />
   <Module PersistentId="0BA620F3-900B-4418-B5D7-76251829CF63" ModuleId="CodeIssue1" />
   <Module PersistentId="D25188E3-079A-4D53-9EBC-CCE721391322" ModuleId="Threading" />
-  <Module PersistentId="63FACBA8-3E04-469F-87FA-8B2A6AB04F03" ModuleId="Logger" />
+  <Module PersistentId="991377AF-417A-4CCE-9478-E57926D84451" ModuleId="RefactoringCodeIssue" />
 </Modules>

@@ -28,9 +28,6 @@ namespace warnings.util
             return instance;
         }
 
-        /* Service for discovering the workspaces. */
-        public IWorkspaceDiscoveryService WorkspaceDiscoveryService { set; get; }
-        
         /* The rename service, retriving from CodeIssueProvider.cs. */
         public IRenameService RenameService { set; get; }
 
@@ -43,8 +40,6 @@ namespace warnings.util
             Logger logger = NLoggerUtil.getNLogger(typeof (ServiceArchive));
             logger.Debug("tostring");
             StringBuilder sb = new StringBuilder();
-            if (WorkspaceDiscoveryService != null)
-                sb.AppendLine("WorkspaceDiscoverySpace");
             if (RenameService != null)
                 sb.AppendLine("RenameService");
             if (ExtractMethodService != null)

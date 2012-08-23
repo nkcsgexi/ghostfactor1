@@ -25,7 +25,7 @@ namespace warnings.analyzer
         public CallGraph buildCallGraph()
         {
             // Get all the method declarations in the class.
-            var methodDeclarations = classDeclaration.DescendentNodes().
+            var methodDeclarations = classDeclaration.DescendantNodes().
                 OfType<MethodDeclarationSyntax>();
             var callGraph = new CallGraph();
             

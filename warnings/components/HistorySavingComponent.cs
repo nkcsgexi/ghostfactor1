@@ -104,8 +104,8 @@ namespace warnings.components
             internal HistorySavingWorkItem(IDocument document)
                 : base()
             {
-                fileName = document.DisplayName;
-                namespaceName = document.Project.DisplayName;
+                fileName = document.Name;
+                namespaceName = document.Project.Name;
 
                 // TODO: can we get the real solution name?
                 solutionName = "solution";

@@ -59,11 +59,11 @@ namespace WarningTest
         [TestMethod]
         public void TestFlattenMethod()
         {
-            var caller = tree.Root.DescendentNodes().OfType<MethodDeclarationSyntax>().
+            var caller = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().
                 First(m => m.Identifier.Value.Equals("foo"));
-            var callee = tree.Root.DescendentNodes().OfType<MethodDeclarationSyntax>().
+            var callee = tree.GetRoot().DescendantNodes().OfType<MethodDeclarationSyntax>().
                 First(m => m.Identifier.Value.Equals("bar"));
-            var invocation = caller.DescendentNodes().OfType<InvocationExpressionSyntax>().
+            var invocation = caller.DescendantNodes().OfType<InvocationExpressionSyntax>().
                 First();
             String afterFlatten = ASTUtil.flattenMethodInvocation(caller, callee, invocation);
             Assert.IsTrue(afterFlatten.Contains("private void foo"));

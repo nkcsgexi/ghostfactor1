@@ -24,9 +24,19 @@ namespace warnings.refactoring.detection
             this.before = source;
         }
 
+        public string getSourceBefore()
+        {
+            return before;
+        }
+
         public void setSourceAfter(String source)
         {
             this.after = source;
+        }
+
+        public string getSourceAfter()
+        {
+            return after;
         }
 
         public bool hasRefactoring()

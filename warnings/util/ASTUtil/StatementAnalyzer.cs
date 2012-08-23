@@ -14,7 +14,7 @@ namespace warnings.util
         public StatementAnalyzer(string source)
         {
             statement = source;
-            root = ASTUtil.getSyntaxTreeFromSource(statement).Root;
+            root = ASTUtil.getSyntaxTreeFromSource(statement).GetRoot();
         }
 
         public bool isStatement()
@@ -24,7 +24,7 @@ namespace warnings.util
 
         public Boolean hasMethodInvocation(String methodName)
         {
-            IEnumerable<SyntaxNode> nodes = root.DescendentNodes();
+            IEnumerable<SyntaxNode> nodes = root.DescendantNodes();
             foreach (SyntaxNode n in nodes)
             {
                 // select the node if it is invocation of a method
@@ -32,7 +32,7 @@ namespace warnings.util
                 {
                     // first node in the invocation should be the method name, including member access
                     // expression.
-                    String method = n.DescendentNodes().First().GetText();
+                    String method = n.DescendantNodes().First().GetText();
                     if (method.EndsWith(methodName))
                         return true;
                 }

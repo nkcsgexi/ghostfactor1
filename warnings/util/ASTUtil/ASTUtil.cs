@@ -20,9 +20,9 @@ namespace warnings.util
 
         public static List<MethodDeclarationSyntax> getAllMethodDeclarations(SyntaxTree tree)
         {
-            SyntaxNode root = tree.Root;
+            SyntaxNode root = tree.GetRoot();
             List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
-            IEnumerable<SyntaxNode> ite = root.DescendentNodes();
+            IEnumerable<SyntaxNode> ite = root.DescendantNodes();
             foreach (SyntaxNode node in ite)
             {
                 if (node.Kind == SyntaxKind.MethodDeclaration)
@@ -63,13 +63,13 @@ namespace warnings.util
         /* Get the classes declared in a syntax tree. */
         public static IEnumerable<ClassDeclarationSyntax> getClassDeclarations(SyntaxTree tree)
         {
-            return tree.Root.DescendentNodes().OfType<ClassDeclarationSyntax>();
+            return tree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
         }
 
         /* Get the methods declared in a class declaration. */
         public static IEnumerable<MethodDeclarationSyntax> getMethodDeclarations(ClassDeclarationSyntax classSyntax)
         {
-            return classSyntax.DescendentNodes().OfType<MethodDeclarationSyntax>();
+            return classSyntax.DescendantNodes().OfType<MethodDeclarationSyntax>();
         }
 
         /* Return true if caller is actually calling the callee, otherwise return false. */
@@ -91,8 +91,10 @@ namespace warnings.util
             Symbol calleeSymbol = model.GetDeclaredSymbol(callee);
 
             // Get the invocations of the callee methods in the given tree.
-            IEnumerable<InvocationExpressionSyntax> allInvocations = tree.Root.DescendentNodes().OfType<InvocationExpressionSyntax>();
-            IEnumerable<InvocationExpressionSyntax> calleeInvocations = allInvocations.Where(i => model.GetSemanticInfo(i).Symbol == calleeSymbol);
+            IEnumerable<InvocationExpressionSyntax> allInvocations = tree.GetRoot().DescendantNodes().OfType<InvocationExpressionSyntax>();
+            IEnumerable<InvocationExpressionSyntax> calleeInvocations = allInvocations.Where
+                (i => model.GetSymbolInfo(i).Symbol == calleeSymbol);
+
 
             // Check if one of thsee invocations is in the caller.
             foreach (InvocationExpressionSyntax invocation in calleeInvocations)
