@@ -21,7 +21,7 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod1()
         {
-            var detector = new ExtractMethodDetector();
+            var detector = RefactoringDetectorFactory.createExtractMethodDetector();
             var sourceBefore = FileUtil.readAllText(fileBefore);
             var sourceAfter = FileUtil.readAllText(fileAfter);
             detector.setSourceBefore(sourceBefore);
