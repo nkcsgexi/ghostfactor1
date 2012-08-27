@@ -7,6 +7,7 @@ using BlackHen.Threading;
 
 namespace warnings.components
 {
+    /* All the components in GhostFactor shall be implementing this interface.*/
     public interface IFactorComponent
     {
         [MethodImpl(MethodImplOptions.Synchronized)]
@@ -27,11 +28,25 @@ namespace warnings.components
         /* Component for traversing the source code history and looking for manual extract method refactorings. */
         public static readonly IFactorComponent searchExtractMethodComponent = SearchExtractMethodComponent.getInstance();
 
+        /* Component for automatically performing rename refactorings. */
+        public static readonly IFactorComponent autoRenameComponent = AutoRenameComponent.getInstance();
+
+        /* Component for automatically performing extract method refactorings. */
+        public static readonly IFactorComponent autoExtractMethodComponent = AutoExtractMethodComponent.getInstance();
+
         public static void StartAllComponents()
         {
+
+            // Start the history keeping component.
             historyComponent.Start();
+            
+            // Start the searching refactoring components.
             searchRenameComponent.Start();
             searchExtractMethodComponent.Start();
+            
+            // Start the auto re-performing refactoring components.
+            autoRenameComponent.Start();
+            autoExtractMethodComponent.Start();
         }
     }
 }

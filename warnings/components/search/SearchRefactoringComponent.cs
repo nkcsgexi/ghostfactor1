@@ -10,6 +10,7 @@ using warnings.util;
 
 namespace warnings.components
 {
+    /* Component for searching a manual refactoring in the code history. */
     public abstract class SearchRefactoringComponent : IFactorComponent, ILoggerKeeper
     {
         /* Queue for handling all the detection */
@@ -52,15 +53,17 @@ namespace warnings.components
         {
         }
 
-
+        /* Get the name of current component. */
         public abstract string GetName();
 
+        /* Get the logger of this class. */
         public abstract Logger GetLogger();
     }
 
     /* The kind of work item for search refactoring component. */
     public abstract class SearchRefactoringWorkitem : WorkItem, ILoggerKeeper
     {
+        /* The latest code history record from where the detector trace back. */
         private readonly ICodeHistoryRecord latestRecord;
 
         protected readonly Logger logger;
@@ -75,7 +78,8 @@ namespace warnings.components
         {
             try
             {
-               IExternalRefactoringDetector detector = getRefactoringDetector();
+                // get the detector, a detector compare two versions of a single file.
+                IExternalRefactoringDetector detector = getRefactoringDetector();
 
                 // The detector shall always have latestRecord as the source after.
                 detector.setSourceAfter(latestRecord.getSource());
@@ -83,11 +87,14 @@ namespace warnings.components
                 // The current record shall be latestRecord initially.
                 ICodeHistoryRecord currentRecord = latestRecord;
 
+                // we only look back up to the bound given by getSearchDepth()
                 for (int i = 0; i < getSearchDepth(); i++)
                 {
                     // No record before current, then break.s
                     if (!currentRecord.hasPreviousRecord())
                         break;
+
+                    // get the record before current record
                     currentRecord = currentRecord.getPreviousRecord();
 
                     // Set the source before

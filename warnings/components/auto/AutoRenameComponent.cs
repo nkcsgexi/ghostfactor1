@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BlackHen.Threading;
+using NLog;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
@@ -10,9 +11,9 @@ using warnings.util;
 
 namespace warnings.components
 {
-    class AutoRenameComponent : IFactorComponent
+    /* Component for handling the automatic rename refactoring. */
+    internal class AutoRenameComponent : AutoRefactoringComponent
     {
-
         /* Singleton this component. */
         private static IFactorComponent instance = new AutoRenameComponent();
 
@@ -21,54 +22,35 @@ namespace warnings.components
             return instance;
         }
 
-        /* Workqueue for running the automatic renaming. */
-        private readonly WorkQueue queue;
-
-
-        private AutoRenameComponent()
-        {
-            // Initialize a workqueue running a single thread.
-            queue = new WorkQueue();
-            queue.ConcurrentLimit = 1;
-
-        }
-
-        public void Enqueue(IWorkItem item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public string GetName()
+        public override string GetName()
         {
             return "AutoRenameComponent";
         }
 
-        public int GetWorkQueueLength()
+        public override Logger GetLogger()
         {
-            return queue.Count;
-        }
-
-        public void Start()
-        {
+            return NLoggerUtil.getNLogger(typeof (AutoRenameComponent));
         }
     }
 
-    public class AutoRenameWorkItem : WorkItem
+    /* WorkItem to be added to automatic rename component. */
+    internal class AutoRenameWorkItem : AutoRefactoringWorkItem
     {
-        private IRenameService service;
-        private IDocument document;
-        private ISymbol symbol;
+        private readonly IRenameService service;
 
-        public AutoRenameWorkItem(IDocument document, ISymbol symbol)
+        public AutoRenameWorkItem(IDocument document) : base(document)
         {
-            service = ServiceArchive.getInstance().RenameService;
-            this.document = document;
-            this.symbol = symbol;
+            this.service = ServiceArchive.getInstance().RenameService;
+        }
+
+        public override Logger GetLogger()
+        {
+            return NLoggerUtil.getNLogger(typeof (AutoRenameWorkItem));
         }
 
         public override void Perform()
         {
-           // TODO: finsih the perform auto refactoring.
+            
         }
     }
 }

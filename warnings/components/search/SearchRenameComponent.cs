@@ -21,7 +21,7 @@ namespace warnings.components
             return instance;
         }
 
-        private SearchRenameComponent() :base()
+        private SearchRenameComponent()
         {
             
         }
@@ -36,6 +36,7 @@ namespace warnings.components
             return NLoggerUtil.getNLogger(typeof (SearchRenameComponent));
         }
     }
+
     /* Item to be schedule to rename searching component. */
     public class SearchRenameWorkItem : SearchRefactoringWorkitem
     {
@@ -70,5 +71,4 @@ namespace warnings.components
             return NLoggerUtil.getNLogger(typeof (SearchRenameWorkItem));
         }
     }
-
 }

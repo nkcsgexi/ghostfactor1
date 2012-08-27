@@ -3,10 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using BlackHen.Threading;
+using NLog;
+using Roslyn.Services;
+using Roslyn.Services.Editor;
+using warnings.util;
 
 namespace warnings.components
 {
-    class AutoExtractMethodComponent : IFactorComponent
+    /* Component for handling automatic extract method refactoring. */
+    internal class AutoExtractMethodComponent : AutoRefactoringComponent
     {
         /* Singleton this component. */
         private static IFactorComponent instance = new AutoExtractMethodComponent();
@@ -16,24 +21,35 @@ namespace warnings.components
             return instance;
         }
 
-        public void Enqueue(IWorkItem item)
+        public override string GetName()
         {
-            throw new NotImplementedException();
+           return "AutoExtractMethodComponent";
         }
 
-        public string GetName()
+        public override Logger GetLogger()
         {
-            throw new NotImplementedException();
+            return NLoggerUtil.getNLogger(typeof (AutoExtractMethodComponent));
+        }
+    }
+
+    /* Workitem for performing automatic extract method. */
+    internal class AutoExtractMethodWorkItem : AutoRefactoringWorkItem
+    {
+        private readonly IExtractMethodService service;
+
+        public AutoExtractMethodWorkItem(IDocument document) : base(document)
+        {
+            this.service = ServiceArchive.getInstance().ExtractMethodService;
         }
 
-        public int GetWorkQueueLength()
+        public override void Perform()
         {
-            throw new NotImplementedException();
+            
         }
 
-        public void Start()
+        public override Logger GetLogger()
         {
-            throw new NotImplementedException();
+            return NLoggerUtil.getNLogger(typeof (AutoExtractMethodWorkItem));
         }
     }
 }

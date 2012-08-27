@@ -27,7 +27,7 @@ namespace warnings.analyzer
         private IDocument document;
 
         private Logger logger;
-
+                    
         private SyntaxNode root;
 
         public DocumentAnalyzer(IDocument document)

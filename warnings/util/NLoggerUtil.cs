@@ -10,15 +10,16 @@ namespace warnings.util
 {
     public class NLoggerUtil
     {
-
+        /* The path to the desktop. */
         private static string desktopPath = @"C:\Users\Xi Ge\Desktop\";
 
         private static bool toDesktop = true;
-        
-        static public Logger getNLogger(Type t)
+
+        /* Configure the logger programmatically. */
+        static NLoggerUtil()
         {
             var config = new LoggingConfiguration();
-            string path =  "GhostFactor.log";
+            string path = "GhostFactor.log";
             if (toDesktop)
                 path = desktopPath + path;
 
@@ -46,6 +47,11 @@ namespace warnings.util
             config.LoggingRules.Add(fatalRule);
 
             LogManager.Configuration = config;
+        }
+
+        /* get a logger using the specified type. */
+        static public Logger getNLogger(Type t)
+        {
             return LogManager.GetLogger(t.FullName);
         }
     }

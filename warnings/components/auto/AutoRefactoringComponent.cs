@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using BlackHen.Threading;
+﻿using BlackHen.Threading;
 using NLog;
 using Roslyn.Services;
 using warnings.util;
@@ -10,7 +6,7 @@ using warnings.util;
 namespace warnings.components
 {
 
-    /* Abstract for automatic refactoring. */
+    /* Abstract for performing automatic refactoring. */
     internal abstract class AutoRefactoringComponent : IFactorComponent, ILoggerKeeper
     {
         /* Work queue for scheduling an automatic refactoring. */
@@ -59,10 +55,9 @@ namespace warnings.components
         public abstract Logger GetLogger();
     }
 
-
-    public abstract class AutoRefactoringWorkItem : WorkItem, ILoggerKeeper
+    /* Abstract class for automatic refactoring work items that shall be used in auto-refactoring component. */
+    internal abstract class AutoRefactoringWorkItem : WorkItem, ILoggerKeeper
     {
-
         protected readonly Logger logger;
 
         /* to where the refactoring shall be performed. */

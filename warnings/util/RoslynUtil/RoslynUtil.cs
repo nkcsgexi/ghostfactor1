@@ -31,7 +31,7 @@ namespace warnings.util
         /* Get the document with the specified name in the project.*/
         public static IDocument GetDocument(IProject project, String name)
         {
-            return project.Documents.First(d => d.SimplifyNames().Equals(name));
+            return project.Documents.First(d => d.Name.Equals(name));
          }
 
         /* 
