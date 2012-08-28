@@ -25,8 +25,11 @@ namespace warnings.analyzer
         /* Given a node of declaration, returns the symbol in the semantic model. */
         ISymbol GetSymbol(SyntaxNode declaration);
 
-        /* Get the first symbol for testing purpuse. */
+        /* Get the first symbol of different types for testing purpuses. */
         ISymbol GetFirstLocalVariable();
+        ISymbol GetFirstClass();
+        ISymbol GetFirstNamespace();
+        ISymbol GetFirstMethod();
         String DumpSyntaxTree();
     }
 
@@ -120,6 +123,8 @@ namespace warnings.analyzer
             return null;
         }
 
+      
+
         public string DumpSyntaxTree()
         {
             StringBuilder sb = new StringBuilder();
@@ -169,6 +174,27 @@ namespace warnings.analyzer
             var first_method = GetMethodDeclarations((ClassDeclarationSyntax)first_class).First();
             var first_variable = GetVariableDeclarations((MethodDeclarationSyntax)first_method).First();
             return GetSymbol(first_variable);
+        }
+        
+        public ISymbol GetFirstMethod()
+        {
+            var first_namespace = GetNamespaceDecalarations().First();
+            var first_class = GetClassDeclarations((NamespaceDeclarationSyntax)first_namespace).First();
+            var first_method = GetMethodDeclarations((ClassDeclarationSyntax)first_class).First();
+            return GetSymbol(first_method);
+        }
+
+        public ISymbol GetFirstClass()
+        {
+            var first_namespace = GetNamespaceDecalarations().First();
+            var first_class = GetClassDeclarations((NamespaceDeclarationSyntax)first_namespace).First();
+            return GetSymbol(first_class);
+        }
+
+        public ISymbol GetFirstNamespace()
+        {
+            var first_namespace = GetNamespaceDecalarations().First();
+            return GetSymbol(first_namespace);
         }
 
         private IEnumerable<SyntaxNode> GetDecendantOfKind(SyntaxNode parent, SyntaxKind kind)

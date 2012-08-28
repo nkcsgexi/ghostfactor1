@@ -116,6 +116,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="quickfix\RefactoringQuickFix.cs" />
     <Compile Include="refactoring.attributes\attributes\RenameAttributes.cs" />
     <Compile Include="refactoring.attributes\extractmethod.attribute\AccessabilityAttri.cs" />
     <Compile Include="refactoring.attributes\extractmethod.attribute\MethodNameAttri.cs" />
