@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
+using Roslyn.Compilers.CSharp;
+using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
 using warnings.util;
@@ -13,6 +15,8 @@ namespace WarningTest
     [TestClass]
     public class RoslynUtilTests
     {
+        Logger logger = NLoggerUtil.getNLogger(typeof(RoslynUtilTests));
+        private int field1, field2;
 
         [TestMethod]
         public void TestMethod1()
@@ -48,9 +52,7 @@ namespace WarningTest
             var project = RoslynUtil.GetProject(solution, "WarningTest");
             var document = RoslynUtil.GetDocument(project, "TryToUpdate.cs");
             Assert.IsNotNull(document);
-            solution = RoslynUtil.UpdateDocumentToString(document, updatedString);
-            project = RoslynUtil.GetProject(solution, "WarningTest");
-            document = RoslynUtil.GetDocument(project, "TryToUpdate.cs");
+            document = RoslynUtil.UpdateDocumentToString(document, updatedString);  
             Assert.IsNotNull(document);
             Assert.IsTrue(document.GetText().GetText().Equals(updatedString));
         }
@@ -58,11 +60,11 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod5()
         {
-            Logger logger = NLoggerUtil.getNLogger(typeof (RoslynUtilTests));
             var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
             var project = RoslynUtil.GetProject(solution, "WarningTest");
             var document = RoslynUtil.GetDocument(project, "RoslynUtilTests.cs");
-            var analyzer = new DocumentAnalyzer(document);
+            var analyzer = new DocumentAnalyzer();
+            analyzer.SetDocument(document);
             Assert.IsNotNull(document);
             try
             {
@@ -76,7 +78,6 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod6()
         {
-            Logger logger = NLoggerUtil.getNLogger(typeof (RoslynUtilTests));
             var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
             var project = RoslynUtil.GetProject(solution, "WarningTest");
             Assert.IsNotNull(project);
@@ -86,5 +87,70 @@ namespace WarningTest
                 logger.Info(name);
             }
         }
+
+        [TestMethod]
+        public void TestMethod7()
+        {
+            var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
+            var analyzer = new SolutionAnalyzer(solution);
+            logger.Info(analyzer.DumpSolutionStructure());
+        }
+
+        [TestMethod]
+        public void TestMethod8()
+        {
+            var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
+            var project = RoslynUtil.GetProject(solution, "WarningTest");
+            var document = RoslynUtil.GetDocument(project, "RoslynUtilTests.cs");
+            var analyzer = new DocumentAnalyzer();
+            analyzer.SetDocument(document);
+            var symbol = GetFirstLocalVariable(document);
+            logger.Info(symbol);
+            Assert.IsNotNull(symbol);
+        }
+
+        private ISymbol GetFirstLocalVariable(IDocument document)
+        {
+            IDocumentAnalyzer analyzer = new DocumentAnalyzer();
+            analyzer.SetDocument(document);
+            logger.Info(analyzer.DumpSyntaxTree);
+            var first_namespace = analyzer.GetNamespaceDecalarations().First();
+            var first_class = analyzer.GetClassDeclarations((NamespaceDeclarationSyntax)first_namespace).First();
+            var first_method = analyzer.GetMethodDeclarations((ClassDeclarationSyntax)first_class).First();
+            var first_variable = analyzer.GetVariableDeclarations((MethodDeclarationSyntax)first_method).First();
+            logger.Info(first_variable);
+            return analyzer.GetSymbol(first_method);
+        }
+
+        [TestMethod]
+        public void TestMethod9()
+        {
+            var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
+            var project = RoslynUtil.GetProject(solution, "WarningTest");
+            var document = RoslynUtil.GetDocument(project, "RoslynUtilTests.cs");
+            var analyzer = new DocumentAnalyzer();
+            analyzer.SetDocument(document);
+
+            var namespaceDec = analyzer.GetNamespaceDecalarations().First();
+            Assert.IsNotNull(namespaceDec);
+            Assert.IsNotNull(analyzer.GetSymbol(namespaceDec));
+
+            var classDec = analyzer.GetClassDeclarations((NamespaceDeclarationSyntax) namespaceDec).First();
+            Assert.IsNotNull(classDec);
+            Assert.IsNotNull(analyzer.GetSymbol(classDec));
+
+            var methodDec = analyzer.GetMethodDeclarations((ClassDeclarationSyntax) classDec).First();
+            Assert.IsNotNull(methodDec);
+            Assert.IsNotNull(analyzer.GetSymbol(methodDec));
+
+            var fieldDec = analyzer.GetFieldDeclarations((ClassDeclarationSyntax) classDec).FirstOrDefault();
+            Assert.IsNotNull(fieldDec);
+            Assert.IsNotNull(analyzer.GetSymbol(fieldDec));
+
+            var variableDec = analyzer.GetVariableDeclarations((MethodDeclarationSyntax) methodDec).FirstOrDefault();
+            Assert.IsNotNull(variableDec);
+            Assert.IsNotNull(analyzer.GetSymbol(variableDec));
+        }
+
     }
 }

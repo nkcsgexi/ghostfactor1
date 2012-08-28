@@ -5,7 +5,10 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using BlackHen.Threading;
 using NLog;
+using Roslyn.Compilers.CSharp;
+using Roslyn.Compilers.Common;
 using Roslyn.Services;
+using warnings.analyzer;
 using warnings.source;
 using warnings.source.history;
 using warnings.util;
@@ -111,7 +114,6 @@ namespace warnings.components
 
             /* Retrieve all the properties needed to save this new record. */
             internal HistorySavingWorkItem(IDocument document)
-                : base()
             {
                 fileName = document.Name;
                 namespaceName = document.Project.Name;
@@ -121,6 +123,8 @@ namespace warnings.components
                 code = document.GetText().GetText();
                 logger = NLoggerUtil.getNLogger(typeof(HistorySavingWorkItem));
             }
+
+          
 
             public override void Perform()
             {

@@ -38,11 +38,11 @@ namespace warnings.util
          * Update one ducument in a solution to the specified string, and return the instance of
          * the modified ISolution.
          */
-        public static ISolution UpdateDocumentToString(IDocument document, String s)
+        public static IDocument UpdateDocumentToString(IDocument document, String s)
         {
             IText text = new StringText(s);
             CommonSyntaxNode node = ASTUtil.getSyntaxTreeFromSource(s).GetRoot();
-            return document.Project.Solution.UpdateDocument(document.Id, text);
+            return document.Project.Solution.UpdateDocument(document.Id, text).GetDocument(document.Id);
         }
     }
 

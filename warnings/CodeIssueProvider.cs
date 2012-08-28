@@ -5,13 +5,11 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using NLog;
-using NLog.Config;
-using NLog.Targets;
 using Roslyn.Compilers;
 using Roslyn.Compilers.Common;
-using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
+using warnings.analyzer;
 using warnings.components;
 using warnings.util;
 
@@ -23,7 +21,11 @@ namespace warnings
         [Import]
         private IRenameService renameService { set; get; }
 
+       
+
         private readonly Logger logger = NLoggerUtil.getNLogger(typeof(CodeIssueProvider));
+
+        private int flag = 0;
 
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
         {
@@ -31,6 +33,27 @@ namespace warnings
 
             // Add the new record to the history component.
             GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
+
+            IDocumentAnalyzer analyzer = new DocumentAnalyzer();
+            analyzer.SetDocument(document);
+            ISolution solution = document.Project.Solution;
+            IWorkspace workspace = Workspace.GetWorkspace(document.GetText().Container);
+
+            // Simply return the first local variable in the first method.
+            ISymbol symbol = analyzer.GetFirstLocalVariable();
+
+            if(10 == flag ++)
+            {
+                try
+                {
+                    renameService.RenameSymbol(workspace, solution, symbol, "blah");
+                    logger.Info(document.GetText());
+                }catch(Exception e)
+                {
+                    logger.Fatal(e);
+                }
+            }
+
 
             var tokens = from nodeOrToken in node.ChildNodesAndTokens()
                          where nodeOrToken.IsToken
@@ -75,6 +98,8 @@ namespace warnings
             if (show)
                 MessageBox.Show(instance.ToString());
         }
+
+
 
         #region Unimplemented ICodeIssueProvider members
 

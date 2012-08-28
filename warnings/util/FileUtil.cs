@@ -6,8 +6,8 @@ using System.Text;
 
 namespace warnings.util
 {
-    public class FileUtil{
-        
+    public class FileUtil
+    {
         //Xi: read specified lines in a file, starts with line start to line end, inclusively.
         //the minumum value of start is 0.
         public static String[] readFileLines(String path, int start, int end)

@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using BlackHen.Threading;
 using NLog;
+using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
+using warnings.analyzer;
 using warnings.util;
 
 namespace warnings.components
@@ -38,9 +40,9 @@ namespace warnings.components
     {
         private readonly IRenameService service;
 
-        public AutoRenameWorkItem(IDocument document) : base(document)
+        public AutoRenameWorkItem(IDocument document, IRenameService service) : base(document)
         {
-            this.service = ServiceArchive.getInstance().RenameService;
+            this.service = service;
         }
 
         public override Logger GetLogger()
@@ -50,7 +52,10 @@ namespace warnings.components
 
         public override void Perform()
         {
-            
+       
+
+            //renameService.RenameSymbol(w, s, GetFirstLocalVariable(document), "somenewname"); 
         }
+
     }
 }

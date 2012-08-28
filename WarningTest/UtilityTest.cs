@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
+using Roslyn.Services;
 using warnings.util;
 
 namespace WarningTest
@@ -13,7 +14,9 @@ namespace WarningTest
     {
         String first = "abcdefgh";
         String second = "123456";
-        
+
+        private Logger logger = NLoggerUtil.getNLogger(typeof (UtilityTest));
+
         // regression to Insert
         [TestMethod]
         public void TestMethod1()
@@ -58,5 +61,18 @@ namespace WarningTest
             logger.Fatal("fatal");
             logger.Info("info");
         }
+
+        [TestMethod]
+        public void TestMethod5()
+        {
+            string path = TestUtil.getTestProjectPath() + "UtilityTest.cs";
+            string code = FileUtil.readAllText(path);
+            Assert.IsNotNull(code);
+            Assert.IsFalse(code.Equals(""));
+            var converter = new String2IDocumentConverter();
+            IDocument document = (IDocument) converter.Convert(code, typeof (IDocument), null, null);
+            Assert.IsNotNull(document);
+            logger.Info(document.GetText());
+         }
     }
 }

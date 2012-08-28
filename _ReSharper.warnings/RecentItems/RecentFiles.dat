@@ -1,21 +1,66 @@
 ﻿<RecentFiles>
   <RecentFiles>
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynRefactoringUtilTest.cs" caret="1407" fromTop="36" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:Properties/f:AssemblyInfo.cs" caret="1411" fromTop="37" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:UtilityTest.cs" caret="2025" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:source.history/d:interfaces/f:ICodeHistory.cs" caret="352" fromTop="11" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:source.history/f:RecordMetaData.cs" caret="0" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="3148" fromTop="38" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:source.history/f:CodeHistory.cs" caret="3007" fromTop="24" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:ASTUtilTests.cs" caret="1073" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:source.history/f:CompilationUnitRecord.cs" caret="0" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring.detection/f:ExtractMethodDetector.cs" caret="643" fromTop="15" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:EMDetectorTests.cs" caret="606" fromTop="22" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring.detection/f:RenameDetector.cs" caret="1217" fromTop="9" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:refactoring.auto/f:AutoExtraceMethodRefactoring.cs" caret="841" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchExtractMethodComponent.cs" caret="2075" fromTop="59" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchRenameComponent.cs" caret="1939" fromTop="45" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchRefactoringComponent.cs" caret="4338" fromTop="72" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:TestUtil.cs" caret="1217" fromTop="29" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:auto/f:AutoRenameComponent.cs" caret="1464" fromTop="40" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ComponentTimer.cs" caret="1138" fromTop="25" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:IFactorComponent.cs" caret="271" fromTop="9" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:auto/f:AutoRefactoringComponent.cs" caret="1327" fromTop="30" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:auto/f:AutoExtractMethodComponent.cs" caret="9" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:HistorySavingComponent.cs" caret="5156" fromTop="140" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:NLoggerUtil.cs" caret="1742" fromTop="46" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:RoslynUtil/f:RoslynUtil.cs" caret="1112" fromTop="28" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:ASTUtil.cs" caret="4037" fromTop="26" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:WorkqueueTests.cs" caret="1374" fromTop="48" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:ComponentTimerTests.cs" caret="593" fromTop="22" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:StatementAnalyzerTests.cs" caret="491" fromTop="20" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:Properties/f:AssemblyInfo.cs" caret="1156" fromTop="29" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="2083" fromTop="26" />
-    <File id="0BA620F3-900B-4418-B5D7-76251829CF63/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
-    <File id="0BA620F3-900B-4418-B5D7-76251829CF63/f:CodeIssueProvider.cs" caret="1308" fromTop="4" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring.detection/f:IRefactoringDetector.cs" caret="874" fromTop="17" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:UtilityTest.cs" caret="1978" fromTop="30" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="3236" fromTop="57" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:CallGraphBuilder.cs" caret="6134" fromTop="52" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="2361" fromTop="60" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="985" fromTop="39" />
   </RecentFiles>
   <RecentEdits>
-    <File id="0BA620F3-900B-4418-B5D7-76251829CF63/f:CodeIssueProvider.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="3637" fromTop="52" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="428" fromTop="17" />
-    <File id="0BA620F3-900B-4418-B5D7-76251829CF63/f:CodeIssueProvider.cs" caret="1308" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1286" fromTop="22" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="4460" fromTop="28" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="1271" fromTop="8" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="4352" fromTop="27" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="4368" fromTop="29" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="1640" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="1842" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="2045" fromTop="31" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="2255" fromTop="36" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="1271" fromTop="10" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="1377" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="4008" fromTop="45" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="3596" fromTop="38" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="283" fromTop="11" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="4752" fromTop="43" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="989" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="2370" fromTop="51" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="402" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="1412" fromTop="32" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="1377" fromTop="38" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="434" fromTop="5" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="386" fromTop="15" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="2785" fromTop="33" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="2189" fromTop="16" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="3436" fromTop="48" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="10722" fromTop="45" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="223" fromTop="9" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="1013" fromTop="41" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="700" fromTop="23" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="595" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="822" fromTop="28" />
   </RecentEdits>
 </RecentFiles>

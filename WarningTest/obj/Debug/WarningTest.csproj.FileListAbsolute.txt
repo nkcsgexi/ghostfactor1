@@ -1,4 +1,3 @@
-D:\VS workspaces\BeneWar\warnings\WarningTest\obj\Debug\ResolveAssemblyReference.cache
 D:\VS workspaces\BeneWar\warnings\WarningTest\bin\Debug\WarningTest.dll
 D:\VS workspaces\BeneWar\warnings\WarningTest\bin\Debug\WarningTest.pdb
 D:\VS workspaces\BeneWar\warnings\WarningTest\bin\Debug\BlackHen.Threading.dll
@@ -8,5 +7,6 @@ D:\VS workspaces\BeneWar\warnings\WarningTest\bin\Debug\BlackHen.Threading.pdb
 D:\VS workspaces\BeneWar\warnings\WarningTest\bin\Debug\BlackHen.Threading.xml
 D:\VS workspaces\BeneWar\warnings\WarningTest\bin\Debug\warnings.pdb
 D:\VS workspaces\BeneWar\warnings\WarningTest\bin\Debug\NLog.xml
+D:\VS workspaces\BeneWar\warnings\WarningTest\obj\Debug\ResolveAssemblyReference.cache
 D:\VS workspaces\BeneWar\warnings\WarningTest\obj\Debug\WarningTest.dll
 D:\VS workspaces\BeneWar\warnings\WarningTest\obj\Debug\WarningTest.pdb
