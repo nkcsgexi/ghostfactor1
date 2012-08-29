@@ -10,17 +10,18 @@ namespace warnings.analyzer
     /* An analyzer for basic solution struture. */
     public interface ISolutionAnalyzer
     {
+        void SetSolution(ISolution solution);
         IEnumerable GetProjects();
         IEnumerable GetDocuments(IProject project);
         String DumpSolutionStructure();
     }
     
     
-    public class SolutionAnalyzer : ISolutionAnalyzer
+    internal class SolutionAnalyzer : ISolutionAnalyzer
     {
-        private readonly ISolution solution;
+        private ISolution solution;
 
-        public SolutionAnalyzer(ISolution solution)
+        public void SetSolution(ISolution solution)
         {
             this.solution = solution;
         }

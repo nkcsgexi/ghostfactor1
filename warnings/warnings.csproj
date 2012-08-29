@@ -96,8 +96,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Algorithm\Levenshtein.cs" />
+    <Compile Include="analyzer\AnalyzerFactory.cs" />
     <Compile Include="analyzer\CallGraphBuilder.cs" />
+    <Compile Include="analyzer\DataFlowAnalyzer.cs" />
     <Compile Include="analyzer\DocumentAnalyzer.cs" />
+    <Compile Include="analyzer\MethodAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
     <Compile Include="change\ASTChange.cs" />
     <Compile Include="change\TextChange.cs" />

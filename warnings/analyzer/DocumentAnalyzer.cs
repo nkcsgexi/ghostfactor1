@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
 using NLog;
@@ -33,7 +34,7 @@ namespace warnings.analyzer
         String DumpSyntaxTree();
     }
 
-    public class DocumentAnalyzer : IDocumentAnalyzer
+    internal class DocumentAnalyzer : IDocumentAnalyzer
     {
         private IDocument document;
 

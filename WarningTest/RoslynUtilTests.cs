@@ -63,7 +63,7 @@ namespace WarningTest
             var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
             var project = RoslynUtil.GetProject(solution, "WarningTest");
             var document = RoslynUtil.GetDocument(project, "RoslynUtilTests.cs");
-            var analyzer = new DocumentAnalyzer();
+            var analyzer = AnalyzerFactory.GetDocumentAnalyzer();
             analyzer.SetDocument(document);
             Assert.IsNotNull(document);
             try
@@ -92,7 +92,8 @@ namespace WarningTest
         public void TestMethod7()
         {
             var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
-            var analyzer = new SolutionAnalyzer(solution);
+            var analyzer = AnalyzerFactory.GetSolutionAnalyzer(); 
+            analyzer.SetSolution(solution);
             logger.Info(analyzer.DumpSolutionStructure());
         }
 
@@ -102,7 +103,7 @@ namespace WarningTest
             var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
             var project = RoslynUtil.GetProject(solution, "WarningTest");
             var document = RoslynUtil.GetDocument(project, "RoslynUtilTests.cs");
-            var analyzer = new DocumentAnalyzer();
+            var analyzer = AnalyzerFactory.GetDocumentAnalyzer();
             analyzer.SetDocument(document);
             var symbol = GetFirstLocalVariable(document);
             logger.Info(symbol);
@@ -111,7 +112,7 @@ namespace WarningTest
 
         private ISymbol GetFirstLocalVariable(IDocument document)
         {
-            IDocumentAnalyzer analyzer = new DocumentAnalyzer();
+            IDocumentAnalyzer analyzer = AnalyzerFactory.GetDocumentAnalyzer();
             analyzer.SetDocument(document);
             logger.Info(analyzer.DumpSyntaxTree);
             var first_namespace = analyzer.GetNamespaceDecalarations().First();
@@ -128,7 +129,7 @@ namespace WarningTest
             var solution = RoslynUtil.GetSolution(TestUtil.getSolutionPath());
             var project = RoslynUtil.GetProject(solution, "WarningTest");
             var document = RoslynUtil.GetDocument(project, "RoslynUtilTests.cs");
-            var analyzer = new DocumentAnalyzer();
+            var analyzer = AnalyzerFactory.GetDocumentAnalyzer();
             analyzer.SetDocument(document);
 
             var namespaceDec = analyzer.GetNamespaceDecalarations().First();
