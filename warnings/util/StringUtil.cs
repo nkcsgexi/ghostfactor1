@@ -51,5 +51,11 @@ namespace warnings.util
             return System.Text.Encoding.UTF8.GetString(bytes);
         }
 
+        /* Replace the new line in a text with multiple lines to something else as specified. */
+        public static String replaceNewLine(String text, String replacement)
+        {
+            return text.Replace(Environment.NewLine, replacement);
+        }
+
     }
 }

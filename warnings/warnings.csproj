@@ -102,6 +102,7 @@
     <Compile Include="analyzer\DocumentAnalyzer.cs" />
     <Compile Include="analyzer\MethodAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
+    <Compile Include="analyzer\SyntaxNodeAnalyzer.cs" />
     <Compile Include="change\ASTChange.cs" />
     <Compile Include="change\TextChange.cs" />
     <Compile Include="CodeIssueProvider.cs" />
@@ -151,7 +152,7 @@
     <Compile Include="util\NLoggerUtil.cs" />
     <Compile Include="util\RoslynUtil\RoslynUtil.cs" />
     <Compile Include="util\RoslynUtil\ServiceArchives.cs" />
-    <Compile Include="util\ASTUtil\StatementAnalyzer.cs" />
+    <Compile Include="analyzer\StatementAnalyzer.cs" />
     <Compile Include="util\StringUtil.cs" />
     <Compile Include="util\FileUtil.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

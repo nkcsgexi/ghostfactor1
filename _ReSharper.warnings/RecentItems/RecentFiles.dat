@@ -1,13 +1,5 @@
 ﻿<RecentFiles>
   <RecentFiles>
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:auto/f:AutoExtractMethodComponent.cs" caret="9" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:NLoggerUtil.cs" caret="1742" fromTop="46" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:WorkqueueTests.cs" caret="1374" fromTop="48" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:auto/f:AutoRefactoringComponent.cs" caret="1567" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:HistorySavingComponent.cs" caret="13" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:TestUtil.cs" caret="1288" fromTop="45" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:StatementAnalyzerTests.cs" caret="491" fromTop="20" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="3710" fromTop="31" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:HistoryRecordTests.cs" caret="0" fromTop="0" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:ComponentTimerTests.cs" caret="593" fromTop="22" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:ResourcesTests.cs" caret="472" fromTop="19" />
@@ -16,51 +8,59 @@
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchRenameComponent.cs" caret="1701" fromTop="59" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:IFactorComponent.cs" caret="932" fromTop="16" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:auto/f:AutoRenameComponent.cs" caret="1619" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:CallGraphBuilder.cs" caret="6134" fromTop="164" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:FileUtil.cs" caret="1357" fromTop="38" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring.detection/f:IRefactoringDetector.cs" caret="874" fromTop="17" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="1170" fromTop="46" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:Converters.cs" caret="1063" fromTop="20" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="1805" fromTop="45" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:resources/f:ResourcePool.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="2384" fromTop="31" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DataFlowAnalyzer.cs" caret="459" fromTop="25" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:StatementAnalyzer.cs" caret="819" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="3602" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:MethodBodyRetriever.cs" caret="1524" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:ASTUtil.cs" caret="1439" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="1529" fromTop="46" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:ExtractMethodExample.cs" caret="314" fromTop="16" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:CallGraphTest.cs" caret="1506" fromTop="33" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:Converters.cs" caret="1398" fromTop="30" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodBodyRetrieverTest.cs" caret="367" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SolutionAnalyzer.cs" caret="482" fromTop="19" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1408" fromTop="26" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:RoslynUtilTests.cs" caret="2726" fromTop="13" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="3370" fromTop="26" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:MethodAnalyzerExample.cs" caret="476" fromTop="25" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="1365" fromTop="32" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:AnalyzerFactory.cs" caret="228" fromTop="7" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DataFlowAnalyzer.cs" caret="354" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="3773" fromTop="62" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:ASTUtil.cs" caret="5372" fromTop="34" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:StatementAnalyzer.cs" caret="716" fromTop="25" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:StatementAnalyzerTests.cs" caret="463" fromTop="17" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:CallGraphBuilder.cs" caret="6394" fromTop="171" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:MethodBodyRetriever.cs" caret="1174" fromTop="0" />
   </RecentFiles>
   <RecentEdits>
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="7823" fromTop="28" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="4770" fromTop="19" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="7172" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="7537" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="1113" fromTop="17" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1089" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1779" fromTop="55" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="483" fromTop="12" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="483" fromTop="25" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="1802" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="1549" fromTop="33" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="1361" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="480" fromTop="6" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="687" fromTop="13" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="747" fromTop="10" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1749" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="1647" fromTop="21" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:quickfix/f:RefactoringQuickFix.cs" caret="1551" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1158" fromTop="13" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1225" fromTop="15" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="2393" fromTop="31" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DataFlowAnalyzer.cs" caret="312" fromTop="16" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DataFlowAnalyzer.cs" caret="214" fromTop="13" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DataFlowAnalyzer.cs" caret="459" fromTop="25" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:MethodBodyRetriever.cs" caret="1514" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="668" fromTop="18" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="947" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="1193" fromTop="28" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="452" fromTop="17" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="1529" fromTop="46" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="2444" fromTop="22" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="4814" fromTop="42" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="3935" fromTop="34" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:MethodAnalyzerExample.cs" caret="675" fromTop="30" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:MethodAnalyzerExample.cs" caret="658" fromTop="31" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="4796" fromTop="37" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="2675" fromTop="20" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="1352" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="537" fromTop="19" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="3734" fromTop="30" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="704" fromTop="16" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="1074" fromTop="25" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="3680" fromTop="27" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="2488" fromTop="17" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="2490" fromTop="17" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:MethodAnalyzerExample.cs" caret="476" fromTop="25" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="2938" fromTop="28" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="4215" fromTop="15" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="2018" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodAnalyzer.cs" caret="2295" fromTop="18" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:MethodAnalyzerTests.cs" caret="3234" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:StatementAnalyzer.cs" caret="415" fromTop="15" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:StatementAnalyzer.cs" caret="693" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:StatementAnalyzer.cs" caret="354" fromTop="11" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:AnalyzerFactory.cs" caret="615" fromTop="15" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:AnalyzerFactory.cs" caret="1100" fromTop="34" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:StatementAnalyzerTests.cs" caret="501" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:AnalyzerFactory.cs" caret="230" fromTop="7" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:StatementAnalyzer.cs" caret="656" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:StatementAnalyzer.cs" caret="716" fromTop="25" />
   </RecentEdits>
 </RecentFiles>

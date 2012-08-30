@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using warnings.analyzer;
 using warnings.util;
 
 namespace WarningTest
@@ -13,8 +14,9 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod1()
         {
-            StatementAnalyzer analyzer = new StatementAnalyzer("print();");
-            Assert.IsTrue(analyzer.hasMethodInvocation("print"));
+            var analyzer = AnalyzerFactory.GetStatementAnalyzer();
+            analyzer.SetSource("print();");
+            Assert.IsTrue(analyzer.HasMethodInvocation("print"));
         }
     }
 }

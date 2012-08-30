@@ -94,13 +94,9 @@ namespace warnings.analyzer
 
         public string DumpTree()
         {
-            StringBuilder sb = new StringBuilder();
-
-            foreach(var node in method.DescendantNodes())
-            {
-                sb.AppendLine(node.GetText() + ":" +node.Kind.ToString());
-            }
-            return sb.ToString();
+            var analyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
+            analyzer.SetSyntaxNode(method);
+            return analyzer.DumpTree();
         }
     }
 }

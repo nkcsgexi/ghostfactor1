@@ -5,6 +5,7 @@ using System.Text;
 
 namespace warnings.analyzer
 {
+    /* Factory method for returning different types of analyzer, one instance of each anlayzer is enough. */
     public class AnalyzerFactory
     {
         private static IMethodAnalyzer methoAnalyzer = new MethodAnalyzer();
@@ -12,6 +13,10 @@ namespace warnings.analyzer
         private static IDocumentAnalyzer documentAnalyzer = new DocumentAnalyzer();
 
         private static ISolutionAnalyzer solutionAnalyzer = new SolutionAnalyzer();
+
+        private static IStatementAnalyzer statementAnalyzer = new StatementAnalyzer();
+
+        private static ISyntaxNodeAnalyzer syntaxNodeAnalyzer = new SyntaxNodeAnalyzer();
 
         public static IMethodAnalyzer GetMethodAnalyzer()
         {
@@ -26,6 +31,16 @@ namespace warnings.analyzer
         public static ISolutionAnalyzer GetSolutionAnalyzer()
         {
             return solutionAnalyzer;
+        }
+
+        public static IStatementAnalyzer GetStatementAnalyzer()
+        {
+            return statementAnalyzer;
+        }
+
+        public static ISyntaxNodeAnalyzer GetSyntaxNodeAnalyzer()
+        {
+            return syntaxNodeAnalyzer;
         }
     }
 }
