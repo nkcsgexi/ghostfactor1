@@ -13,6 +13,7 @@ namespace warnings.analyzer
         void SetSyntaxNode(SyntaxNode statement);
         bool IsStatement();
         bool HasMethodInvocation(string methodName);
+        SyntaxNode GetMethodDeclaration();
     }
 
     internal class StatementAnalyzer : IStatementAnalyzer
@@ -53,6 +54,13 @@ namespace warnings.analyzer
                 }
             }
             return false;
+        }
+
+        public SyntaxNode GetMethodDeclaration()
+        {
+            return statement.Ancestors().First(
+                    n => n.Kind == SyntaxKind.MethodDeclaration 
+                        && n.Span.OverlapsWith(statement.Span));
         }
     }
 }

@@ -18,6 +18,8 @@ namespace warnings.analyzer
 
         private static ISyntaxNodeAnalyzer syntaxNodeAnalyzer = new SyntaxNodeAnalyzer();
 
+        private static ISyntaxNodesAnalyzer syntaxNodesAnalyzer = new SyntaxNodesAnalyzer();
+
         public static IMethodAnalyzer GetMethodAnalyzer()
         {
             return methoAnalyzer;
@@ -41,6 +43,11 @@ namespace warnings.analyzer
         public static ISyntaxNodeAnalyzer GetSyntaxNodeAnalyzer()
         {
             return syntaxNodeAnalyzer;
+        }
+
+        public static ISyntaxNodesAnalyzer GetSyntaxNodesAnalyzer()
+        {
+            return syntaxNodesAnalyzer;
         }
     }
 }

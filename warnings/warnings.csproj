@@ -103,6 +103,7 @@
     <Compile Include="analyzer\MethodAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodeAnalyzer.cs" />
+    <Compile Include="analyzer\SyntaxNodesAnalyzer.cs" />
     <Compile Include="change\ASTChange.cs" />
     <Compile Include="change\TextChange.cs" />
     <Compile Include="CodeIssueProvider.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="util\ASTUtil\ASTUtil.cs" />
     <Compile Include="util\ASTUtil\MethodBodyRetriever.cs" />
     <Compile Include="util\Converters.cs" />
+    <Compile Include="util\DataStructureUtil.cs" />
     <Compile Include="util\NLoggerUtil.cs" />
     <Compile Include="util\RoslynUtil\RoslynUtil.cs" />
     <Compile Include="util\RoslynUtil\ServiceArchives.cs" />
