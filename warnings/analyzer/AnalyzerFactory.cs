@@ -8,53 +8,53 @@ namespace warnings.analyzer
     /* Factory method for returning different types of analyzer, one instance of each anlayzer is enough. */
     public class AnalyzerFactory
     {
-        private static IMethodAnalyzer methoAnalyzer = new MethodAnalyzer();
-
-        private static IDocumentAnalyzer documentAnalyzer = new DocumentAnalyzer();
-
-        private static ISolutionAnalyzer solutionAnalyzer = new SolutionAnalyzer();
-
-        private static IStatementAnalyzer statementAnalyzer = new StatementAnalyzer();
-
-        private static ISyntaxNodeAnalyzer syntaxNodeAnalyzer = new SyntaxNodeAnalyzer();
-
-        private static ISyntaxNodesAnalyzer syntaxNodesAnalyzer = new SyntaxNodesAnalyzer();
-        
-        private static IDataFlowAnalyzer dataFlowAnalyzer = new DataFlowAnalyzer();
-
         public static IMethodAnalyzer GetMethodAnalyzer()
         {
-            return methoAnalyzer;
+            return new MethodAnalyzer();
         }
 
         public static IDocumentAnalyzer GetDocumentAnalyzer()
         {
-            return documentAnalyzer;
+            return new DocumentAnalyzer();
         }
 
         public static ISolutionAnalyzer GetSolutionAnalyzer()
         {
-            return solutionAnalyzer;
+            return new SolutionAnalyzer();
         }
 
         public static IStatementAnalyzer GetStatementAnalyzer()
         {
-            return statementAnalyzer;
+            return new StatementAnalyzer();
         }
 
         public static ISyntaxNodeAnalyzer GetSyntaxNodeAnalyzer()
         {
-            return syntaxNodeAnalyzer;
+            return new SyntaxNodeAnalyzer();
         }
 
         public static ISyntaxNodesAnalyzer GetSyntaxNodesAnalyzer()
         {
-            return syntaxNodesAnalyzer;
+            return new SyntaxNodesAnalyzer();
         }
 
         public static IDataFlowAnalyzer GetDataFlowAnalyzer()
         {
-            return dataFlowAnalyzer;
+            return new DataFlowAnalyzer();
         }
+
+        public static String GetAnalyzersCountInfo()
+        {
+            StringBuilder sb = new StringBuilder(Environment.NewLine);
+            sb.AppendLine("SolutionAnalyzer: " + SolutionAnalyzer.GetCount());
+            sb.AppendLine("DocumentAnalyzer: " + DocumentAnalyzer.GetCount());
+            sb.AppendLine("MethodAnalyzer: " + MethodAnalyzer.GetCount());
+            sb.AppendLine("StatementAnalyzer :" + StatementAnalyzer.GetCount());
+            sb.AppendLine("SyntaxNodesAnalyzer: " + SyntaxNodesAnalyzer.GetCount());
+            sb.AppendLine("SyntaxNodeAnalyzer: " + SyntaxNodeAnalyzer.GetCount());
+            sb.AppendLine("DataFlowAnalyzer: " + DataFlowAnalyzer.GetCount());
+            return sb.ToString();
+        }
+
     }
 }

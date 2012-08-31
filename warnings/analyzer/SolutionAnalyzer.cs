@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Roslyn.Services;
 
 namespace warnings.analyzer
@@ -15,11 +16,28 @@ namespace warnings.analyzer
         IEnumerable GetDocuments(IProject project);
         String DumpSolutionStructure();
     }
-    
-    
+
+
     internal class SolutionAnalyzer : ISolutionAnalyzer
     {
+        private static int ANALYZER_COUNT = 0;
+
+        public static int GetCount()
+        {
+            return ANALYZER_COUNT;
+        }
+
         private ISolution solution;
+
+        internal SolutionAnalyzer()
+        {
+            Interlocked.Increment(ref ANALYZER_COUNT);
+        }
+
+        ~SolutionAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
 
         public void SetSolution(ISolution solution)
         {

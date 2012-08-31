@@ -1,3 +1,4 @@
+D:\VS workspaces\BeneWar\warnings\Threading\bin\Debug\BlackHen.Threading.xml
 D:\VS workspaces\BeneWar\warnings\Threading\bin\Debug\BlackHen.Threading.dll
 D:\VS workspaces\BeneWar\warnings\Threading\bin\Debug\BlackHen.Threading.pdb
 D:\VS workspaces\BeneWar\warnings\Threading\obj\Debug\ResolveAssemblyReference.cache

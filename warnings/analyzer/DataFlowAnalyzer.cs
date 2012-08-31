@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Documents;
 using NLog;
 using Roslyn.Compilers.CSharp;
@@ -13,7 +14,7 @@ using warnings.util;
 
 namespace warnings.analyzer
 {
-    public interface IDataFlowAnalyzer
+    public interface IDataFlowAnalyzer 
     {
         void SetDocument(IDocument document);
         void SetStatements(IEnumerable<SyntaxNode> statements);
@@ -24,6 +25,13 @@ namespace warnings.analyzer
 
     internal class DataFlowAnalyzer : IDataFlowAnalyzer
     {
+        private static int ANALYZER_COUNT = 0;
+
+        public static int GetCount()
+        {
+            return ANALYZER_COUNT;
+        }
+
         private IDocument document;
 
         private ISemanticModel model;
@@ -31,8 +39,19 @@ namespace warnings.analyzer
         private IEnumerable<SyntaxNode> statements;
 
         private readonly Logger logger = NLoggerUtil.getNLogger(typeof (DataFlowAnalyzer));
+        
 
+        internal DataFlowAnalyzer()
+        {  
+            Interlocked.Increment(ref ANALYZER_COUNT);
+        }
 
+        ~DataFlowAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
+
+    
         public void SetDocument(IDocument document)
         {
             this.document = document;

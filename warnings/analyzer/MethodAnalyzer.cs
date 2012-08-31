@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Windows.Documents;
 using Roslyn.Compilers.CSharp;
 using warnings.util;
@@ -24,11 +25,28 @@ namespace warnings.analyzer
 
     internal class MethodAnalyzer : IMethodAnalyzer
     {
+        private static int ANALYZER_COUNT = 0;
+
+        public static int GetCount()
+        {
+            return ANALYZER_COUNT;
+        }
+
         private MethodDeclarationSyntax method;
+
+        internal MethodAnalyzer()
+        {
+            Interlocked.Increment(ref ANALYZER_COUNT);
+        }
+
+        ~MethodAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
 
         public void SetMethodDeclaration(MethodDeclarationSyntax method)
         {
-            this.method = method;
+            this.method = method;   
         }
 
         public IEnumerable<SyntaxNode> GetStatements()

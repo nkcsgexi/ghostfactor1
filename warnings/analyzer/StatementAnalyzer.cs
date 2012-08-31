@@ -2,12 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Roslyn.Compilers.CSharp;
 using warnings.util;
 
 namespace warnings.analyzer
 {
-    public interface IStatementAnalyzer
+    public interface IStatementAnalyzer 
     {
         void SetSource(string source);
         void SetSyntaxNode(SyntaxNode statement);
@@ -18,8 +19,25 @@ namespace warnings.analyzer
 
     internal class StatementAnalyzer : IStatementAnalyzer
     {
+        private static int ANALYZER_COUNT = 0;
+
+        public static int GetCount()
+        {
+            return ANALYZER_COUNT;
+        }
+
         private string source;
         private SyntaxNode statement;
+
+        internal StatementAnalyzer()
+        {
+            Interlocked.Increment(ref ANALYZER_COUNT);
+        }
+
+        ~StatementAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
 
         public void SetSource(string source)
         {

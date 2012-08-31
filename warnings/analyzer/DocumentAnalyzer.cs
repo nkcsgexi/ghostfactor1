@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
@@ -36,6 +37,13 @@ namespace warnings.analyzer
 
     internal class DocumentAnalyzer : IDocumentAnalyzer
     {
+        private static int ANALYZER_COUNT = 0;
+
+        public static int GetCount()
+        {
+            return ANALYZER_COUNT;
+        }
+
         private IDocument document;
 
         private Logger logger;
@@ -43,10 +51,18 @@ namespace warnings.analyzer
         /* the root for the syntax tree of the document. */
         private SyntaxNode root;
 
-        public DocumentAnalyzer()
+
+        internal DocumentAnalyzer()
         {  
             this.logger = NLoggerUtil.getNLogger(typeof (DocumentAnalyzer));
+            Interlocked.Increment(ref ANALYZER_COUNT);
         }
+
+        ~DocumentAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
+
 
         public void SetDocument(IDocument document)
         {

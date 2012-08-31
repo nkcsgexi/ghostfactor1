@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using Roslyn.Compilers.CSharp;
 using warnings.util;
 
@@ -19,7 +20,24 @@ namespace warnings.analyzer
 
     internal class SyntaxNodeAnalyzer : ISyntaxNodeAnalyzer
     {
+        private static int ANALYZER_COUNT = 0;
+
+        public static int GetCount()
+        {
+            return ANALYZER_COUNT;
+        }
+
         private SyntaxNode node;
+
+        internal SyntaxNodeAnalyzer()
+        {
+            Interlocked.Increment(ref ANALYZER_COUNT);
+        }
+
+        ~SyntaxNodeAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
 
         public void SetSyntaxNode(SyntaxNode node)
         {
