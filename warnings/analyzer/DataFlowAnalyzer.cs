@@ -5,9 +5,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Documents;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
+using warnings.util;
 
 namespace warnings.analyzer
 {
@@ -27,6 +29,8 @@ namespace warnings.analyzer
         private ISemanticModel model;
 
         private IEnumerable<SyntaxNode> statements;
+
+        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (DataFlowAnalyzer));
 
 
         public void SetDocument(IDocument document)
@@ -60,8 +64,9 @@ namespace warnings.analyzer
                 analysis = model.AnalyzeStatementDataFlow(statement);
 
                 // Union the symbols that get assigned in this statement.
-                assigned.Union(analysis.DataFlowsOut);
+                assigned = assigned.Union(analysis.WrittenInside);
             }
+            logger.Info("Statements changed variables: " + String.Join("", assigned.SelectMany(s => s.Name)));
 
             // Get the end position of all these statements 
             var nodesAnalyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
@@ -77,11 +82,16 @@ namespace warnings.analyzer
             var methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
             methodAnalyzer.SetMethodDeclaration((MethodDeclarationSyntax)method);
             IEnumerable<SyntaxNode> laterStatements = methodAnalyzer.GetStatementsAfter(end);
+            logger.Info("Remaining statements:" + Environment.NewLine +
+                String.Join("", laterStatements.SelectMany(s => s.GetText())));
 
             // Get symbols needed in those later statements.
             IEnumerable<ISymbol> needed = GetNeededSymbols(laterStatements);
+            logger.Info("Remaining statements needed symbols: " + Environment.NewLine +
+                String.Join("", needed.SelectMany(s => s.Name)));
 
-            return assigned.Except(needed);
+            // Overlap of all the assigned variables with all the used variables below is the ones flow out. 
+            return assigned.Intersect(needed);
         }
 
 

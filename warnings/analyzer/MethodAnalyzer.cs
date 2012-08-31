@@ -37,8 +37,8 @@ namespace warnings.analyzer
             StatementSyntax[] statements = new StatementSyntax[] {};
             if (block != null)
                 statements = ASTUtil.getStatementsInBlock(block);
-            return statements.AsEnumerable();
-        }
+            return statements.OrderBy(n => n.Span.Start).AsEnumerable();
+         }
 
         public IEnumerable<SyntaxNode> GetStatementsBefore(int position)
         {
