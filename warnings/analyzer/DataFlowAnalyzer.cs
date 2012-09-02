@@ -28,8 +28,8 @@ namespace warnings.analyzer
     {
         void SetDocument(IDocument document);
         void SetExpression(SyntaxNode expression);
-        IEnumerable<ISymbol> GetFlowOut();
-        IEnumerable<ISymbol> GetFlowIn();
+        IEnumerable<ISymbol> GetFlowOutData();
+        IEnumerable<ISymbol> GetFlowInData();
     }
 
 
@@ -115,13 +115,13 @@ namespace warnings.analyzer
             this.expression = expression;
         }
 
-        public IEnumerable<ISymbol> GetFlowOut()
+        public IEnumerable<ISymbol> GetFlowOutData()
         {
             var analysis = model.AnalyzeExpressionDataFlow(expression);
             return analysis.DataFlowsOut;
         }
 
-        public IEnumerable<ISymbol> GetFlowIn()
+        public IEnumerable<ISymbol> GetFlowInData()
         {
             var analysis = model.AnalyzeExpressionDataFlow(expression);
             return analysis.DataFlowsIn;

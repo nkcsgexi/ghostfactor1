@@ -5,7 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Documents;
+using NLog;
 using Roslyn.Compilers.CSharp;
+using Roslyn.Compilers.Common;
+using Roslyn.Services;
 using warnings.util;
 
 namespace warnings.analyzer
@@ -13,13 +16,15 @@ namespace warnings.analyzer
     /* Analyzer for a method declaration. */
     public interface IMethodAnalyzer
     {
-        void SetMethodDeclaration(MethodDeclarationSyntax method);
+        void SetMethodDeclaration(SyntaxNode method);
         IEnumerable<SyntaxNode> GetStatements();
         IEnumerable<SyntaxNode> GetStatementsBefore(int position);
         SyntaxNode GetStatementAt(int position);
         IEnumerable<SyntaxNode> GetStatementsAfter(int position); 
         IEnumerable<SyntaxNode> GetParameters();
         SyntaxNode GetReturnType();
+        IEnumerable<SyntaxNode> GetReturnStatements();
+        bool HasReturnStatement();
         string DumpTree();
     }
 
@@ -33,6 +38,7 @@ namespace warnings.analyzer
         }
 
         private MethodDeclarationSyntax method;
+        private Logger logger = NLoggerUtil.getNLogger(typeof(MethodAnalyzer));
 
         internal MethodAnalyzer()
         {
@@ -44,9 +50,9 @@ namespace warnings.analyzer
             Interlocked.Decrement(ref ANALYZER_COUNT);
         }
 
-        public void SetMethodDeclaration(MethodDeclarationSyntax method)
+        public void SetMethodDeclaration(SyntaxNode method)
         {
-            this.method = method;   
+            this.method = (MethodDeclarationSyntax) method;   
         }
 
         public IEnumerable<SyntaxNode> GetStatements()
@@ -158,6 +164,21 @@ namespace warnings.analyzer
             }
 
             return leftMostIdentifier;
+        }
+
+        public IEnumerable<SyntaxNode> GetReturnStatements()
+        {
+            return method.DescendantNodes().Where(n => n.Kind == SyntaxKind.ReturnStatement);
+        }
+
+        public bool HasReturnStatement()
+        {
+            // Get the return statement of the method.
+            var return_statement = (ReturnStatementSyntax)method.DescendantNodes().First(n => n.Kind == SyntaxKind.ReturnStatement);
+            
+            // Return if no such statement.
+            return (return_statement != null);
+
         }
 
         public string DumpTree()

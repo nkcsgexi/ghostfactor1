@@ -119,5 +119,14 @@ namespace WarningTest
             Assert.IsTrue(para.ElementAt(3).GetText().Equals("Object d"));
             Assert.IsTrue(para.ElementAt(4).GetText().Equals("IEnumerable<int> e"));
         }
+
+        [TestMethod]
+        public void TestMethod7()
+        {
+            methodAnalyzer.SetMethodDeclaration(getMethod(4));
+            Assert.IsTrue(methodAnalyzer.HasReturnStatement());
+            logger.Info(methodAnalyzer.GetReturnStatement().GetText());
+            Assert.IsTrue(methodAnalyzer.GetReturnStatement().GetText().Equals("return Enumerable.Empty<Object>();"));
+        }
     }
 }

@@ -15,7 +15,13 @@ namespace warnings.conditions
             get { return RefactoringType.EXTRACT_METHOD; }
         }
 
-        public abstract ICheckingResult CheckCondition(IDocument before, IDocument after, IManualRefactoring input);
+        public ICheckingResult CheckCondition(IDocument before, IDocument after, IManualRefactoring input)
+        {
+            return CheckCondition(before, after, (IManualExtractMethodRefactoring)input);
+        }
+
+        protected abstract ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after,
+                                                                   IManualExtractMethodRefactoring input);
     }
 
 
