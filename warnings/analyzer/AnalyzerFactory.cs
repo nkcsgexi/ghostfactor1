@@ -38,9 +38,14 @@ namespace warnings.analyzer
             return new SyntaxNodesAnalyzer();
         }
 
-        public static IDataFlowAnalyzer GetDataFlowAnalyzer()
+        public static IStatementsDataFlowAnalyzer GetStatementsDataFlowAnalyzer()
         {
-            return new DataFlowAnalyzer();
+            return new StatementsesDataFlowAnalyzer();
+        }
+
+        public static IExpressionDataFlowAnalyzer GetExpressionDataFlowAnalyzer()
+        {
+            return new ExpressionDataFlowAnalyzer();
         }
 
         public static String GetAnalyzersCountInfo()
@@ -52,7 +57,8 @@ namespace warnings.analyzer
             sb.AppendLine("StatementAnalyzer :" + StatementAnalyzer.GetCount());
             sb.AppendLine("SyntaxNodesAnalyzer: " + SyntaxNodesAnalyzer.GetCount());
             sb.AppendLine("SyntaxNodeAnalyzer: " + SyntaxNodeAnalyzer.GetCount());
-            sb.AppendLine("DataFlowAnalyzer: " + DataFlowAnalyzer.GetCount());
+            sb.AppendLine("StatementsDataFlowAnalyzer: " + StatementsesDataFlowAnalyzer.GetCount());
+            sb.AppendLine("ExpressionDataFlowAnalyzer: " + ExpressionDataFlowAnalyzer.GetCount());
             return sb.ToString();
         }
 

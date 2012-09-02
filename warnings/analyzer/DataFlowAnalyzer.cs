@@ -14,7 +14,8 @@ using warnings.util;
 
 namespace warnings.analyzer
 {
-    public interface IDataFlowAnalyzer 
+    /* Analyzer for one or more statement. */
+    public interface IStatementsDataFlowAnalyzer 
     {
         void SetDocument(IDocument document);
         void SetStatements(IEnumerable<SyntaxNode> statements);
@@ -22,8 +23,17 @@ namespace warnings.analyzer
         IEnumerable<ISymbol> GetFlowOutData();
     }
 
+    /* Analyzer for a single expression. */
+    public interface IExpressionDataFlowAnalyzer
+    {
+        void SetDocument(IDocument document);
+        void SetExpression(SyntaxNode expression);
+        IEnumerable<ISymbol> GetFlowOut();
+        IEnumerable<ISymbol> GetFlowIn();
+    }
 
-    internal class DataFlowAnalyzer : IDataFlowAnalyzer
+
+    internal class StatementsesDataFlowAnalyzer : IStatementsDataFlowAnalyzer
     {
         private static int ANALYZER_COUNT = 0;
 
@@ -32,21 +42,16 @@ namespace warnings.analyzer
             return ANALYZER_COUNT;
         }
 
-        private IDocument document;
-
         private ISemanticModel model;
 
         private IEnumerable<SyntaxNode> statements;
 
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (DataFlowAnalyzer));
-        
-
-        internal DataFlowAnalyzer()
+        internal StatementsesDataFlowAnalyzer()
         {  
             Interlocked.Increment(ref ANALYZER_COUNT);
         }
 
-        ~DataFlowAnalyzer()
+        ~StatementsesDataFlowAnalyzer()
         {
             Interlocked.Decrement(ref ANALYZER_COUNT);
         }
@@ -54,95 +59,72 @@ namespace warnings.analyzer
     
         public void SetDocument(IDocument document)
         {
-            this.document = document;
             model = document.GetSemanticModel();
         }
 
 
         public void SetStatements(IEnumerable<SyntaxNode> statements)
         {
-            this.statements = statements;
+            this.statements = statements.OrderBy(s => s.Span.Start);
         }
 
         public IEnumerable<ISymbol> GetFlowInData()
         {
-            return GetNeededSymbols(statements);
+
+            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
+            return analysis.DataFlowsIn;
         }
 
         public IEnumerable<ISymbol> GetFlowOutData()
         {
-            IRegionDataFlowAnalysis analysis;
-
-            // Symbols assigned in these statements.
-            IEnumerable<ISymbol> assigned = Enumerable.Empty<ISymbol>();
-            
-            // Iterate each statement.
-            foreach (var statement in statements)
-            {
-                // Get the analysis result.
-                analysis = model.AnalyzeStatementDataFlow(statement);
-
-                // Union the symbols that get assigned in this statement.
-                assigned = assigned.Union(analysis.WrittenInside);
-            }
-            logger.Info("Statements changed variables: " + String.Join("", assigned.SelectMany(s => s.Name)));
-
-            // Get the end position of all these statements 
-            var nodesAnalyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
-            nodesAnalyzer.SetSyntaxNodes(statements);
-            int end = nodesAnalyzer.GetEndPosition();
-
-            // Get the method in where the statement lies.
-            var statementAnalyzer = AnalyzerFactory.GetStatementAnalyzer();
-            statementAnalyzer.SetSyntaxNode(statements.First());
-            var method = statementAnalyzer.GetMethodDeclaration();
-            
-            // Get those statements that are in the same method body but after these statements under analysis.
-            var methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
-            methodAnalyzer.SetMethodDeclaration((MethodDeclarationSyntax)method);
-            IEnumerable<SyntaxNode> laterStatements = methodAnalyzer.GetStatementsAfter(end);
-            logger.Info("Remaining statements:" + Environment.NewLine +
-                String.Join("", laterStatements.SelectMany(s => s.GetText())));
-
-            // Get symbols needed in those later statements.
-            IEnumerable<ISymbol> needed = GetNeededSymbols(laterStatements);
-            logger.Info("Remaining statements needed symbols: " + Environment.NewLine +
-                String.Join("", needed.SelectMany(s => s.Name)));
-
-            // Overlap of all the assigned variables with all the used variables below is the ones flow out. 
-            return assigned.Intersect(needed);
+            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
+            return analysis.DataFlowsOut;
         }
+    }
 
+    internal class ExpressionDataFlowAnalyzer : IExpressionDataFlowAnalyzer
+    {
+        private static int ANALYZER_COUNT = 0;
 
-        private IEnumerable<ISymbol> GetNeededSymbols(IEnumerable<SyntaxNode> nodes)
+        public static int GetCount()
         {
-            IRegionDataFlowAnalysis analysis;
-
-            // The symbols need in all of the statements
-            IEnumerable<ISymbol> flowIns = Enumerable.Empty<ISymbol>();
-
-            // The symbols defined in all the statements.
-            IEnumerable<ISymbol> defined = Enumerable.Empty<ISymbol>();
-
-            // Iterate all the statement
-            foreach (var node in nodes)
-            {
-                // Get the analyze result of each statement.
-                analysis = model.AnalyzeStatementDataFlow(node);
-
-                // Add current state needed data.
-                flowIns = flowIns.Union(analysis.DataFlowsIn);
-
-                // Add current state defined data.
-                defined = defined.Union(analysis.VariablesDeclared);
-            }
-
-            // Remove all the defined data in all the statements, and return the needed datas.
-            return flowIns.Except(defined);
-
+            return ANALYZER_COUNT;
         }
 
+        private SyntaxNode expression;
 
+        private ISemanticModel model;
 
+        internal ExpressionDataFlowAnalyzer()
+        {  
+            Interlocked.Increment(ref ANALYZER_COUNT);
+        }
+
+        ~ExpressionDataFlowAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
+
+        public void SetDocument(IDocument document)
+        {
+            model = document.GetSemanticModel();
+        }
+
+        public void SetExpression(SyntaxNode expression)
+        {
+            this.expression = expression;
+        }
+
+        public IEnumerable<ISymbol> GetFlowOut()
+        {
+            var analysis = model.AnalyzeExpressionDataFlow(expression);
+            return analysis.DataFlowsOut;
+        }
+
+        public IEnumerable<ISymbol> GetFlowIn()
+        {
+            var analysis = model.AnalyzeExpressionDataFlow(expression);
+            return analysis.DataFlowsIn;
+        }
     }
 }

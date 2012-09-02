@@ -4,6 +4,7 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0C1C4956-0090-420D-9329-D4B54AC10799}"
 	ProjectSection(SolutionItems) = preProject
 		IntegrationTests.testsettings = IntegrationTests.testsettings
+		readme.txt = readme.txt
 		UnitTests.testsettings = UnitTests.testsettings
 		warnings.vsmdi = warnings.vsmdi
 	EndProjectSection

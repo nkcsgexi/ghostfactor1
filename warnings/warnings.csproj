@@ -109,6 +109,7 @@
     <Compile Include="CodeIssueProvider.cs" />
     <Compile Include="components\auto\AutoExtractMethodComponent.cs" />
     <Compile Include="components\auto\AutoRefactoringComponent.cs" />
+    <Compile Include="components\ConditionCheckingComponent.cs" />
     <Compile Include="components\HistorySavingComponent.cs" />
     <Compile Include="components\IFactorComponent.cs" />
     <Compile Include="components\ComponentTimer.cs" />
@@ -116,6 +117,11 @@
     <Compile Include="components\search\SearchExtractMethodComponent.cs" />
     <Compile Include="components\search\SearchRefactoringComponent.cs" />
     <Compile Include="components\search\SearchRenameComponent.cs" />
+    <Compile Include="conditions\ConditionInterfaces.cs" />
+    <Compile Include="conditions\ExtractMethod\ExtractMethodConditionChecker.cs" />
+    <Compile Include="conditions\ExtractMethod\ParametersChecker.cs" />
+    <Compile Include="conditions\ExtractMethod\ReturnTypeChecker.cs" />
+    <Compile Include="conditions\Rename\RenameConditionChecker.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -143,7 +149,6 @@
     <Compile Include="refactoring\refactoring.auto\AutoExtraceMethodRefactoring.cs" />
     <Compile Include="refactoring\refactoring.auto\AutoRenameRefactoring.cs" />
     <Compile Include="refactoring\refactoring.auto\IAutoRefactoring.cs" />
-    <Compile Include="refactoring\refactoring.manual\ManualRefactoringFactory.cs" />
     <Compile Include="resources\ResourcePool.cs" />
     <Compile Include="source.history\CodeHistory.cs" />
     <Compile Include="source.history\CompilationUnitRecord.cs" />
@@ -162,8 +167,6 @@
     <Compile Include="refactoring\refactoring.common\IRefactoring.cs" />
     <Compile Include="refactoring\refactoring.common\RefactoringType.cs" />
     <Compile Include="refactoring\refactoring.manual\IManualRefactoring.cs" />
-    <Compile Include="refactoring\refactoring.manual\ManualExtractMethodRefactoring.cs" />
-    <Compile Include="refactoring\refactoring.manual\ManualRenameRefactoring.cs" />
     <Compile Include="source.history\interfaces\ICodeHistory.cs" />
     <Compile Include="source.history\interfaces\ICodeHistoryRecord.cs" />
     <Compile Include="source.history\interfaces\IRecordMetaData.cs" />

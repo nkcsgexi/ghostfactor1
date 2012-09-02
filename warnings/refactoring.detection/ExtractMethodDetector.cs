@@ -224,7 +224,7 @@ namespace warnings.refactoring.detection
             if (dis2 - dis1 < THRESHHOLD)
             {
                 // If similar enough, a manual refactoring instance is detected and created.
-                refactoring = ManualRefactoringFactory.createManualExtractMethodRefactoring();
+                refactoring = new ManualExtractMethodRefactoring(null, null, null);
                 return true;
             }
             else

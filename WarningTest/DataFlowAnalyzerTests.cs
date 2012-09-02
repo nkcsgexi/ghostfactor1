@@ -22,7 +22,7 @@ namespace WarningTest
 
         private readonly int METHOD_COUNT = 4;
 
-        private readonly IDataFlowAnalyzer dataFlowanalyzer = AnalyzerFactory.GetDataFlowAnalyzer();
+        private readonly IStatementsDataFlowAnalyzer _statementsDataFlowanalyzer = AnalyzerFactory.GetStatementsDataFlowAnalyzer();
 
         private readonly IMethodAnalyzer methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
 
@@ -42,7 +42,7 @@ namespace WarningTest
             var classDec = analyzer.GetClassDeclarations((NamespaceDeclarationSyntax) namespaceDec).First();
             this.methods = analyzer.GetMethodDeclarations((ClassDeclarationSyntax) classDec);
 
-            dataFlowanalyzer.SetDocument(document);
+            _statementsDataFlowanalyzer.SetDocument(document);
         }
           
         private MethodDeclarationSyntax GetMethodByIndex(int i)
@@ -55,7 +55,7 @@ namespace WarningTest
         {
             Assert.IsNotNull(methods);
             Assert.IsTrue(methods.Count() == METHOD_COUNT);
-            Assert.IsNotNull(dataFlowanalyzer);
+            Assert.IsNotNull(_statementsDataFlowanalyzer);
             Assert.IsNotNull(methodAnalyzer);
         }
 
@@ -69,15 +69,15 @@ namespace WarningTest
             
             // the while loop.
             statementsToAnalyze.Add(statements.ElementAt(4));
-            dataFlowanalyzer.SetStatements(statementsToAnalyze);
-            var flowins = dataFlowanalyzer.GetFlowInData().OrderBy(s => s.Name);
+            _statementsDataFlowanalyzer.SetStatements(statementsToAnalyze);
+            var flowins = _statementsDataFlowanalyzer.GetFlowInData().OrderBy(s => s.Name);
             Assert.IsTrue(flowins.Count() == 5);
             Assert.IsTrue(flowins.ElementAt(0).Name.Equals("counter"));
             Assert.IsTrue(flowins.ElementAt(1).Name.Equals("end"));
             Assert.IsTrue(flowins.ElementAt(2).Name.Equals("file"));
             Assert.IsTrue(flowins.ElementAt(3).Name.Equals("lines"));
             Assert.IsTrue(flowins.ElementAt(4).Name.Equals("start"));
-            var flowouts = dataFlowanalyzer.GetFlowOutData();
+            var flowouts = _statementsDataFlowanalyzer.GetFlowOutData();
             Assert.IsFalse(flowouts.Any());
            
         }
@@ -90,11 +90,11 @@ namespace WarningTest
             var statements = methodAnalyzer.GetStatements();
             statementsToAnalyze.Clear();
             statementsToAnalyze.Add(statements.ElementAt(2));
-            dataFlowanalyzer.SetStatements(statementsToAnalyze);
-            var flowins = dataFlowanalyzer.GetFlowInData();
+            _statementsDataFlowanalyzer.SetStatements(statementsToAnalyze);
+            var flowins = _statementsDataFlowanalyzer.GetFlowInData();
             Assert.IsTrue(flowins.Count() == 1);
             Assert.IsTrue(flowins.First().Name.Equals("b"));
-            var flowouts = dataFlowanalyzer.GetFlowOutData();
+            var flowouts = _statementsDataFlowanalyzer.GetFlowOutData();
             Assert.IsTrue(flowouts.Count() == 1);
             Assert.IsTrue(flowouts.First().Name.Equals("b"));
         }
