@@ -125,8 +125,8 @@ namespace WarningTest
         {
             methodAnalyzer.SetMethodDeclaration(getMethod(4));
             Assert.IsTrue(methodAnalyzer.HasReturnStatement());
-            logger.Info(methodAnalyzer.GetReturnStatement().GetText());
-            Assert.IsTrue(methodAnalyzer.GetReturnStatement().GetText().Equals("return Enumerable.Empty<Object>();"));
+            logger.Info(methodAnalyzer.GetReturnStatements().First().GetText());
+            Assert.IsTrue(methodAnalyzer.GetReturnStatements().First().GetText().Equals("return Enumerable.Empty<Object>();"));
         }
     }
 }
