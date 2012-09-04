@@ -21,20 +21,20 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod1()
         {
-            String result = StringUtil.replaceWith(first, second, 0, 0);
+            String result = StringUtil.ReplaceWith(first, second, 0, 0);
             Assert.IsTrue(result.Equals(second + first));
-            result = StringUtil.replaceWith(first, second, 1, 0);
+            result = StringUtil.ReplaceWith(first, second, 1, 0);
             Assert.IsTrue(result.Equals("a123456bcdefgh"));
-            result = StringUtil.replaceWith(first, second, first.Length, 0);
+            result = StringUtil.ReplaceWith(first, second, first.Length, 0);
             Assert.IsTrue(result.Equals(first + second));
         }
 
         [TestMethod]
         public void TestMethod2()
         {
-            String result = StringUtil.replaceWith(first, second, 0, 1);
+            String result = StringUtil.ReplaceWith(first, second, 0, 1);
             Assert.IsTrue(result.Equals("123456bcdefgh"));
-            result = StringUtil.replaceWith(first, second, 0, 2);
+            result = StringUtil.ReplaceWith(first, second, 0, 2);
             Assert.IsTrue(result.Equals("123456cdefgh"));
         }
 
@@ -42,13 +42,13 @@ namespace WarningTest
         public void TestMethod3()
         {
             string first2 = "abcd";
-            int near = StringUtil.getStringDistance(first, first2);
-            int far = StringUtil.getStringDistance(first, second);
+            int near = StringUtil.GetStringDistance(first, first2);
+            int far = StringUtil.GetStringDistance(first, second);
             Assert.IsTrue(far > near);
             string second2 = "123242";
-            near = StringUtil.getStringDistance(second, second2);
+            near = StringUtil.GetStringDistance(second, second2);
             Assert.IsTrue(far > near);
-            far = StringUtil.getStringDistance(second2, first);
+            far = StringUtil.GetStringDistance(second2, first);
             Assert.IsTrue(far > near);
         }
 

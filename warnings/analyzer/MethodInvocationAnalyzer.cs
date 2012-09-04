@@ -48,9 +48,6 @@ namespace warnings.analyzer
 
         public SyntaxNode GetMethodName()
         {
-            logger.Info(invocation);
-            logger.Info(invocation.DescendantNodes().Count());
-
             // The left parentheses is the rightmost position for the method name.
             int rightMost = invocation.ArgumentList.OpenParenToken.Span.Start;
 
@@ -59,7 +56,6 @@ namespace warnings.analyzer
 
             // The decendent whose length is the most and end is before ( should be method name node.
             var name = orderedDecendents.Last(n => n.Span.End <= rightMost);
-            logger.Info(name.Kind.ToString);
             return name;
         }
 

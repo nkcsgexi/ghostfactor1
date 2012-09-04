@@ -65,7 +65,7 @@ namespace warnings.analyzer
                 sb.Append("|-");
                 indent += "|\t";
             }
-            sb.AppendLine(node.Kind.ToString() + ":" + StringUtil.replaceNewLine(node.GetText(), ""));
+            sb.AppendLine(node.Kind.ToString() + ":" + StringUtil.ReplaceNewLine(node.GetText(), ""));
 
             for (int i = 0; i < node.ChildNodes().Count() ; i++)
             {

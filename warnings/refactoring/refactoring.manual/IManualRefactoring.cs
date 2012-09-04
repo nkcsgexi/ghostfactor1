@@ -25,6 +25,10 @@ namespace warnings.refactoring
 
         /* Statements to extract in the original code. */
         IEnumerable<SyntaxNode> ExtractedStatements { get; }
+
+        /* Expression to extract in the original code. */
+        SyntaxNode ExtractedExpression { get; }
+
     }
 
     /* public interface for communicating a manual rename refactoring. */
@@ -46,6 +50,9 @@ namespace warnings.refactoring
         /* Statements to extract in the original code. */
         public IEnumerable<SyntaxNode> ExtractedStatements { private set; get; }
 
+        /* Expression to extract in the original code. */
+        public SyntaxNode ExtractedExpression { private set; get; }
+
         public RefactoringType type
         {
             get { return RefactoringType.EXTRACT_METHOD; }
@@ -56,10 +63,19 @@ namespace warnings.refactoring
             ExtractedMethodDeclaration = declaration;
             ExtractMethodInvocation = invocation;
             ExtractedStatements = statements;
+            ExtractedExpression = null;
+        }
+
+        internal ManualExtractMethodRefactoring(SyntaxNode declaration, SyntaxNode invocation, SyntaxNode expression)
+        {
+            ExtractedMethodDeclaration = declaration;
+            ExtractMethodInvocation = invocation;
+            ExtractedExpression = expression;
+            ExtractedStatements = null;
         }
     }
 
-    internal class ManaulRenameRefactoring : IManualRenameRefactoring
+    internal class ManualRenameRefactoring : IManualRenameRefactoring
     {
         public RefactoringType type
         {

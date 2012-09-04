@@ -2,54 +2,71 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
 using warnings.refactoring;
+using warnings.util;
 
 namespace warnings.conditions
 {
     /* Checker for whether the extracted method returns the right value. */
-    class ReturnTypeChecker : ExtractMethodConditionChecker
+
+    internal class ReturnTypeChecker : ExtractMethodConditionChecker
     {
+        private Logger logger = NLoggerUtil.getNLogger(typeof (ReturnTypeChecker));
+
         protected override ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after, IManualExtractMethodRefactoring input)
         {
-            // Calculate the outflow data from the original statements.
-            var statements = input.ExtractedStatements;
-            var statementsDataFlowAnalyzer = AnalyzerFactory.GetStatementsDataFlowAnalyzer();
-            statementsDataFlowAnalyzer.SetDocument(before);
-            statementsDataFlowAnalyzer.SetStatements(statements);
-            var flowOuts = statementsDataFlowAnalyzer.GetFlowOutData();
+            // Calculate the outflow data
+            IEnumerable<ISymbol> flowOuts;
+            if (input.ExtractedStatements != null)
+                flowOuts = GetFlowOutData(input.ExtractedStatements, before);
+            else
+                flowOuts = GetFlowOutData(input.ExtractedExpression, before);
 
             // Get the returning data of the return statements.
             var delaration = input.ExtractedMethodDeclaration;
             var methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
             methodAnalyzer.SetMethodDeclaration(delaration);
 
-            // Get the returning data in the return statements of the extracted method.
+            // Get the returning data in the return statements of the extracted method, also log them.
             var returningData = GetMethodReturningData(methodAnalyzer, after);
 
-            // Buid up the error message. 
-            var sb = new StringBuilder();
-            var hasProblem = false;
+            // Missing symbols that are in the flow out before but not in the returning data.
+            // Remove this symbol.
+            var missing = RemoveThisSymbol(GetSymbolListExceptByName(flowOuts, returningData));
 
-            // Missing symbols that are in the flow out before but not in the returning data. 
-            var missing = GetSymbolListExceptByName(flowOuts, returningData);
             if(missing.Any())
             {
-                hasProblem = true;
-                sb.AppendLine("Missing Return Value: " + CombineSymbolName(missing));
+                return new ReturnTypeCheckingResult(true, missing.Select(s => s.Name));
             }
-
-            // No needed symbols that are in the returning value but not in the flow out before.
-            var noNeed = GetSymbolListExceptByName(returningData, flowOuts);
-            if(noNeed.Any())
+            else
             {
-                hasProblem = true;
-                sb.AppendLine("No Needed Return Value: " + CombineSymbolName(noNeed));
+                return new ReturnTypeCheckingResult(false);
             }
-            return new ReturnTypeCheckingResult(hasProblem, sb.ToString());
+        }
+
+        private IEnumerable<ISymbol> GetFlowOutData(IEnumerable<SyntaxNode> statements, IDocument document)
+        {
+            var statementsDataFlowAnalyzer = AnalyzerFactory.GetStatementsDataFlowAnalyzer();
+            statementsDataFlowAnalyzer.SetDocument(document);
+            statementsDataFlowAnalyzer.SetStatements(statements);
+            var flowOuts = statementsDataFlowAnalyzer.GetFlowOutData();
+            logger.Info("Statements Flowing Out Data: " + StringUtil.ConcatenateAll(", ", flowOuts.Select(s => s.Name)));
+            return flowOuts;
+        }
+
+        private IEnumerable<ISymbol> GetFlowOutData(SyntaxNode expression, IDocument document)
+        {
+            var expressionDataFlowAnalyzer = AnalyzerFactory.GetExpressionDataFlowAnalyzer();
+            expressionDataFlowAnalyzer.SetDocument(document);
+            expressionDataFlowAnalyzer.SetExpression(expression);
+            var flowOuts = expressionDataFlowAnalyzer.GetFlowOutData();
+            logger.Info("Expression Flowing Out Data: " + StringUtil.ConcatenateAll(", ", flowOuts.Select(s => s.Name)));
+            return flowOuts;
         }
 
         private IEnumerable<ISymbol> GetMethodReturningData(IMethodAnalyzer methodAnalyzer, IDocument document)
@@ -86,31 +103,26 @@ namespace warnings.conditions
                     returningData = returningData.Union(dataFlowAnalyzer.GetFlowInData());
                 }
             }
+            logger.Info("Returning Data: " + StringUtil.ConcatenateAll(", ", returningData.Select(s => s.Name)));
             return returningData;
         }
-
-        private string CombineSymbolName(IEnumerable<ISymbol> symbols)
-        {
-            var sb = new StringBuilder();
-            foreach (var symbol in symbols)
-            {
-                sb.Append(" " + symbol.Name);
-            }
-            return sb.ToString();
-        }
-
     }
 
-
+    
     class ReturnTypeCheckingResult : ExtractMethodConditionCheckingResult
     {
         private string description;
         private bool hasProblem;
+        private IEnumerable<string> missingSymbolNames;
 
-        internal ReturnTypeCheckingResult(bool hasProblem, string description)
+        internal ReturnTypeCheckingResult(bool hasProblem, IEnumerable<string> missingSymbolNames = null)
         {
             this.hasProblem = hasProblem;
-            this.description = description;
+            if (this.hasProblem)
+            {
+                this.missingSymbolNames = missingSymbolNames;
+                description = "Missing Return Value: " + StringUtil.ConcatenateAll(", ", missingSymbolNames);
+            }
         }
 
         public override bool HasProblem()
@@ -121,6 +133,11 @@ namespace warnings.conditions
         public override string GetProblemDescription()
         {
             return description;
+        }
+
+        public IEnumerable<String> GetMissingReturnSymbolNames()
+        {
+            return missingSymbolNames;
         }
     }
 }

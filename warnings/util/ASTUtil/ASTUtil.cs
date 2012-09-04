@@ -114,15 +114,14 @@ namespace warnings.util
                 .Where(s => !(s is ReturnStatementSyntax));
 
             // Combine the statements into one string;
-            String replacer = StringUtil.concatenateAll(
-                statements.Select(s => s.GetFullText()).ToArray());
+            String replacer = StringUtil.ConcatenateAll("", statements.Select(s => s.GetFullText()).ToArray());
             
             // Get the span of expression, can not invoke invocation.fullspan because {} may exist.
             var span = invocation.Expression.FullSpan;
             String callerString = caller.GetFullText();
             
             // Replace the invocation with the replacer.
-            return StringUtil.replaceWith(callerString, replacer,
+            return StringUtil.ReplaceWith(callerString, replacer,
                 span.Start - caller.Span.Start, span.Length);
         }
     }

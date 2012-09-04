@@ -10,27 +10,25 @@ namespace warnings.util
     public class StringUtil
     {
         /* Concatenate all the strings in an array into one single string. */
-        public static String concatenateAll(String[] texts)
+        public static String ConcatenateAll(String seperator, String[] texts)
         {
-            StringBuilder sb = new StringBuilder();
-            foreach (string text in texts)
+            StringBuilder sb = new StringBuilder(texts[0]);
+            for (int i = 1; i < texts.Count(); i++ )
             {
-                sb.Append(text);
+                sb.Append(seperator + texts[i]);
             }
             return sb.ToString();
         }
 
         /* Same as above, different input. */
-        public static String concatenateAll(IEnumerable<String> texts)
+        public static String ConcatenateAll(String seperator, IEnumerable<String> texts)
         {
-            StringBuilder sb = new StringBuilder();
-             foreach(String s in texts)
-                sb.Append(s);
-            return sb.ToString();
+            return ConcatenateAll(seperator, texts.ToArray());
         }
 
+
         /* Replace the specified start(length) in a text with the replacer. */
-        public static String replaceWith(String text, String replacer, int start, int length)
+        public static String ReplaceWith(String text, String replacer, int start, int length)
         {
             StringBuilder sb = new StringBuilder();
             sb.Append(text.Substring(0, start));
@@ -40,19 +38,19 @@ namespace warnings.util
         }
 
         /* Get the distance between two strings. */
-        public static int getStringDistance(String a, String b)
+        public static int GetStringDistance(String a, String b)
         {
             return new Levenshtein().LD(a, b);
         }
 
         /* Convert an array of bytes to a string. */
-        public static String bytes2String(byte[] bytes)
+        public static String Bytes2String(byte[] bytes)
         {
             return System.Text.Encoding.UTF8.GetString(bytes);
         }
 
         /* Replace the new line in a text with multiple lines to something else as specified. */
-        public static String replaceNewLine(String text, String replacement)
+        public static String ReplaceNewLine(String text, String replacement)
         {
             return text.Replace(Environment.NewLine, replacement);
         }

@@ -14,22 +14,25 @@ using warnings.util;
 
 namespace warnings.analyzer
 {
-    /* Analyzer for one or more statement. */
-    public interface IStatementsDataFlowAnalyzer 
+    /* Common interface for data flow anlayzer. */
+    public interface IDataFlowAnalyzer
     {
         void SetDocument(IDocument document);
-        void SetStatements(IEnumerable<SyntaxNode> statements);
         IEnumerable<ISymbol> GetFlowInData();
         IEnumerable<ISymbol> GetFlowOutData();
     }
 
-    /* Analyzer for a single expression. */
-    public interface IExpressionDataFlowAnalyzer
+
+    /* Analyzer for one or more statement. */
+    public interface IStatementsDataFlowAnalyzer : IDataFlowAnalyzer
     {
-        void SetDocument(IDocument document);
+        void SetStatements(IEnumerable<SyntaxNode> statements);
+    }
+
+    /* Analyzer for a single expression. */
+    public interface IExpressionDataFlowAnalyzer : IDataFlowAnalyzer
+    {
         void SetExpression(SyntaxNode expression);
-        IEnumerable<ISymbol> GetFlowOutData();
-        IEnumerable<ISymbol> GetFlowInData();
     }
 
 

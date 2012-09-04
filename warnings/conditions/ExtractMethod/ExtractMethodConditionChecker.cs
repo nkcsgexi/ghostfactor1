@@ -36,6 +36,13 @@ namespace warnings.conditions
             return result.AsEnumerable();
         }
 
+        /* Remove 'this' symbol in a list of symbols. */
+        protected IEnumerable<ISymbol> RemoveThisSymbol(IEnumerable<ISymbol> original)
+        {
+            return original.Where(s => !s.Name.Equals("this"));
+        }
+
+
         protected abstract ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after,
                                                                    IManualExtractMethodRefactoring input);
     }

@@ -8,6 +8,8 @@ namespace WarningTest.fakesource.before
 {
     public class FakeClass
     {
+        private int field = 0;
+
         public void method1()
         {
             int i;
@@ -21,6 +23,22 @@ namespace WarningTest.fakesource.before
             int j = 0;
             i = i + j;
             Console.WriteLine(i);       
+        }
+
+        public int method3()
+        {
+            int field = 0;
+            field = field + 1;
+            return field;
+        }
+
+        public int method4()
+        {
+            int i = 1;
+            int j = 1;
+
+            i = i + j;
+            return i;
         }
     }
 }

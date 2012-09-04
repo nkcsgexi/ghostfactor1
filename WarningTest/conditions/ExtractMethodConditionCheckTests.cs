@@ -10,6 +10,7 @@ using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
 using warnings.analyzer;
 using warnings.conditions;
+using warnings.refactoring;
 using warnings.refactoring.refactoring.manual;
 using warnings.util;
 
@@ -93,6 +94,16 @@ namespace WarningTest
                 logger.Info(Environment.NewLine + r.GetProblemDescription());
             }
         }
+
+        /* Get the manual refactoring extracts statements indexed 'start' to 'end' in 'methodN' (before) to 'extractedN' (after)*/
+        private IManualExtractMethodRefactoring GetTestInput(int methodIndex, int start, int end)
+        {
+            var declaration = GetExtractedMethodDeclaration("extracted" + methodIndex);
+            var invocation = GetInvokingExtractedMethod("method" + methodIndex, "extracted" + methodIndex).First();
+            var statements = GetStatementsBeforeExtract("method" + methodIndex, start, end);
+            return ManualRefactoringFactory.
+                CreateManualExtractMethodRefactoring(declaration, invocation, statements);
+        }
             
             
         [TestMethod]
@@ -107,31 +118,31 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod2()
         {
-            var declaration = GetExtractedMethodDeclaration("extracted1");
-            Assert.IsNotNull(declaration);
-
-            var invocation = GetInvokingExtractedMethod("method1", "extracted1").First();
-            Assert.IsNotNull(invocation);
-
-            var statements = GetStatementsBeforeExtract("method1", 0, 2);
-            Assert.IsTrue(statements.Count() == 3);
-
-            var refactoring = ManualRefactoringFactory.
-                CreateManualExtractMethodRefactoring(declaration, invocation, statements);
-
+            var refactoring = GetTestInput(1, 0, 2);
             var results = conditionsList.CheckAllConditions(before, after, refactoring);
-
             logResults(results);
         }
 
         [TestMethod]
         public void TestMethod3()
         {
-            var declaration = GetExtractedMethodDeclaration("extracted2");
-            var invocation = GetInvokingExtractedMethod("method2", "extracted2").First();
-            var statements = GetStatementsBeforeExtract("method2", 2, 2);
-            var refactoring = ManualRefactoringFactory.
-                CreateManualExtractMethodRefactoring(declaration, invocation, statements);
+            var refactoring = GetTestInput(2, 2, 2);
+            var results = conditionsList.CheckAllConditions(before, after, refactoring);
+            logResults(results);
+        }
+
+        [TestMethod]
+        public void TestMethod4()
+        {
+            var refactoring = GetTestInput(3, 1, 1);
+            var results = conditionsList.CheckAllConditions(before, after, refactoring);
+            logResults(results);
+        }
+
+        [TestMethod]
+        public void TestMethod5()
+        {
+            var refactoring = GetTestInput(4, 2, 2);
             var results = conditionsList.CheckAllConditions(before, after, refactoring);
             logResults(results);
         }

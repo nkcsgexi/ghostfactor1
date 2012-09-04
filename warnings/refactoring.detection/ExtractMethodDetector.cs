@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
-using System.Text;
-using Roslyn.Compilers;
 using Roslyn.Compilers.CSharp;
 using warnings.analyzer;
-using warnings.refactoring.refactoring;
-using warnings.source;
 using warnings.util;
 
 namespace warnings.refactoring.detection
@@ -27,11 +23,6 @@ namespace warnings.refactoring.detection
         
         /* Detected manual refactoring.*/
         private IManualRefactoring refactoring;
-
-        internal ExtractMethodDetector()
-        {
-            
-        }
 
         public void setSourceBefore(String before)
         {
@@ -215,16 +206,16 @@ namespace warnings.refactoring.detection
             String callerAfterFlattenned = ASTUtil.flattenMethodInvocation(callerAfter, calleeAfter, invocation);
 
             // The distance between flattened caller after and the caller before.
-            int dis1 = StringUtil.getStringDistance(callerAfterFlattenned, callerBefore.GetFullText());
+            int dis1 = StringUtil.GetStringDistance(callerAfterFlattenned, callerBefore.GetFullText());
             
             // The distance between caller after and the caller before.
-            int dis2 = StringUtil.getStringDistance(callerAfter.GetFullText(), callerBefore.GetFullText());
+            int dis2 = StringUtil.GetStringDistance(callerAfter.GetFullText(), callerBefore.GetFullText());
             
             // Check whether the distance gain of the flatten is bigger than threshhold. 
             if (dis2 - dis1 < THRESHHOLD)
             {
                 // If similar enough, a manual refactoring instance is detected and created.
-                refactoring = new ManualExtractMethodRefactoring(null, null, null);
+                refactoring = ManualRefactoringFactory.CreateManualExtractMethodRefactoring(null, null, Enumerable.Empty<SyntaxNode>());
                 return true;
             }
             else
