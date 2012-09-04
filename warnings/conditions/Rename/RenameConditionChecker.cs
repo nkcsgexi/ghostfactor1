@@ -19,7 +19,7 @@ namespace warnings.conditions
     }
 
     /* This class includes all the conditions to check for rename refactoring. */
-    class RenameConditionsList : RefactoringConditionsList
+    internal class RenameConditionsList : RefactoringConditionsList
     {
         private static Lazy<RenameConditionsList> instance = new Lazy<RenameConditionsList>();
 
@@ -28,6 +28,10 @@ namespace warnings.conditions
             if (instance.IsValueCreated)
                 return instance.Value;
             return new RenameConditionsList();
+        }
+
+        private RenameConditionsList()
+        {
         }
 
         protected override IEnumerable<IRefactoringConditionChecker> GetAllConditionCheckers()

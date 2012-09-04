@@ -59,6 +59,7 @@
     <Compile Include="ComponentTimerTests.cs" />
     <Compile Include="DataFlowAnalyzerTests.cs" />
     <Compile Include="EMDetectorTests.cs" />
+    <Compile Include="conditions\ExtractMethodConditionCheckTests.cs" />
     <Compile Include="fakesource\DataFlowExample.cs" />
     <Compile Include="fakesource\EMDetectorAfter.cs" />
     <Compile Include="fakesource\EMDetectorBefore.cs" />

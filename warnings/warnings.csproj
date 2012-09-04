@@ -101,6 +101,7 @@
     <Compile Include="analyzer\DataFlowAnalyzer.cs" />
     <Compile Include="analyzer\DocumentAnalyzer.cs" />
     <Compile Include="analyzer\MethodAnalyzer.cs" />
+    <Compile Include="analyzer\MethodInvocationAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodeAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodesAnalyzer.cs" />
@@ -117,6 +118,7 @@
     <Compile Include="components\search\SearchExtractMethodComponent.cs" />
     <Compile Include="components\search\SearchRefactoringComponent.cs" />
     <Compile Include="components\search\SearchRenameComponent.cs" />
+    <Compile Include="conditions\ConditionCheckingFactory.cs" />
     <Compile Include="conditions\ConditionInterfaces.cs" />
     <Compile Include="conditions\ExtractMethod\ExtractMethodConditionChecker.cs" />
     <Compile Include="conditions\ExtractMethod\ParametersChecker.cs" />
@@ -149,6 +151,7 @@
     <Compile Include="refactoring\refactoring.auto\AutoExtraceMethodRefactoring.cs" />
     <Compile Include="refactoring\refactoring.auto\AutoRenameRefactoring.cs" />
     <Compile Include="refactoring\refactoring.auto\IAutoRefactoring.cs" />
+    <Compile Include="refactoring\refactoring.manual\ManualRefactoringFactory.cs" />
     <Compile Include="resources\ResourcePool.cs" />
     <Compile Include="source.history\CodeHistory.cs" />
     <Compile Include="source.history\CompilationUnitRecord.cs" />

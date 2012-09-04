@@ -18,6 +18,7 @@ namespace warnings.analyzer
     {
         void SetMethodDeclaration(SyntaxNode method);
         IEnumerable<SyntaxNode> GetStatements();
+        IEnumerable<SyntaxNode> GetStatementsByIndexRange(int start, int end);
         IEnumerable<SyntaxNode> GetStatementsBefore(int position);
         SyntaxNode GetStatementAt(int position);
         IEnumerable<SyntaxNode> GetStatementsAfter(int position); 
@@ -58,11 +59,24 @@ namespace warnings.analyzer
         public IEnumerable<SyntaxNode> GetStatements()
         {
             BlockSyntax block = ASTUtil.getBlockOfMethod(method);
-            StatementSyntax[] statements = new StatementSyntax[] {};
+            var statements = new StatementSyntax[] {};
             if (block != null)
                 statements = ASTUtil.getStatementsInBlock(block);
             return statements.OrderBy(n => n.Span.Start).AsEnumerable();
          }
+
+        /* Get a subset of all the containing statements, start and end index are inclusive. */
+        public IEnumerable<SyntaxNode> GetStatementsByIndexRange(int start, int end)
+        {
+            var statements = GetStatements();
+            var subList = new List<SyntaxNode>();
+            for(int i = start; i <= end; i++)
+            {
+                subList.Add(statements.ElementAt(i));
+            }
+            return subList.AsEnumerable();
+        }
+
 
         public IEnumerable<SyntaxNode> GetStatementsBefore(int position)
         {
@@ -174,10 +188,10 @@ namespace warnings.analyzer
         public bool HasReturnStatement()
         {
             // Get the return statement of the method.
-            var return_statement = (ReturnStatementSyntax)method.DescendantNodes().First(n => n.Kind == SyntaxKind.ReturnStatement);
+            var returns = method.DescendantNodes().Where(n => n.Kind == SyntaxKind.ReturnStatement);
             
             // Return if no such statement.
-            return (return_statement != null);
+            return returns.Any();
 
         }
 

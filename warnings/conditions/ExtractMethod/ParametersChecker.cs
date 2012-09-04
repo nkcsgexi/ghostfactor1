@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roslyn.Compilers.CSharp;
+using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
 using warnings.refactoring;
@@ -31,8 +32,8 @@ namespace warnings.conditions
             var used = expressionDataFlowAnalyzer.GetFlowInData();
 
             // Calculate the missing symbols and the extra symbols. 
-            var missing = needed.Except(used);
-            var extra = used.Except(needed);
+            var missing = GetSymbolListExceptByName(needed, used);
+            var extra = GetSymbolListExceptByName(used, needed);
 
             // Build the description of missing variables.
             var sb = new StringBuilder();
@@ -47,21 +48,12 @@ namespace warnings.conditions
                 }
             }
 
-            // Append the description of extra variables.
-            if (extra.Any())
-            {
-                hasProblem = true;
-                sb.AppendLine();
-                sb.Append("Redundant Variables: ");
-                foreach (var symbol in extra)
-                {
-                    sb.Append(symbol.Name + " ");
-                }
-            }
-
             // Return the checking result.
             return new ParameterCheckResult(hasProblem, sb.ToString());
         }
+
+
+      
     }
 
     /* The check result of the parameter checkings of newly extracted method. */

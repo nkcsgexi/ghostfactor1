@@ -69,11 +69,11 @@ namespace warnings.components
             switch (refactoring.type)
             {
                 case RefactoringType.EXTRACT_METHOD:
-                    result = RenameConditionsList.GetInstance().CheckAllConditions(before, after, refactoring);
+                    result = ConditionCheckingFactory.GetExtractMethodConditionsList().CheckAllConditions(before, after, refactoring);
                     break;
 
                 case RefactoringType.RENAME:
-                    result = ExtractMethodConditionsList.GetInstance().CheckAllConditions(before, after, refactoring);
+                    result = ConditionCheckingFactory.GetRenameConditionsList().CheckAllConditions(before, after, refactoring);
                     break;
             }
             // TODO: push result to another component.

@@ -7,17 +7,30 @@ namespace WarningTest.fakesource.after
 {
     public class FakeClass
     {
-        public void fake()
+        public void method1()
         {
             int k;
             k = 2;
-            foo();
+            extracted1();
         }
-        private void foo()
+        private void extracted1()
         {
             int i;
             int j;
             i = j = 10;
+        }
+
+        public void method2()
+        {
+            int i = 0;
+            int j = 0;
+            extracted2(i, j);
+            Console.WriteLine(i);
+        }
+
+        private void extracted2(int i, int j)
+        {
+            i = i + j;
         }
     }
 }

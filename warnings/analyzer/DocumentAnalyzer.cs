@@ -19,10 +19,10 @@ namespace warnings.analyzer
     {
         void SetDocument(IDocument document);
         IEnumerable<SyntaxNode> GetNamespaceDecalarations();
-        IEnumerable<SyntaxNode> GetClassDeclarations(NamespaceDeclarationSyntax mamespaceDeclaration);
-        IEnumerable<SyntaxNode> GetFieldDeclarations(ClassDeclarationSyntax classDeclaration);
-        IEnumerable<SyntaxNode> GetMethodDeclarations(ClassDeclarationSyntax classDeclaration);
-        IEnumerable<SyntaxNode> GetVariableDeclarations(MethodDeclarationSyntax methodDeclaration);
+        IEnumerable<SyntaxNode> GetClassDeclarations(SyntaxNode mamespaceDeclaration);
+        IEnumerable<SyntaxNode> GetFieldDeclarations(SyntaxNode classDeclaration);
+        IEnumerable<SyntaxNode> GetMethodDeclarations(SyntaxNode classDeclaration);
+        IEnumerable<SyntaxNode> GetVariableDeclarations(SyntaxNode methodDeclaration);
 
         /* Given a node of declaration, returns the symbol in the semantic model. */
         ISymbol GetSymbol(SyntaxNode declaration);
@@ -75,13 +75,13 @@ namespace warnings.analyzer
             return GetDecendantOfKind(root, SyntaxKind.NamespaceDeclaration);
          }
 
-        public IEnumerable<SyntaxNode> GetClassDeclarations(NamespaceDeclarationSyntax mamespaceDeclaration)
+        public IEnumerable<SyntaxNode> GetClassDeclarations(SyntaxNode mamespaceDeclaration)
         {
             return GetDecendantOfKind(mamespaceDeclaration, SyntaxKind.ClassDeclaration);
         }
 
         /* A field declaration can consist of several declarator.*/
-        public IEnumerable<SyntaxNode> GetFieldDeclarations(ClassDeclarationSyntax classDeclaration)
+        public IEnumerable<SyntaxNode> GetFieldDeclarations(SyntaxNode classDeclaration)
         {
             // First get all the field declarations in the class.
             var fields =  GetDecendantOfKind(classDeclaration, SyntaxKind.FieldDeclaration);
@@ -104,12 +104,12 @@ namespace warnings.analyzer
             return result;
         }
 
-        public IEnumerable<SyntaxNode> GetMethodDeclarations(ClassDeclarationSyntax classDeclaration)
+        public IEnumerable<SyntaxNode> GetMethodDeclarations(SyntaxNode classDeclaration)
         {
             return GetDecendantOfKind(classDeclaration, SyntaxKind.MethodDeclaration);
         }
 
-        public IEnumerable<SyntaxNode> GetVariableDeclarations(MethodDeclarationSyntax methodDeclaration)
+        public IEnumerable<SyntaxNode> GetVariableDeclarations(SyntaxNode methodDeclaration)
         {
             return GetDecendantOfKind(methodDeclaration, SyntaxKind.VariableDeclarator);
         }

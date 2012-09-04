@@ -35,7 +35,7 @@ namespace warnings.conditions
             var hasProblem = false;
 
             // Missing symbols that are in the flow out before but not in the returning data. 
-            var missing = flowOuts.Except(returningData);
+            var missing = GetSymbolListExceptByName(flowOuts, returningData);
             if(missing.Any())
             {
                 hasProblem = true;
@@ -43,7 +43,7 @@ namespace warnings.conditions
             }
 
             // No needed symbols that are in the returning value but not in the flow out before.
-            var noNeed = returningData.Except(flowOuts);
+            var noNeed = GetSymbolListExceptByName(returningData, flowOuts);
             if(noNeed.Any())
             {
                 hasProblem = true;

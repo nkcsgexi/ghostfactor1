@@ -13,6 +13,11 @@ namespace warnings.analyzer
             return new MethodAnalyzer();
         }
 
+        public static IMethodInvocationAnalyzer GetMethodInvocationAnalyzer()
+        {
+            return new MethodInvocationAnalyzer();
+        }
+
         public static IDocumentAnalyzer GetDocumentAnalyzer()
         {
             return new DocumentAnalyzer();
@@ -54,6 +59,7 @@ namespace warnings.analyzer
             sb.AppendLine("SolutionAnalyzer: " + SolutionAnalyzer.GetCount());
             sb.AppendLine("DocumentAnalyzer: " + DocumentAnalyzer.GetCount());
             sb.AppendLine("MethodAnalyzer: " + MethodAnalyzer.GetCount());
+            sb.AppendLine("MethodInvocationAnalyzer: " + MethodInvocationAnalyzer.GetCount());
             sb.AppendLine("StatementAnalyzer :" + StatementAnalyzer.GetCount());
             sb.AppendLine("SyntaxNodesAnalyzer: " + SyntaxNodesAnalyzer.GetCount());
             sb.AppendLine("SyntaxNodeAnalyzer: " + SyntaxNodeAnalyzer.GetCount());

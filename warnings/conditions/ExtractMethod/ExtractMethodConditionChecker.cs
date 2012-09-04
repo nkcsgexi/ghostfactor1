@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.refactoring;
 
@@ -18,6 +19,21 @@ namespace warnings.conditions
         public ICheckingResult CheckCondition(IDocument before, IDocument after, IManualRefactoring input)
         {
             return CheckCondition(before, after, (IManualExtractMethodRefactoring)input);
+        }
+
+        /* Except one symbol list from the other by symbol name. */
+        protected IEnumerable<ISymbol> GetSymbolListExceptByName(IEnumerable<ISymbol> original, IEnumerable<ISymbol> except)
+        {
+            var result = new List<ISymbol>();
+            foreach (ISymbol o in original)
+            {
+                var name = o.Name;
+                if (!except.Any(e => e.Name.Equals(name)))
+                {
+                    result.Add(o);
+                }
+            }
+            return result.AsEnumerable();
         }
 
         protected abstract ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after,
@@ -40,9 +56,13 @@ namespace warnings.conditions
  
 
     /* Condition list for extract method. */
-    class ExtractMethodConditionsList : RefactoringConditionsList
+    internal class ExtractMethodConditionsList : RefactoringConditionsList
     {
         private static Lazy<ExtractMethodConditionsList> instance = new Lazy<ExtractMethodConditionsList>();
+
+        private ExtractMethodConditionsList()
+        {
+        }
 
         public static IRefactoringConditionsList GetInstance()
         {

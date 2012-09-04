@@ -51,7 +51,7 @@ namespace warnings.refactoring
             get { return RefactoringType.EXTRACT_METHOD; }
         }
 
-        public ManualExtractMethodRefactoring(SyntaxNode declaration, SyntaxNode invocation, IEnumerable<SyntaxNode> statements )
+        internal ManualExtractMethodRefactoring(SyntaxNode declaration, SyntaxNode invocation, IEnumerable<SyntaxNode> statements )
         {
             ExtractedMethodDeclaration = declaration;
             ExtractMethodInvocation = invocation;
