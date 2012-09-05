@@ -6,12 +6,14 @@ using Roslyn.Compilers.CSharp;
 using warnings.conditions;
 using warnings.refactoring.attributes;
 using warnings.source;
+using warnings.util;
 
 namespace warnings.refactoring
 {
     /* Refactoring input that shall be feed in to the checker. */
     public interface IManualRefactoring : IHasRefactoringType
     {
+        string ToString();
     }
 
     /* public interface for communicateing a manual extract method refactoring.*/
@@ -72,6 +74,20 @@ namespace warnings.refactoring
             ExtractMethodInvocation = invocation;
             ExtractedExpression = expression;
             ExtractedStatements = null;
+        }
+
+        /* Output the information of a detected extract method refactoring for testing and log purposes.*/
+        public string ToString()
+        {
+            var sb = new StringBuilder();
+            sb.AppendLine("Manual Extract Method Refactoring:");
+            sb.AppendLine("Extracted Method Declaration:\n" + ExtractedMethodDeclaration);
+            sb.AppendLine("Extracted Method Invocation:\n" + ExtractMethodInvocation);
+            if (ExtractedStatements == null)
+                sb.AppendLine("Extracted Expression:\n" + ExtractedExpression);
+            else
+                sb.AppendLine(StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
+            return sb.ToString();
         }
     }
 

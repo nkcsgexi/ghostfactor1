@@ -11,7 +11,6 @@ using Roslyn.Services;
 using warnings.analyzer;
 using warnings.conditions;
 using warnings.refactoring;
-using warnings.refactoring.refactoring.manual;
 using warnings.util;
 
 namespace WarningTest

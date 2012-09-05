@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using warnings.analyzer;
 using warnings.util;
@@ -21,8 +22,8 @@ namespace warnings.refactoring.detection
         /* Source code later. */
         private String after;
         
-        /* Detected manual refactoring.*/
-        private IManualRefactoring refactoring;
+        /* Detected manual refactorings.*/
+        private IEnumerable<IManualRefactoring> refactorings = Enumerable.Empty<IManualRefactoring>();
 
         public void setSourceBefore(String before)
         {
@@ -62,11 +63,10 @@ namespace warnings.refactoring.detection
                 detector.setSyntaxTreeAfter(treeAfter);
                 if(detector.hasRefactoring())
                 {
-                    this.refactoring = detector.getRefactoring();
-                    return true;
+                    refactorings = refactorings.Union(detector.getRefactorings());
                 }
             }
-            return false;
+            return refactorings.Any();
         }
 
         /* Get the definition of same classes before and after. */
@@ -88,9 +88,9 @@ namespace warnings.refactoring.detection
             return pairs;
         }
 
-        public IManualRefactoring getRefactoring()
+        public IEnumerable<IManualRefactoring> getRefactorings()
         {
-            return this.refactoring;
+            return this.refactorings;
         }
     }
 
@@ -105,8 +105,10 @@ namespace warnings.refactoring.detection
         private SyntaxTree treeBefore;
         private SyntaxTree treeAfter;
 
-        /* The detected refactoring if there is one. */
-        private IManualRefactoring refactoring;
+        /* The detected refactorings. */
+        private IEnumerable<IManualRefactoring> refactorings;
+
+        private Logger logger;
 
 
         public InClassExtractMethodDetector (ClassDeclarationSyntax classBefore,
@@ -114,6 +116,8 @@ namespace warnings.refactoring.detection
         {
             this.classBefore = classBefore;
             this.classAfter = classAfter;
+            this.refactorings = Enumerable.Empty<IManualRefactoring>();
+            logger = NLoggerUtil.getNLogger(typeof (InClassExtractMethodDetector));
         }
 
         public Boolean hasRefactoring()
@@ -137,26 +141,28 @@ namespace warnings.refactoring.detection
                     {
                         // Get what does the caller look like before. 
                         var callerBefore = callGraphBefore.getVertice((String)caller.Identifier.Value);
+
                         // Create in method detector;
                         var detector = new InMethodExtraceMethodDectector(callerBefore, caller, callee);
+
                         // Set the trees to the detector.
                         detector.setSyntaxTreeBefore(treeBefore);
                         detector.setSyntaxTreeAfter(treeAfter);
+
                         // Start to detect.
                         if (detector.hasRefactoring())
                         {
-                            refactoring = detector.getRefactoring();
-                            return true;
+                            refactorings = refactorings.Union(detector.getRefactorings());
                         }
                     }
                 }
             }
-            return false;
+            return refactorings.Any();
         }
 
-        public IManualRefactoring getRefactoring()
+        public IEnumerable<IManualRefactoring> getRefactorings()
         {
-            return this.refactoring;
+            return this.refactorings;
         }
 
         public void setSyntaxTreeBefore(SyntaxTree before)
@@ -174,10 +180,13 @@ namespace warnings.refactoring.detection
     {
         /* The caller declaration before. */
         private readonly MethodDeclarationSyntax callerBefore;
+
         /* The caller declaration after. */
         private readonly MethodDeclarationSyntax callerAfter;
+        
         /* The callee that is called after but never called before. */
         private readonly MethodDeclarationSyntax calleeAfter;
+        
         /* The entire trees before and after. */
         private SyntaxTree treeAfter;
         private SyntaxTree treeBefore;
@@ -186,48 +195,55 @@ namespace warnings.refactoring.detection
         private IManualRefactoring refactoring;
         
         /* Threshhold for considering to string similar. */
-        private static readonly int THRESHHOLD = 50;
+        private static readonly int THRESHHOLD = 10;
+
+        private readonly Logger logger;
 
         public InMethodExtraceMethodDectector(MethodDeclarationSyntax callerBefore, MethodDeclarationSyntax callerAfter, MethodDeclarationSyntax calleeAfter)
         {
             this.callerBefore = callerBefore;
             this.callerAfter = callerAfter;
             this.calleeAfter = calleeAfter;
+            logger = NLoggerUtil.getNLogger(typeof (InMethodExtraceMethodDectector));
         }
 
         public bool hasRefactoring()
         {
-            // Get all the invocations of callee in the caller method body.
+            // Get the first invocation of callee in the caller method body.
             var invocation = ASTUtil.getAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter)[0];
             // Precondition  
             Contract.Requires(invocation!= null);
             
             /* Flatten the caller after by replacing callee invocation with the code in the calle method body. */
             String callerAfterFlattenned = ASTUtil.flattenMethodInvocation(callerAfter, calleeAfter, invocation);
+            logger.Info("Caller Before:\n" + callerBefore.GetText());
+            logger.Info("Caller After:\n" + callerAfter.GetText());
+            logger.Info("Callee after:\n" + calleeAfter.GetText());
+            logger.Info("Flattened Caller:\n" + callerAfterFlattenned);
+
+            var beforeWithoutSpace = callerBefore.GetFullText().Replace(" ", "");
 
             // The distance between flattened caller after and the caller before.
-            int dis1 = StringUtil.GetStringDistance(callerAfterFlattenned, callerBefore.GetFullText());
-            
+            int dis1 = StringUtil.GetStringDistance(callerAfterFlattenned.Replace(" ", ""), beforeWithoutSpace);
+           
             // The distance between caller after and the caller before.
-            int dis2 = StringUtil.GetStringDistance(callerAfter.GetFullText(), callerBefore.GetFullText());
+            int dis2 = StringUtil.GetStringDistance(callerAfter.GetFullText().Replace(" ", ""), beforeWithoutSpace);
+            logger.Info("Distance Gain by Flattening:" + (dis2 - dis1));
             
-            // Check whether the distance gain of the flatten is bigger than threshhold. 
-            if (dis2 - dis1 < THRESHHOLD)
+            // Check whether the distance is shortened by flatten. 
+            if (dis2 > dis1)
             {
                 // If similar enough, a manual refactoring instance is detected and created.
-                refactoring = ManualRefactoringFactory.CreateManualExtractMethodRefactoring(null, null, Enumerable.Empty<SyntaxNode>());
+                refactoring = ManualRefactoringFactory.CreateManualExtractMethodRefactoring(calleeAfter, invocation, GetExtractedExpression());
                 return true;
             }
             else
                 return false;
         }
 
-        
-        
-
-        public IManualRefactoring getRefactoring()
+        public IEnumerable<IManualRefactoring> getRefactorings()
         {
-            return refactoring;
+            yield return refactoring;
         }
 
         public void setSyntaxTreeBefore(SyntaxTree before)
@@ -238,6 +254,20 @@ namespace warnings.refactoring.detection
         public void setSyntaxTreeAfter(SyntaxTree after)
         {
             this.treeAfter = after;
+        }
+
+
+
+        private IEnumerable<SyntaxNode> GetExtractedStatements()
+        {
+            // TODO: to implement;
+            return null;
+        }
+
+        private SyntaxNode GetExtractedExpression()
+        {
+            // TODO: to implement. 
+            return null;
         }
     }
 

@@ -3,6 +3,7 @@ using System.Text;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog;
 using warnings.refactoring.detection;
 using warnings.util;
 
@@ -18,6 +19,8 @@ namespace WarningTest
         private static readonly string fileAfter = 
             TestUtil.getFakeSourceFolder() + "EMDetectorAfter.cs";
 
+        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (EMDetectorTests));
+
         [TestMethod]
         public void TestMethod1()
         {
@@ -27,6 +30,11 @@ namespace WarningTest
             detector.setSourceBefore(sourceBefore);
             detector.setSourceAfter(sourceAfter);
             Assert.IsTrue(detector.hasRefactoring());
+            foreach (var refactoring in detector.getRefactorings())
+            {
+                logger.Info(refactoring.ToString());
+            }
+            
         }
     }
 }

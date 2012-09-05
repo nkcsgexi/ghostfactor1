@@ -8,8 +8,6 @@ using warnings.util;
 
 namespace warnings.refactoring.detection
 {
-
-
     /*
      * This is a detector for mamual rename refactoring. Setting the source code before and after a time interval, this detector should be able to tell whether
      * a rename refactoring was performed.
@@ -52,7 +50,7 @@ namespace warnings.refactoring.detection
             return false;
         }
 
-        public IManualRefactoring getRefactoring()
+        public IEnumerable<IManualRefactoring> getRefactorings()
         {
             throw new NotImplementedException();
         }

@@ -110,7 +110,7 @@ namespace warnings.util
             MethodDeclarationSyntax callee, InvocationExpressionSyntax invocation)
         {
             // Get the statements in the callee method body except the return statement;
-            var statements = ASTUtil.getStatementsInBlock(ASTUtil.getBlockOfMethod(callee))
+            var statements = getStatementsInBlock(ASTUtil.getBlockOfMethod(callee))
                 .Where(s => !(s is ReturnStatementSyntax));
 
             // Combine the statements into one string;
@@ -121,8 +121,7 @@ namespace warnings.util
             String callerString = caller.GetFullText();
             
             // Replace the invocation with the replacer.
-            return StringUtil.ReplaceWith(callerString, replacer,
-                span.Start - caller.Span.Start, span.Length);
+            return callerString.Replace(invocation.GetText(), replacer);
         }
     }
 }
