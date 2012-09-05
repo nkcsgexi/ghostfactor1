@@ -31,7 +31,7 @@ namespace warnings.util
             return methods;
         }
 
-        public static BlockSyntax getBlockOfMethod(MethodDeclarationSyntax method)
+        public static BlockSyntax getBlockOfMethod(SyntaxNode method)
         {
             foreach (SyntaxNode node in method.ChildNodes())
             {

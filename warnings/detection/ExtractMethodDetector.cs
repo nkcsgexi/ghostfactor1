@@ -234,7 +234,11 @@ namespace warnings.refactoring.detection
             if (dis2 > dis1)
             {
                 // If similar enough, a manual refactoring instance is detected and created.
-                refactoring = ManualRefactoringFactory.CreateManualExtractMethodRefactoring(calleeAfter, invocation, GetExtractedExpression());
+                var analyzer = RefactoringAnalyzerFactory.CreateManualExtractMethodAnalyzer();
+                analyzer.SetMethodDeclarationBeforeExtracting(callerBefore);
+                analyzer.SetExtractedMethodDeclaration(calleeAfter);
+                analyzer.SetInvocationExpression(invocation);
+                refactoring = analyzer.GetRefactoring();
                 return true;
             }
             else
@@ -254,20 +258,6 @@ namespace warnings.refactoring.detection
         public void setSyntaxTreeAfter(SyntaxTree after)
         {
             this.treeAfter = after;
-        }
-
-
-
-        private IEnumerable<SyntaxNode> GetExtractedStatements()
-        {
-            // TODO: to implement;
-            return null;
-        }
-
-        private SyntaxNode GetExtractedExpression()
-        {
-            // TODO: to implement. 
-            return null;
         }
     }
 

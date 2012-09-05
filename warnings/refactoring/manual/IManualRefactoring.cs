@@ -4,8 +4,6 @@ using System.Linq;
 using System.Text;
 using Roslyn.Compilers.CSharp;
 using warnings.conditions;
-using warnings.refactoring.attributes;
-using warnings.source;
 using warnings.util;
 
 namespace warnings.refactoring
