@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Documents;
 using Roslyn.Compilers.CSharp;
+using warnings.analyzer;
 using warnings.util;
 
 namespace warnings.refactoring
@@ -67,13 +68,68 @@ namespace warnings.refactoring
             var commonStatements = new List<SyntaxNode>();
             var commonExpressions = new List<SyntaxNode>();
 
-            var parentBlock = ASTUtil.getBlockOfMethod(parentMethodDeclarationBefore);
-            var extractedMethodBlock = ASTUtil.getBlockOfMethod(extractedMethodDeclaration);
+            // Get the block of the original method before extracting anything.
+            var parentBlockBefore = ASTUtil.GetBlockOfMethod(parentMethodDeclarationBefore);
+
+            // Get the block of the extracted method declaration.
+            var extractedMethodBlock = ASTUtil.GetBlockOfMethod(extractedMethodDeclaration);
             
-            // TODO: to finish
+            // For each decendent node in the block of original method.
+            foreach(var node in parentBlockBefore.DescendantNodes())
+            {
+                // Care about statements.
+                if(node is StatementSyntax)
+                {
+                    // For each statement in the body of the extracted method
+                    foreach (var statement in extractedMethodBlock.DescendantNodes().Where(n => n is StatementSyntax))
+                    {
+                        // If we some how think they are same, memorized that.
+                        if(AreStatementsEqual(statement, node))
+                        {
+                            commonStatements.Add(node);
+                        }
+                    }
+                }
 
+                // Care about expressions.
+                if(node is ExpressionSyntax)
+                {
+                    // For each expression in the block of the extracted method.
+                    foreach (var expression in extractedMethodBlock.DescendantNodes().Where(n => n is ExpressionSyntax))
+                    {
+                        // If we somehow think they are same, memorize that.
+                        if(AreExpressionsEqual(expression, node))
+                        {
+                            commonExpressions.Add(node);
+                        }
+                    }
+                }
+            }
 
+            var analyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
 
+            // First-class customer: has statements in common.
+            if(commonStatements.Any())
+            {
+                analyzer.SetSyntaxNodes(commonStatements);
+
+                // Get the longest group of statements that are neighbors.
+                var extractedStatements = analyzer.GetLongestNeighborredNodesGroup();
+                return ManualRefactoringFactory.CreateManualExtractMethodRefactoring
+                    (extractedMethodDeclaration, invocation, extractedStatements);
+            }  
+            
+            // Second class customer: has expressions in common.
+            if (commonExpressions.Any())
+            {
+                analyzer.SetSyntaxNodes(commonExpressions);
+
+                // Get the longest node among all the expressions; It is not possible to extract
+                // several expressions at the same time. 
+                var extractedExpression = analyzer.GetLongestNode();
+                return ManualRefactoringFactory.CreateManualExtractMethodRefactoring
+                    (extractedMethodDeclaration, invocation, extractedExpression);
+            }
             return null;
         }
 
@@ -86,6 +142,5 @@ namespace warnings.refactoring
         {
             return one.GetText().Replace(" ", "").Equals(two.GetText().Replace(" ", ""));
         }
-
     }
 }

@@ -84,7 +84,7 @@ namespace warnings.refactoring
             if (ExtractedStatements == null)
                 sb.AppendLine("Extracted Expression:\n" + ExtractedExpression);
             else
-                sb.AppendLine(StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
+                sb.AppendLine("Extracted Statements:\n" + StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
             return sb.ToString();
         }
     }

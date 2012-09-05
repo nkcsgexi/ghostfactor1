@@ -31,7 +31,7 @@ namespace warnings.util
             return methods;
         }
 
-        public static BlockSyntax getBlockOfMethod(SyntaxNode method)
+        public static BlockSyntax GetBlockOfMethod(SyntaxNode method)
         {
             foreach (SyntaxNode node in method.ChildNodes())
             {
@@ -110,7 +110,7 @@ namespace warnings.util
             MethodDeclarationSyntax callee, InvocationExpressionSyntax invocation)
         {
             // Get the statements in the callee method body except the return statement;
-            var statements = getStatementsInBlock(ASTUtil.getBlockOfMethod(callee))
+            var statements = getStatementsInBlock(ASTUtil.GetBlockOfMethod(callee))
                 .Where(s => !(s is ReturnStatementSyntax));
 
             // Combine the statements into one string;

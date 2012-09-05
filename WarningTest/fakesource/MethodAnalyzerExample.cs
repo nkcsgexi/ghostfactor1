@@ -10,7 +10,7 @@ namespace WarningTest.fakesource
     {
         public void method1()
         {
-            
+
         }
 
         public int method2()

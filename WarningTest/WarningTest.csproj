@@ -65,6 +65,7 @@
     <Compile Include="fakesource\EMDetectorBefore.cs" />
     <Compile Include="fakesource\ExtractMethodExample.cs" />
     <Compile Include="fakesource\MethodAnalyzerExample.cs" />
+    <Compile Include="fakesource\SyntaxNodesAnalyzerExamples.cs" />
     <Compile Include="fakesource\TryToUpdate.cs" />
     <Compile Include="HistoryRecordTests.cs" />
     <Compile Include="MethodAnalyzerTests.cs" />
@@ -74,6 +75,7 @@
     <Compile Include="RoslynRefactoringUtilTest.cs" />
     <Compile Include="RoslynUtilTests.cs" />
     <Compile Include="StatementAnalyzerTests.cs" />
+    <Compile Include="SyntaxNodesAnalyzerTests.cs" />
     <Compile Include="TestUtil.cs" />
     <Compile Include="UtilityTest.cs" />
     <Compile Include="WorkqueueTests.cs" />

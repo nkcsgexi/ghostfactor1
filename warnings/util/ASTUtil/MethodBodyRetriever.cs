@@ -38,7 +38,7 @@ namespace warnings.util
             methodNames = new List<string>();
             foreach (MethodDeclarationSyntax method in methods)
             {
-                BlockSyntax block = ASTUtil.getBlockOfMethod(method);
+                BlockSyntax block = ASTUtil.GetBlockOfMethod(method);
                 if(block != null)
                 {
                     StringBuilder sb = new StringBuilder();

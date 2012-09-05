@@ -58,7 +58,7 @@ namespace warnings.analyzer
 
         public IEnumerable<SyntaxNode> GetStatements()
         {
-            BlockSyntax block = ASTUtil.getBlockOfMethod(method);
+            BlockSyntax block = ASTUtil.GetBlockOfMethod(method);
             var statements = new StatementSyntax[] {};
             if (block != null)
                 statements = ASTUtil.getStatementsInBlock(block);
@@ -138,7 +138,7 @@ namespace warnings.analyzer
             var paras = method.DescendantNodes().First(n => n.Kind == SyntaxKind.ParameterList);
             if (paras == null)
             {
-                var block = ASTUtil.getBlockOfMethod(method);
+                var block = ASTUtil.GetBlockOfMethod(method);
                 limit = block.Span.Start;
             }
             else
