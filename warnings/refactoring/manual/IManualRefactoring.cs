@@ -14,7 +14,13 @@ namespace warnings.refactoring
     public interface IManualRefactoring : IHasRefactoringType
     {
         string ToString();
+
+        // Map the refactoring a new pair of document, whose code are identical to the 
+        // original sources from where the refactoring is detected. 
         void MapToDocuments(IDocument before, IDocument after);
+
+        // Get the node where the issue should show.
+        SyntaxNode GetIssuedNode();
     }
 
     /* public interface for communicateing a manual extract method refactoring.*/
@@ -118,6 +124,11 @@ namespace warnings.refactoring
                 ExtractedStatements = nodesAnalyzer.MapToAnotherDocument(before);
             }
         }
+
+        public SyntaxNode GetIssuedNode()
+        {
+            return ExtractMethodInvocation;
+        }
     }
 
     internal class ManualRenameRefactoring : IManualRenameRefactoring
@@ -128,6 +139,11 @@ namespace warnings.refactoring
         }
 
         public void MapToDocuments(IDocument before, IDocument after)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SyntaxNode GetIssuedNode()
         {
             throw new NotImplementedException();
         }

@@ -24,42 +24,25 @@ namespace warnings
 
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
         {
-            initialize(document, false);
+            initialize();
 
             // Add the new record to the history component.
             GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
 
+            // Add the new document to the Issue component.
+            GhostFactorComponents.refactoringIssuedNodeComponent.Enqueue(new UpdateIssuesWorkItem(document
+                , GhostFactorComponents.refactoringIssuedNodeComponent));
 
-            ICodeAction action = new RefactoringQuickFix(document);
-            ICodeAction[] actions = new ICodeAction[] {action};
-
-            var tokens = from nodeOrToken in node.ChildNodesAndTokens()
-                         where nodeOrToken.IsToken
-                         select nodeOrToken.AsToken();
-
-            foreach (var token in tokens)
-            {
-                var tokenText = token.GetText();
-
-                if (tokenText.Contains('a'))
-                {
-                    var issueDescription = "warnings is running.";
-
-                    yield return new CodeIssue(CodeIssue.Severity.Warning, token.Span, actions);
-                }
-            }
+            return GhostFactorComponents.refactoringIssuedNodeComponent.GetCodeIssues();
         }
 
         private bool initialized = false;
 
         /* Code runs only once when getIssues is called. */
-        private void initialize(IDocument document, bool show)
+        private void initialize()
         {
             if (!initialized)
             {
-                // Retrieve the refactoring services to initialize ServiceArchive.
-                retrieveService(document, show);
-
                 // Start all the components.
                 GhostFactorComponents.StartAllComponents();
                 initialized = true;

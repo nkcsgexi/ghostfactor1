@@ -31,6 +31,10 @@ namespace warnings.components
         /* Component for checking the conditions of detected manual refactorings. */
         public static readonly IFactorComponent conditionCheckingComponent = ConditionCheckingComponent.GetInstance();
 
+        /* Component for keeping track of all the refactoring issues and posting them to the editor.*/
+        public static readonly IRefactoringIssuedNodesComponent refactoringIssuedNodeComponent =
+            RefactoringIssuedNodesComponent.GetInstance();
+
         public static void StartAllComponents()
         {
 
@@ -43,6 +47,9 @@ namespace warnings.components
 
             // Start condition checker.
             conditionCheckingComponent.Start();
+
+            // Start refactoring issues.
+            refactoringIssuedNodeComponent.Start();
         }
     }
 }

@@ -51,8 +51,4 @@ namespace warnings.conditions
         bool HasProblem();
         string GetProblemDescription();
     }
-
-
-
- 
 }

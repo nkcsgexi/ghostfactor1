@@ -7,11 +7,14 @@ using BlackHen.Threading;
 using NLog;
 using Roslyn.Services;
 using warnings.conditions;
+using warnings.conditions.CheckResults;
+using warnings.quickfix;
 using warnings.refactoring;
 using warnings.util;
 
 namespace warnings.components
 {
+    /* The component to handle condition checkings for all the refactoring types. */
     internal class ConditionCheckingComponent : IFactorComponent
     {
         private static IFactorComponent instance = new ConditionCheckingComponent();
@@ -54,7 +57,7 @@ namespace warnings.components
 
         public string GetName()
         {
-            return "Condition Checking Component";
+            return "Conditions Checking Component";
         }
 
         public int GetWorkQueueLength()
@@ -67,11 +70,18 @@ namespace warnings.components
         }
     }
 
+    /* The work item to be pushed to the condition checking component. */
     class ConditionCheckWorkItem : WorkItem
     {
+        // The refactoring instance from detector. 
         private readonly IManualRefactoring refactoring;
+        
+        // A document instance whose code is identical the detector's before code.
         private readonly IDocument after;
+        
+        // A document instance whose code is identical to the detector's after code.
         private readonly IDocument before;
+        
         private readonly Logger logger;
 
         public ConditionCheckWorkItem (IDocument before, IDocument after, IManualRefactoring refactoring)
@@ -87,29 +97,60 @@ namespace warnings.components
         {
             try
             {
+                // The refactoring instance was generated from pure strings, need to map them to real docuement to facilitate semantic
+                // analyze.
                 refactoring.MapToDocuments(before, after);
-                IEnumerable<ICheckingResult> result = Enumerable.Empty<ICheckingResult>();
+                IEnumerable<ICheckingResult> results = Enumerable.Empty<ICheckingResult>();
                 switch (refactoring.type)
                 {
+                    // Checking all conditions for extract method.
                     case RefactoringType.EXTRACT_METHOD:
                         logger.Info("Checking conditions for extract method.");
-                        result = ConditionCheckingFactory.GetExtractMethodConditionsList().CheckAllConditions(before, after, refactoring);
+                        results = ConditionCheckingFactory.GetExtractMethodConditionsList().CheckAllConditions(before, after, refactoring);
+                        
+                        // Add founded issues to the issue tracking component.
+                        AddIssuesToRefactoringIssueComponent(refactoring, results);
                         break;
 
+                    // Checking all conditions for rename.
                     case RefactoringType.RENAME:
                         logger.Info("Checking conditions for rename.");
-                        result = ConditionCheckingFactory.GetRenameConditionsList().CheckAllConditions(before, after, refactoring);
+                        results = ConditionCheckingFactory.GetRenameConditionsList().CheckAllConditions(before, after, refactoring);
+                        
+                        // Add founded issues to the issue tracking component.
+                        AddIssuesToRefactoringIssueComponent(refactoring, results);
                         break;
 
                     default:
                         logger.Fatal("Unknown refactoring type for conditions checking.");
                         break;
                 }
+                 
             }catch(Exception e)
             {
+                // All exception shall go to the fatal log.
                 logger.Fatal(e);
             }
         }
-    }
 
+        /* When some condition checkings are failed, add an issue to the issue tracking component. */
+        private void AddIssuesToRefactoringIssueComponent(IManualRefactoring refactoring, IEnumerable<ICheckingResult> results)
+        {
+            // Combine all the checking results into one.
+            ICheckingResult combined = new CombinedCheckingResult(results);
+
+            // If having problems, added to the issue componet
+            if (combined.HasProblem())
+            {
+                // Create an issued node.
+                var issuedNode = new IssueTracedNode(refactoring.GetIssuedNode(), combined);
+
+                // Add an add issue item to the component.
+                GhostFactorComponents.refactoringIssuedNodeComponent.Enqueue(new AddIssueTracedNodeWorkItem(issuedNode, 
+                GhostFactorComponents.refactoringIssuedNodeComponent));
+            }
+        }
+    }
 }
+
+

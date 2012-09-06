@@ -115,6 +115,8 @@
     <Compile Include="components\search\SearchExtractMethodComponent.cs" />
     <Compile Include="components\search\SearchRefactoringComponent.cs" />
     <Compile Include="components\search\SearchRenameComponent.cs" />
+    <Compile Include="components\RefactoringIssueComponent.cs" />
+    <Compile Include="conditions\CheckResults\CombinedCheckingResult.cs" />
     <Compile Include="conditions\ConditionCheckingFactory.cs" />
     <Compile Include="conditions\ConditionInterfaces.cs" />
     <Compile Include="conditions\ExtractMethod\ExtractMethodConditionChecker.cs" />
@@ -126,6 +128,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="quickfix\IssueTracedNode.cs" />
     <Compile Include="quickfix\RefactoringQuickFix.cs" />
     <Compile Include="detection\ExtractMethodDetector.cs" />
     <Compile Include="detection\RenameDetector.cs" />
