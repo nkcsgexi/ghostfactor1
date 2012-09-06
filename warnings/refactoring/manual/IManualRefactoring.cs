@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roslyn.Compilers.CSharp;
+using Roslyn.Services;
+using warnings.analyzer;
 using warnings.conditions;
 using warnings.util;
 
@@ -12,6 +14,7 @@ namespace warnings.refactoring
     public interface IManualRefactoring : IHasRefactoringType
     {
         string ToString();
+        void MapToDocuments(IDocument before, IDocument after);
     }
 
     /* public interface for communicateing a manual extract method refactoring.*/
@@ -87,6 +90,34 @@ namespace warnings.refactoring
                 sb.AppendLine("Extracted Statements:\n" + StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
             return sb.ToString();
         }
+
+        public void MapToDocuments(IDocument before, IDocument after)
+        {
+            var nodeAnalyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
+
+            // Map extracted method declaration to the after document.
+            nodeAnalyzer.SetSyntaxNode(ExtractedMethodDeclaration);
+            ExtractedMethodDeclaration = nodeAnalyzer.MapToAnotherDocument(after);
+
+            // Map the invocation of extracted method to the after document.
+            nodeAnalyzer.SetSyntaxNode(ExtractMethodInvocation);
+            ExtractMethodInvocation = nodeAnalyzer.MapToAnotherDocument(after);
+
+            // Map the extracted expression to the before document.
+            if(ExtractedExpression != null)
+            {
+                nodeAnalyzer.SetSyntaxNode(ExtractedExpression);
+                ExtractedExpression = nodeAnalyzer.MapToAnotherDocument(before);
+            }
+
+            // Map the extracted statements to the before document.
+            if(ExtractedStatements != null)
+            {
+                var nodesAnalyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
+                nodesAnalyzer.SetSyntaxNodes(ExtractedStatements);
+                ExtractedStatements = nodesAnalyzer.MapToAnotherDocument(before);
+            }
+        }
     }
 
     internal class ManualRenameRefactoring : IManualRenameRefactoring
@@ -94,6 +125,11 @@ namespace warnings.refactoring
         public RefactoringType type
         {
             get { return RefactoringType.RENAME; }
+        }
+
+        public void MapToDocuments(IDocument before, IDocument after)
+        {
+            throw new NotImplementedException();
         }
     }
 }

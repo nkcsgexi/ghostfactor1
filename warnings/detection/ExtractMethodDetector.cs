@@ -193,13 +193,11 @@ namespace warnings.refactoring.detection
 
         /* The detected refactoring if any. */
         private IManualRefactoring refactoring;
-        
-        /* Threshhold for considering to string similar. */
-        private static readonly int THRESHHOLD = 10;
-
+       
         private readonly Logger logger;
 
-        public InMethodExtraceMethodDectector(MethodDeclarationSyntax callerBefore, MethodDeclarationSyntax callerAfter, MethodDeclarationSyntax calleeAfter)
+        public InMethodExtraceMethodDectector(MethodDeclarationSyntax callerBefore, MethodDeclarationSyntax callerAfter, 
+            MethodDeclarationSyntax calleeAfter)
         {
             this.callerBefore = callerBefore;
             this.callerAfter = callerAfter;

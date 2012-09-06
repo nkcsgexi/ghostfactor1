@@ -28,11 +28,8 @@ namespace warnings.components
         /* Component for traversing the source code history and looking for manual extract method refactorings. */
         public static readonly IFactorComponent searchExtractMethodComponent = SearchExtractMethodComponent.getInstance();
 
-        /* Component for automatically performing rename refactorings. */
-        public static readonly IFactorComponent autoRenameComponent = AutoRenameComponent.getInstance();
-
-        /* Component for automatically performing extract method refactorings. */
-        public static readonly IFactorComponent autoExtractMethodComponent = AutoExtractMethodComponent.getInstance();
+        /* Component for checking the conditions of detected manual refactorings. */
+        public static readonly IFactorComponent conditionCheckingComponent = ConditionCheckingComponent.GetInstance();
 
         public static void StartAllComponents()
         {
@@ -43,10 +40,9 @@ namespace warnings.components
             // Start the searching refactoring components.
             searchRenameComponent.Start();
             searchExtractMethodComponent.Start();
-            
-            // Start the auto re-performing refactoring components.
-            autoRenameComponent.Start();
-            autoExtractMethodComponent.Start();
+
+            // Start condition checker.
+            conditionCheckingComponent.Start();
         }
     }
 }

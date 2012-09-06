@@ -12,6 +12,8 @@ namespace warnings.util
         /* Concatenate all the strings in an array into one single string. */
         public static String ConcatenateAll(String seperator, String[] texts)
         {
+            if (texts.Count() == 0)
+                return "";
             StringBuilder sb = new StringBuilder(texts[0]);
             for (int i = 1; i < texts.Count(); i++ )
             {

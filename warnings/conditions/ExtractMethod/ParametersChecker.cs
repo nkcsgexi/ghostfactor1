@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
@@ -14,6 +15,9 @@ namespace warnings.conditions
     /* This checker is checking whether the extracted method has taken enough or more than enough parameters than actual need. */
     internal class ParametersChecker : ExtractMethodConditionChecker
     {
+        private Logger logger = NLoggerUtil.getNLogger(typeof (ParametersChecker));
+
+
         protected override ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after, 
             IManualExtractMethodRefactoring input)
         {
@@ -72,15 +76,20 @@ namespace warnings.conditions
         private readonly string description;
         private readonly bool hasProblem;
         private readonly IEnumerable<string> missingParaNames;
+        private readonly Logger logger;
 
         internal ParameterCheckingResult(bool hasProblem, IEnumerable<string> missingParaNames = null )
         {
             this.hasProblem = hasProblem;
+            logger = NLoggerUtil.getNLogger(typeof (ParameterCheckingResult));
             if(hasProblem)
             {
                 this.missingParaNames = missingParaNames;
                 description = "Missing Parameters: " + StringUtil.ConcatenateAll(", ", missingParaNames);
+                logger.Info(description);
             }
+            else
+                logger.Info("Checking Passed.");
         }
 
         public override bool HasProblem()

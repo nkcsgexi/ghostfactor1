@@ -73,7 +73,6 @@ namespace warnings.analyzer
 
         public IEnumerable<ISymbol> GetFlowInData()
         {
-
             IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
             return analysis.DataFlowsIn;
         }

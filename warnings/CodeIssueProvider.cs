@@ -20,9 +20,6 @@ namespace warnings
     [ExportSyntaxNodeCodeIssueProvider("CodeIssue", LanguageNames.CSharp)]
     class CodeIssueProvider : ICodeIssueProvider
     {
-        [Import]
-        private IRenameService renameService { set; get; }
-
         private readonly Logger logger = NLoggerUtil.getNLogger(typeof(CodeIssueProvider));
 
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
@@ -75,7 +72,6 @@ namespace warnings
         private void retrieveService(IDocument document, bool show)
         {
             ServiceArchive instance = ServiceArchive.getInstance();
-            instance.RenameService = renameService;
             instance.ExtractMethodService = document.LanguageServices.GetService<IExtractMethodService>();
             if (show)
                 MessageBox.Show(instance.ToString());

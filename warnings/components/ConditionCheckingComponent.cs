@@ -14,23 +14,40 @@ namespace warnings.components
 {
     internal class ConditionCheckingComponent : IFactorComponent
     {
+        private static IFactorComponent instance = new ConditionCheckingComponent();
+       
+        public static IFactorComponent GetInstance()
+        {
+            return instance;
+        }
+
+   
         private readonly WorkQueue queue;
         private readonly Logger logger;
 
-        ConditionCheckingComponent()
+        private ConditionCheckingComponent()
         {
             // A single thread workqueue.
             queue = new WorkQueue();
             queue.ConcurrentLimit = 1;
+            
+            // Set listener for failed work item.
+            queue.FailedWorkItem += onFailedItem;
 
             // Initiate the logger.
             logger = NLoggerUtil.getNLogger(typeof (ConditionCheckingComponent));
         }
 
+        private void onFailedItem(object sender, WorkItemEventArgs workItemEventArgs)
+        {
+            logger.Fatal("Work item failed.");
+        }
+
         public void Enqueue(IWorkItem item)
         {
-            if(item is ConditionCheckWorkItem && queue.Count == 0)
+            if(queue.Count == 0)
             {
+                logger.Info("enqueue");
                 queue.Add(item);
             }
         }
@@ -52,32 +69,46 @@ namespace warnings.components
 
     class ConditionCheckWorkItem : WorkItem
     {
-        private IManualRefactoring refactoring;
-        private IDocument after;
-        private IDocument before;
+        private readonly IManualRefactoring refactoring;
+        private readonly IDocument after;
+        private readonly IDocument before;
+        private readonly Logger logger;
 
         public ConditionCheckWorkItem (IDocument before, IDocument after, IManualRefactoring refactoring)
         {
             this.before = before;
             this.after = after;
             this.refactoring = refactoring;
+            logger = NLoggerUtil.getNLogger(typeof (ConditionCheckWorkItem));
+           
         }
 
         public override void Perform()
         {
-            IEnumerable<ICheckingResult> result;
-            switch (refactoring.type)
+            try
             {
-                case RefactoringType.EXTRACT_METHOD:
-                    result = ConditionCheckingFactory.GetExtractMethodConditionsList().CheckAllConditions(before, after, refactoring);
-                    break;
+                refactoring.MapToDocuments(before, after);
+                IEnumerable<ICheckingResult> result = Enumerable.Empty<ICheckingResult>();
+                switch (refactoring.type)
+                {
+                    case RefactoringType.EXTRACT_METHOD:
+                        logger.Info("Checking conditions for extract method.");
+                        result = ConditionCheckingFactory.GetExtractMethodConditionsList().CheckAllConditions(before, after, refactoring);
+                        break;
 
-                case RefactoringType.RENAME:
-                    result = ConditionCheckingFactory.GetRenameConditionsList().CheckAllConditions(before, after, refactoring);
-                    break;
+                    case RefactoringType.RENAME:
+                        logger.Info("Checking conditions for rename.");
+                        result = ConditionCheckingFactory.GetRenameConditionsList().CheckAllConditions(before, after, refactoring);
+                        break;
+
+                    default:
+                        logger.Fatal("Unknown refactoring type for conditions checking.");
+                        break;
+                }
+            }catch(Exception e)
+            {
+                logger.Fatal(e);
             }
-            // TODO: push result to another component.
-
         }
     }
 

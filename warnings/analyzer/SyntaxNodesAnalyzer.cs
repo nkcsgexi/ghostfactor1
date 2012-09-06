@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Windows.Documents;
 using Roslyn.Compilers.CSharp;
+using Roslyn.Services;
 
 namespace warnings.analyzer
 {
@@ -16,6 +17,7 @@ namespace warnings.analyzer
         IEnumerable<SyntaxNode> RemoveSubNodes();
         IEnumerable<IEnumerable<SyntaxNode>> GetNeighborredNodesGroups();
         IEnumerable<SyntaxNode> GetLongestNeighborredNodesGroup();
+        IEnumerable<SyntaxNode> MapToAnotherDocument(IDocument document); 
         int GetStartPosition();
         int GetEndPosition();
     }
@@ -123,6 +125,19 @@ namespace warnings.analyzer
             return longestGroup;
         }
 
+        /* Map all the nodes to another document. */
+        public IEnumerable<SyntaxNode> MapToAnotherDocument(IDocument document)
+        {
+            var analyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
+            var list = new List<SyntaxNode>();
+
+            foreach (SyntaxNode node in nodes)
+            {
+                analyzer.SetSyntaxNode(node);
+                list.Add(analyzer.MapToAnotherDocument(document));
+            }
+            return list.AsEnumerable();
+        }
 
 
         /* The leftmost postion for all the nodes. */

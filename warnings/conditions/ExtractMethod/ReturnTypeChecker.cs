@@ -111,17 +111,24 @@ namespace warnings.conditions
     
     class ReturnTypeCheckingResult : ExtractMethodConditionCheckingResult
     {
-        private string description;
-        private bool hasProblem;
-        private IEnumerable<string> missingSymbolNames;
+        private readonly string description;
+        private readonly bool hasProblem;
+        private readonly IEnumerable<string> missingSymbolNames;
+        private readonly Logger logger;
 
         internal ReturnTypeCheckingResult(bool hasProblem, IEnumerable<string> missingSymbolNames = null)
         {
+            logger = NLoggerUtil.getNLogger(typeof (ReturnTypeCheckingResult));
             this.hasProblem = hasProblem;
             if (this.hasProblem)
             {
                 this.missingSymbolNames = missingSymbolNames;
                 description = "Missing Return Value: " + StringUtil.ConcatenateAll(", ", missingSymbolNames);
+                logger.Info(description);
+            }
+            else
+            {
+                logger.Info("Checking passed.");
             }
         }
 

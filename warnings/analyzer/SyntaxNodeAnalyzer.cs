@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using NLog;
 using Roslyn.Compilers.CSharp;
+using Roslyn.Services;
 using warnings.util;
 
 namespace warnings.analyzer
@@ -20,6 +21,9 @@ namespace warnings.analyzer
 
         /* Get the common parent of these two nodes. */
         SyntaxNode GetCommonParent(SyntaxNode another);
+
+        /* Map this node to a new document whose text is equal to the node's tree.*/
+        SyntaxNode MapToAnotherDocument(IDocument target);
 
         /* Get a tree-like structure depicting all the decendent nodes and itself. */
         string DumpTree();
@@ -79,6 +83,11 @@ namespace warnings.analyzer
             
             // The ancestor of the least length is the nearest common ancestor.
             return sortedCommonAncestors.First();
+        }
+
+        public SyntaxNode MapToAnotherDocument(IDocument target)
+        {
+            return (SyntaxNode)target.GetSyntaxRoot().DescendantNodes().First(n => n.Span.Equals(node.Span));
         }
 
         public string DumpTree()
