@@ -1,15 +1,9 @@
 ﻿<RecentFiles>
   <RecentFiles>
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:ExtractMethodDetector.cs" caret="10253" fromTop="34" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="2229" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DataFlowAnalyzer.cs" caret="2111" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="601" fromTop="21" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ExtractMethodConditionChecker.cs" caret="2986" fromTop="84" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:RenameDetector.cs" caret="1137" fromTop="46" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/f:ConditionCheckingFactory.cs" caret="225" fromTop="9" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:IRefactoringDetector.cs" caret="1222" fromTop="31" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:EMDetectorAfter.cs" caret="1195" fromTop="61" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:StringUtil.cs" caret="1527" fromTop="31" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchRefactoringComponent.cs" caret="1175" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchRenameComponent.cs" caret="2085" fromTop="44" />
     <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1201" fromTop="13" />
@@ -21,22 +15,28 @@
     <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWorkQueue.cs" caret="0" fromTop="0" />
     <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWorkItem.cs" caret="0" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringQuickFix.cs" caret="830" fromTop="16" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/f:ConditionInterfaces.cs" caret="1114" fromTop="13" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ConditionCheckingComponent.cs" caret="4634" fromTop="58" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:manual/f:IManualRefactoring.cs" caret="5493" fromTop="23" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:HistorySavingComponent.cs" caret="5657" fromTop="28" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:CheckResults/f:CombinedCheckingResult.cs" caret="1162" fromTop="31" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:IFactorComponent.cs" caret="1553" fromTop="26" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="616" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="1140" fromTop="12" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="468" fromTop="12" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ExtractMethodConditionChecker.cs" caret="2986" fromTop="81" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="268" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:ASTUtil.cs" caret="5494" fromTop="40" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:ASTUtilTests.cs" caret="1073" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/f:ConditionInterfaces.cs" caret="1114" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="4667" fromTop="105" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="535" fromTop="8" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1364" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:StringUtil.cs" caret="635" fromTop="20" />
   </RecentFiles>
   <RecentEdits>
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ConditionCheckingComponent.cs" caret="5705" fromTop="44" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ConditionCheckingComponent.cs" caret="5204" fromTop="38" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1168" fromTop="40" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="871" fromTop="21" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="1864" fromTop="23" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="1979" fromTop="23" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3511" fromTop="36" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1168" fromTop="39" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1022" fromTop="16" />
@@ -56,11 +56,11 @@
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="801" fromTop="17" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="964" fromTop="29" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="566" fromTop="13" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="1965" fromTop="36" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="2080" fromTop="36" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3496" fromTop="31" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1131" fromTop="15" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1133" fromTop="10" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="616" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="1709" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:IssueTracedNode.cs" caret="1695" fromTop="23" />
   </RecentEdits>
 </RecentFiles>

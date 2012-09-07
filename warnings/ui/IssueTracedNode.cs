@@ -45,8 +45,10 @@ namespace warnings.quickfix
         public bool IsIssuedAt(SyntaxNode another)
         {
             // TODO: more sofisticated way to determine whether it is the right node
-            // What if they are slightly different, say a space is added. 
-            return another.GetText().Equals(node.GetText());
+            // What if the user resolved the issue manually. 
+            var noSpaceNode = node.GetText().Replace(" ", "");
+            var noSpaceAnother = another.GetText().Replace(" ", "");
+            return noSpaceAnother.Equals(noSpaceNode);
         }
 
         public SyntaxNode GetSyntaxNode()
