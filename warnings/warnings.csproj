@@ -128,8 +128,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="quickfix\IssueTracedNode.cs" />
-    <Compile Include="quickfix\RefactoringQuickFix.cs" />
+    <Compile Include="ui\IssueTracedNode.cs" />
+    <Compile Include="ui\RefactoringQuickFix.cs" />
     <Compile Include="detection\ExtractMethodDetector.cs" />
     <Compile Include="detection\RenameDetector.cs" />
     <Compile Include="refactoring\analyzer\ManualExtractMethodAnalyzer.cs" />

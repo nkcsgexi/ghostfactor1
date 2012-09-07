@@ -138,6 +138,7 @@ namespace warnings.components
         {
             // Combine all the checking results into one.
             ICheckingResult combined = new CombinedCheckingResult(results);
+            logger.Info("Combined Result: hasProblem = " + combined.HasProblem() + "; description = " +combined.GetProblemDescription());
 
             // If having problems, added to the issue componet
             if (combined.HasProblem())
@@ -147,7 +148,7 @@ namespace warnings.components
 
                 // Add an add issue item to the component.
                 GhostFactorComponents.refactoringIssuedNodeComponent.Enqueue(new AddIssueTracedNodeWorkItem(issuedNode, 
-                GhostFactorComponents.refactoringIssuedNodeComponent));
+                    GhostFactorComponents.refactoringIssuedNodeComponent));
             }
         }
     }

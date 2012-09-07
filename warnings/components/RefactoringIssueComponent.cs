@@ -13,15 +13,18 @@ using warnings.util;
 
 namespace warnings.components
 {
+    /* A repository from issues can be queried, added, and updated. */
     public interface IIssuedNodesRepository
     {
         void AddIssueTracedNode(IIssueTracedNode tracedNode);
 
-        IEnumerable<CodeIssue> GetCodeIssues();
+        CodeIssue GetCodeIssue(SyntaxNode node);
 
-        void UpdateIssues(IDocument document);
+        // TODO: when to remove a issued node.
+
     }
 
+    /* The componenet itself is a issue repository and also is a Factor component. */
     public interface IRefactoringIssuedNodesComponent :  IFactorComponent, IIssuedNodesRepository
     {
         
@@ -29,6 +32,7 @@ namespace warnings.components
 
     internal class RefactoringIssuedNodesComponent : IRefactoringIssuedNodesComponent
     {
+        /* Singleton this component. */
         private static readonly IRefactoringIssuedNodesComponent intance = new RefactoringIssuedNodesComponent();
 
         public static IRefactoringIssuedNodesComponent GetInstance()
@@ -38,13 +42,6 @@ namespace warnings.components
 
         /* A list containing all the issuedNodes with issues. */
         private List<IIssueTracedNode> issuedNodes;
-
-        /* All the issues. */
-        /*
-         * Reads and writes of the following data types are atomic: bool, char, byte, sbyte, short, 
-         * ushort, uint, int, float, and reference types.
-         */
-        private IEnumerable<CodeIssue> issues; 
         
         /* A single thread workqueue. */
         private WorkQueue queue;
@@ -54,7 +51,6 @@ namespace warnings.components
         private RefactoringIssuedNodesComponent()
         {
             issuedNodes = new List<IIssueTracedNode>();
-            issues = Enumerable.Empty<CodeIssue>();
 
             queue = new WorkQueue();
             queue.ConcurrentLimit = 1;
@@ -95,32 +91,30 @@ namespace warnings.components
         /* Add a issue traced node to the repository, if such node does not exist. */
         public void AddIssueTracedNode(IIssueTracedNode tracedNode)
         {
-            if(!issuedNodes.Contains(tracedNode))
-            {
-                issuedNodes.Add(tracedNode);
-            }
-        }
-
-        /* Get the issues. */
-        public IEnumerable<CodeIssue> GetCodeIssues()
-        {
-            return issues;
-        }
-
-        /* Update all the issues given a new document instance. */
-        public void UpdateIssues(IDocument document)
-        {
-            var newIssuedNode = new List<IIssueTracedNode>();
-            foreach (var iNode in issuedNodes)
-            {
-                iNode.SetNewDocument(document);
-                if (!iNode.IsIssueResolved())
+            // First lock the issuedNodes, cannot read.
+            lock(issuedNodes){
+                // Whether the issued node is already there.
+                if (!issuedNodes.Contains(tracedNode))
                 {
-                    newIssuedNode.Add(iNode);
+                    issuedNodes.Add(tracedNode);
+                    logger.Info("IIssueTracedNode is added. Count: " + issuedNodes.Count);
                 }
             }
-            issuedNodes = newIssuedNode;
-            issues = issuedNodes.Select(n => n.GetCodeIssue());    
+        }
+
+
+        public CodeIssue GetCodeIssue(SyntaxNode node)
+        {
+            // First lock the issued nodes.
+            lock (issuedNodes)
+            {
+                foreach (var iNode in issuedNodes)
+                {
+                    if(iNode.IsIssuedAt(node))
+                        return new CodeIssue(CodeIssue.Severity.Warning, node.Span, iNode.GetCheckResult().GetProblemDescription());
+                }
+                return null;
+            }
         }
     }
 
@@ -129,37 +123,25 @@ namespace warnings.components
     {
         private readonly IIssuedNodesRepository repository;
         private readonly IIssueTracedNode node;
+        private readonly Logger logger;
 
         public AddIssueTracedNodeWorkItem(IIssueTracedNode node, IIssuedNodesRepository repository)
         {
             this.node = node;
             this.repository = repository;
+            this.logger = NLoggerUtil.getNLogger(typeof (AddIssueTracedNodeWorkItem));
         }
 
         public override void Perform()
         {
-            repository.AddIssueTracedNode(node);
+            try
+            {
+                repository.AddIssueTracedNode(node);
+            }catch(Exception e)
+            {
+               logger.Fatal(e);
+            }
+            
         }
-    }
-
-    /* Work item to update the existing issues by giving a new document. */
-    internal class UpdateIssuesWorkItem : WorkItem
-    {
-        private readonly IIssuedNodesRepository repository;
-        private readonly IDocument document;
-
-        public UpdateIssuesWorkItem(IDocument document, IIssuedNodesRepository repository)
-        {
-            this.document = document;
-            this.repository = repository;
-        }
-
-        public override void Perform()
-        {
-            repository.UpdateIssues(document);
-        }
-    }
-  
-
-
+    } 
 }

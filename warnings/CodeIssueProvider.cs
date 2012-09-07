@@ -6,6 +6,7 @@ using System.Threading;
 using System.Windows;
 using NLog;
 using Roslyn.Compilers;
+using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
@@ -28,12 +29,8 @@ namespace warnings
 
             // Add the new record to the history component.
             GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
-
-            // Add the new document to the Issue component.
-            GhostFactorComponents.refactoringIssuedNodeComponent.Enqueue(new UpdateIssuesWorkItem(document
-                , GhostFactorComponents.refactoringIssuedNodeComponent));
-
-            return GhostFactorComponents.refactoringIssuedNodeComponent.GetCodeIssues();
+            var issue = GhostFactorComponents.refactoringIssuedNodeComponent.GetCodeIssue((SyntaxNode) node);  
+            yield return issue;
         }
 
         private bool initialized = false;
