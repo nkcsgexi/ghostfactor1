@@ -17,6 +17,7 @@ namespace warnings.analyzer
     public interface IMethodAnalyzer
     {
         void SetMethodDeclaration(SyntaxNode method);
+        SyntaxNode GetMethodName();
         IEnumerable<SyntaxNode> GetStatements();
         IEnumerable<SyntaxNode> GetStatementsByIndexRange(int start, int end);
         IEnumerable<SyntaxNode> GetStatementsBefore(int position);
@@ -54,6 +55,11 @@ namespace warnings.analyzer
         public void SetMethodDeclaration(SyntaxNode method)
         {
             this.method = (MethodDeclarationSyntax) method;   
+        }
+
+        public SyntaxNode GetMethodName()
+        {
+            throw new NotImplementedException();
         }
 
         public IEnumerable<SyntaxNode> GetStatements()

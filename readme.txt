@@ -11,7 +11,7 @@ Conditions to check for extract method:
 	g. method name does not exist. (static analysis)
 	h. method does not hide a method in super class. (static analysis)
 
-Counting line of code:
+Counting line of code:  
 	Select Edit -> Find & Replace -> Find in files¡­ or just press CTRL+SHIFT+F
 	Check Use and select Regular expressions.
 	Top Left Drop down using the Find in Files Selection

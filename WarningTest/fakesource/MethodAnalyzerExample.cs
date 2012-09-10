@@ -8,9 +8,14 @@ namespace WarningTest.fakesource
 {
     class MethodAnalyzerExample
     {
+        private int field1;
+        private int field2, field3;
+
         public void method1()
         {
-
+            int variable4;
+            int variable5;
+            variable4 = 1;
         }
 
         public int method2()
@@ -29,6 +34,10 @@ namespace WarningTest.fakesource
 
         public IEnumerable<Object> method5(int a, int b, bool c, Object d, IEnumerable<int> e)
         {
+            var list = new List<int>();
+            list.Add(1);
+            list.Where(n => n > 0).First();
+            method3();
             return Enumerable.Empty<Object>();
         }
 

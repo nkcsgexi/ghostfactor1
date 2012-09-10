@@ -71,6 +71,7 @@
     <Compile Include="MethodAnalyzerTests.cs" />
     <Compile Include="MethodBodyRetrieverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenamableRetrieverTests.cs" />
     <Compile Include="ResourcesTests.cs" />
     <Compile Include="RoslynRefactoringUtilTest.cs" />
     <Compile Include="RoslynUtilTests.cs" />

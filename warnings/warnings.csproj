@@ -128,6 +128,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="retriever\RenamablesRetriever.cs" />
+    <Compile Include="retriever\RetrieverFactory.cs" />
     <Compile Include="ui\IssueTracedNode.cs" />
     <Compile Include="ui\RefactoringQuickFix.cs" />
     <Compile Include="detection\ExtractMethodDetector.cs" />
