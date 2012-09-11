@@ -65,6 +65,8 @@
     <Compile Include="fakesource\EMDetectorBefore.cs" />
     <Compile Include="fakesource\ExtractMethodExample.cs" />
     <Compile Include="fakesource\MethodAnalyzerExample.cs" />
+    <Content Include="fakesource\RenameDetectorExampleAfter.txt" />
+    <Content Include="fakesource\RenameDetectorExampleBefore.txt" />
     <Compile Include="fakesource\SyntaxNodesAnalyzerExamples.cs" />
     <Compile Include="fakesource\TryToUpdate.cs" />
     <Compile Include="HistoryRecordTests.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="MethodBodyRetrieverTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RenamableRetrieverTests.cs" />
+    <Compile Include="RenameDetectorTests.cs" />
     <Compile Include="ResourcesTests.cs" />
     <Compile Include="RoslynRefactoringUtilTest.cs" />
     <Compile Include="RoslynUtilTests.cs" />

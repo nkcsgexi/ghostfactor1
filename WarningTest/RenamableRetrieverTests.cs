@@ -31,7 +31,8 @@ namespace WarningTest
             this.document = (IDocument) converter.Convert(FileUtil.readAllText(code), null, null, null);
             logger = NLoggerUtil.getNLogger(typeof (MethodAnalyzerTests));
             root = (SyntaxNode) document.GetSyntaxRoot();
-            retriever = RetrieverFactory.GetRenamableRetriever(root);
+            retriever = RetrieverFactory.GetRenamableRetriever();
+            retriever.SetRoot(root);
         }
 
 

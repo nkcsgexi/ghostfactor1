@@ -133,6 +133,15 @@ namespace warnings.refactoring
 
     internal class ManualRenameRefactoring : IManualRenameRefactoring
     {
+        private readonly string newName;
+        private readonly SyntaxToken token;
+
+        public ManualRenameRefactoring(SyntaxToken token, string newName)
+        {
+            this.token = token;
+            this.newName = newName;
+        }
+
         public RefactoringType type
         {
             get { return RefactoringType.RENAME; }
@@ -145,7 +154,7 @@ namespace warnings.refactoring
 
         public SyntaxNode GetIssuedNode()
         {
-            throw new NotImplementedException();
+            return token.Parent;
         }
     }
 }

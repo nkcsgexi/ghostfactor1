@@ -21,5 +21,14 @@ namespace warnings.refactoring
         {
             return new ManualExtractMethodRefactoring(declaration, invocation, expression);
         }
+
+        /* 
+         * Create a manual rename refactoring, the token (of type identifier token) is where the rename is performed on,
+         * the new name is the name given to the identifier. Token is in the before version. 
+         */
+        public static IManualRenameRefactoring CreateManualRenameRefactoring(SyntaxToken token, string newName)
+        {
+            return new ManualRenameRefactoring(token, newName);
+        }
     }
 }

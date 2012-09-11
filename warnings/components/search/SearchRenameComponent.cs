@@ -51,14 +51,17 @@ namespace warnings.components
 
         protected override int getSearchDepth()
         {
-            return 30;
+            return 3;
         }
 
         protected override void onRefactoringDetected(IExternalRefactoringDetector detector)
         {
-            logger.Info("\n Rename dectected.");
-            logger.Info("\n Before: \n" + detector.getSourceBefore());
-            logger.Info("\n After: \n" + detector.getSourceAfter());
+            logger.Info("Rename dectected.");
+            logger.Info("\nBefore: \n" + detector.getSourceBefore());
+            logger.Info("\nAfter: \n" + detector.getSourceAfter());
+
+            // Get the 
+            var refactoring = detector.getRefactorings().FirstOrDefault();
         }
 
         protected override void onNoRefactoringDetected()

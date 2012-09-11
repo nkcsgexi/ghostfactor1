@@ -9,9 +9,9 @@ namespace warnings.retriever
 {
     public class RetrieverFactory
     {
-        public static IRenamableRetriever GetRenamableRetriever(SyntaxNode root)
+        public static IRenamableRetriever GetRenamableRetriever()
         {
-            return new RenamablesRetriever(root);
+            return new RenamablesRetriever();
         }
     }
 }

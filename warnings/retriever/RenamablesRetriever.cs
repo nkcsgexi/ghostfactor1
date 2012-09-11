@@ -13,10 +13,14 @@ namespace warnings.retriever
 {
     /* 
      * For retrieving all the renamable things in a given document, the list of renamable things shall keep increasing, right now
-     * only solving the most used ones, classdeclarations, methoddeclarations, and variabledeclarators.
+     * only solving the most used ones, class declarations, method declarations, and variable declarators. In addtion, it can retrieve
+     * all the member access, like A.C.D() for method access or A.C.B for field access, and also all identifiers in the given 
+     * document.
      */
     public interface IRenamableRetriever
     {
+        void SetRoot(SyntaxNode root);
+
         /* First all the things in declarations that can be renamed. */
         IEnumerable<SyntaxToken> GetClassDeclarationIdentifiers();
         IEnumerable<SyntaxToken> GetMethodDeclarationIdentifiers();
@@ -29,14 +33,13 @@ namespace warnings.retriever
     }
 
     internal class RenamablesRetriever : IRenamableRetriever
-    {  
-        private readonly Logger logger;
+    {
+        private readonly Logger logger = NLoggerUtil.getNLogger(typeof(RenamablesRetriever));
 
-        private readonly SyntaxNode root;
+        private SyntaxNode root;
 
-        internal RenamablesRetriever(SyntaxNode root)
+        public void SetRoot(SyntaxNode root)
         {
-            this.logger = NLoggerUtil.getNLogger(typeof (RenamablesRetriever));
             this.root = root;
         }
 
@@ -110,7 +113,7 @@ namespace warnings.retriever
         {
             // All the identifier tokens
             var names = root.DescendantTokens().Where(n => n.Kind == SyntaxKind.IdentifierToken);
-            logger.Info("Identifier tokens: " + StringUtil.ConcatenateAll(",", names.Select(n => n.GetText())));
+            logger.Info("Get all identifier tokens.");
             return names.OrderBy(n => n.Span.Start).AsEnumerable();
         }
     }

@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using NLog;
 
 namespace warnings.util
 {
     public class FileUtil
     {
+        private static Logger logger = NLoggerUtil.getNLogger(typeof (FileUtil));
+
         //Xi: read specified lines in a file, starts with line start to line end, inclusively.
         //the minumum value of start is 0.
         public static String[] readFileLines(String path, int start, int end)
@@ -66,7 +69,14 @@ namespace warnings.util
 
         public static string readAllText(string path)
         {
-            return File.ReadAllText(path);
+            try
+            {
+                return File.ReadAllText(path);
+            }catch(Exception e)
+            {
+                logger.Fatal(e);
+                return null;
+            }
         }
 
         public static void delete(string sourcePath)
