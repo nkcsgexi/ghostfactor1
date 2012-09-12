@@ -64,16 +64,16 @@ namespace warnings.refactoring.detection
             // trees.
             var retriever = RetrieverFactory.GetRenamableRetriever();
             retriever.SetRoot(rootBefore);
-            var beforeTokens = retriever.GetIdentifierTokens();
+            var beforeTokens = retriever.GetIdentifierNodes();
             retriever.SetRoot(rootAfter);
-            var afterTokens = retriever.GetIdentifierTokens();
+            var afterTokens = retriever.GetIdentifierNodes();
 
             // For all the identifiers in before and after treees, rename shall result in one identifier change
             // and leaves anything else untouched.
             if(beforeTokens.Count() == afterTokens.Count())
             {
                 // A list containing all the nodes whose names are changed.
-                var changedID = new List<SyntaxToken>();
+                var changedID = new List<SyntaxNode>();
                 
                 // Save the new name.
                 String newName = null;
@@ -85,10 +85,10 @@ namespace warnings.refactoring.detection
 
                     // If the value of the name is changed, add the token in before tree to
                     // the list. 
-                    if(!beforeId.ValueText.Equals(afterId.ValueText))
+                    if(!beforeId.GetText().Equals(afterId.GetText()))
                     {
                         changedID.Add(beforeId);
-                        newName = afterId.ValueText;
+                        newName = afterId.GetText();
                     }
                 }
 

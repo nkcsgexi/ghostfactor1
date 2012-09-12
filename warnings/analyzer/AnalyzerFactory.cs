@@ -53,6 +53,17 @@ namespace warnings.analyzer
             return new ExpressionDataFlowAnalyzer();
         }
 
+        public static IParameterAnalyzer GetParameterAnalyzer()
+        {
+            return new ParameterAnalyzer();
+        }
+
+        public static ISemanticModelAnalyzer GetSemanticModelAnalyzer()
+        {
+            return new SemanticModelAnalyzer();
+        }
+
+
         public static String GetAnalyzersCountInfo()
         {
             StringBuilder sb = new StringBuilder(Environment.NewLine);
@@ -68,5 +79,6 @@ namespace warnings.analyzer
             return sb.ToString();
         }
 
+      
     }
 }

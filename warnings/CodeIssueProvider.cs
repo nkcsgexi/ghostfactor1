@@ -23,9 +23,11 @@ namespace warnings
     {
         private readonly Logger logger = NLoggerUtil.getNLogger(typeof(CodeIssueProvider));
 
+        private ISolution solution;
+
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
         {
-            initialize();
+            initialize(document);
 
             // Add the new record to the history component.
             GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
@@ -36,10 +38,12 @@ namespace warnings
         private bool initialized = false;
 
         /* Code runs only once when getIssues is called. */
-        private void initialize()
+        private void initialize(IDocument document)
         {
             if (!initialized)
             {
+                solution = document.Project.Solution;
+              
                 // Start all the components.
                 GhostFactorComponents.StartAllComponents();
                 initialized = true;

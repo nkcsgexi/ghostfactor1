@@ -134,11 +134,11 @@ namespace warnings.refactoring
     internal class ManualRenameRefactoring : IManualRenameRefactoring
     {
         private readonly string newName;
-        private readonly SyntaxToken token;
+        private readonly SyntaxNode node;
 
-        public ManualRenameRefactoring(SyntaxToken token, string newName)
+        public ManualRenameRefactoring(SyntaxNode node, string newName)
         {
-            this.token = token;
+            this.node = node;
             this.newName = newName;
         }
 
@@ -154,7 +154,7 @@ namespace warnings.refactoring
 
         public SyntaxNode GetIssuedNode()
         {
-            return token.Parent;
+            return node;
         }
     }
 }

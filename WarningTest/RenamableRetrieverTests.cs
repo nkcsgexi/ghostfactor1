@@ -24,14 +24,17 @@ namespace WarningTest
 
         private readonly IDocument document;
 
+        private readonly ISemanticModel model;
+
         public RenamableRetrieverTests()
         {
             var code = TestUtil.getFakeSourceFolder() + "MethodAnalyzerExample.cs";
             var converter = new String2IDocumentConverter();
             this.document = (IDocument) converter.Convert(FileUtil.readAllText(code), null, null, null);
+            model = document.GetSemanticModel();
             logger = NLoggerUtil.getNLogger(typeof (MethodAnalyzerTests));
             root = (SyntaxNode) document.GetSyntaxRoot();
-            retriever = RetrieverFactory.GetRenamableRetriever();
+            retriever = RetrieverFactory.GetRenamableRetriever(); 
             retriever.SetRoot(root);
         }
 
@@ -42,6 +45,9 @@ namespace WarningTest
             var classes = retriever.GetClassDeclarationIdentifiers();
             Assert.IsTrue(classes.Count() == 1);
             Assert.IsTrue(classes.First().GetText().Equals("MethodAnalyzerExample"));
+            var symbol = model.GetDeclaredSymbol(classes.First().Parent);
+            Assert.IsTrue(symbol.Name.Equals("MethodAnalyzerExample"));
+
         }
 
         [TestMethod]
@@ -81,23 +87,37 @@ namespace WarningTest
             Assert.IsTrue(variables.ElementAt(5).GetText().Equals("e"));
         }
 
+
         [TestMethod]
         public void TestMethod5()
         {
-            var accesses = retriever.GetMemberAccesses();
-            var refers = retriever.GetIdentifierTokens();
-            foreach (var access in accesses)
+            var identifiers = retriever.GetAllDeclarationIdentifiers();
+            foreach (var id in identifiers)
             {
-                var symbol = document.GetSemanticModel().GetDeclaredSymbol(access);
-                if(symbol != null)
-                    logger.Info(access.GetText() + "," + symbol.Name);
-            }
-            foreach (SyntaxToken refer in refers)
-            {
-                var symbol = document.GetSemanticModel().LookupSymbols(refer.Span.Start);
-                if (symbol.Any())
-                    logger.Info(refer.GetText() + "," + StringUtil.ConcatenateAll(" ", symbol.Select(s => s.Name)));
+                var s = model.GetDeclaredSymbol(id.Parent);
+                Assert.IsNotNull(s);
+                Assert.IsTrue(s.Name.Equals(id.ValueText));
             }
         }
+
+        [TestMethod]
+        public void TestMethod6()
+        {
+            var accesses = retriever.GetMemberAccesses();
+            var refers = retriever.GetIdentifierNodes();
+            foreach (var access in accesses)
+            {
+                var infor = model.GetSymbolInfo(access);
+                logger.Info(access.GetText() + "," + infor.Symbol);
+            }
+            foreach (SyntaxNode refer in refers)
+            {
+                var infor = model.GetSymbolInfo(refer);
+                logger.Info(refer.GetText() + "," + infor.Symbol);
+            }
+        }
+
+     
+
     }
 }

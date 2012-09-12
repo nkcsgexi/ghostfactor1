@@ -41,5 +41,19 @@ namespace WarningTest.fakesource
             return Enumerable.Empty<Object>();
         }
 
+        public void method6(int a, int b, int c)
+        {
+            int d = a + b;
+            int e = b + c;
+            var list = new List<int>();
+            list.Add(a);
+            list.Add(c);
+        }
+
+        public void method7(out IEnumerable<IEnumerable<object>> things)
+        {
+            things = null;
+        }
+
     }
 }

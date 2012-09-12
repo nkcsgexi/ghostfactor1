@@ -22,14 +22,16 @@ namespace warnings.retriever
         void SetRoot(SyntaxNode root);
 
         /* First all the things in declarations that can be renamed. */
+        IEnumerable<SyntaxNode> GetNamespaceDeclarationNames();
         IEnumerable<SyntaxToken> GetClassDeclarationIdentifiers();
         IEnumerable<SyntaxToken> GetMethodDeclarationIdentifiers();
         IEnumerable<SyntaxToken> GetVariableDeclaratorIdentifiers();
         IEnumerable<SyntaxToken> GetMethodParameterDeclarationIdentifiers();
-
+        IEnumerable<SyntaxToken> GetAllDeclarationIdentifiers(); 
+            
         /* Next, all the names in refering that can be renamed. */
         IEnumerable<SyntaxNode> GetMemberAccesses();
-        IEnumerable<SyntaxToken> GetIdentifierTokens();
+        IEnumerable<SyntaxNode> GetIdentifierNodes();
     }
 
     internal class RenamablesRetriever : IRenamableRetriever
@@ -41,6 +43,17 @@ namespace warnings.retriever
         public void SetRoot(SyntaxNode root)
         {
             this.root = root;
+        }
+
+        public IEnumerable<SyntaxNode> GetNamespaceDeclarationNames()
+        {
+            // All declarations of namespace
+            var declarations = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.NamespaceDeclaration);
+            
+            // Select their names, their type is NameSyntax.
+            var list = (from NamespaceDeclarationSyntax dec in declarations select dec.Name);
+            logger.Info("Get all identifiers in namespace declarations.");
+            return list.AsEnumerable();
         }
 
         public IEnumerable<SyntaxToken> GetMethodDeclarationIdentifiers()
@@ -83,6 +96,23 @@ namespace warnings.retriever
             return list.OrderBy(n => n.Span.Start).AsEnumerable();
         }
 
+        /* 
+         * Identifier tokens exist in the declarations. Their parent can be applied on GetDeclaredSymbol to get the
+         * declared symbols.
+         */
+        public IEnumerable<SyntaxToken> GetAllDeclarationIdentifiers()
+        {
+            var allTokens = new List<SyntaxToken>();
+
+            // Add identifiers in all kinds of delarations.
+            allTokens.AddRange(GetClassDeclarationIdentifiers());
+            allTokens.AddRange(GetMethodDeclarationIdentifiers());
+            allTokens.AddRange(GetVariableDeclaratorIdentifiers());
+            allTokens.AddRange(GetMethodParameterDeclarationIdentifiers());
+
+            return allTokens.AsEnumerable();
+        }
+
 
         public IEnumerable<SyntaxToken> GetClassDeclarationIdentifiers()
         {
@@ -108,12 +138,12 @@ namespace warnings.retriever
             return accesses.OrderBy(n => n.Span.Start).AsEnumerable();
         }
 
-        /* Get all identifier tokens in the root. */
-        public IEnumerable<SyntaxToken> GetIdentifierTokens()
+        /* Identifier nodes are in referring, not declaring. */
+        public IEnumerable<SyntaxNode> GetIdentifierNodes()
         {
-            // All the identifier tokens
-            var names = root.DescendantTokens().Where(n => n.Kind == SyntaxKind.IdentifierToken);
-            logger.Info("Get all identifier tokens.");
+            // Get all nodes whose type is identifier name.
+            var names = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName);
+            logger.Info("Get all indetifier names.");
             return names.OrderBy(n => n.Span.Start).AsEnumerable();
         }
     }

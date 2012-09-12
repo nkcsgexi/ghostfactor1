@@ -102,6 +102,7 @@
     <Compile Include="analyzer\DocumentAnalyzer.cs" />
     <Compile Include="analyzer\MethodAnalyzer.cs" />
     <Compile Include="analyzer\MethodInvocationAnalyzer.cs" />
+    <Compile Include="analyzer\ParameterAnalyzer.cs" />
     <Compile Include="analyzer\SemanticModelAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodeAnalyzer.cs" />
@@ -124,6 +125,7 @@
     <Compile Include="conditions\ExtractMethod\ParametersChecker.cs" />
     <Compile Include="conditions\ExtractMethod\ReturnTypeChecker.cs" />
     <Compile Include="conditions\Rename\RenameConditionChecker.cs" />
+    <Compile Include="detection\ChangeMethodSignatureDetector.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

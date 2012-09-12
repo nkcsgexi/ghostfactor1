@@ -25,7 +25,7 @@ namespace WarningTest
 
         private Logger logger;
 
-        private readonly int METHOD_COUNT = 5;
+        private readonly int METHOD_COUNT = 7;
 
         public MethodAnalyzerTests()
         {
@@ -127,6 +127,45 @@ namespace WarningTest
             Assert.IsTrue(methodAnalyzer.HasReturnStatement());
             logger.Info(methodAnalyzer.GetReturnStatements().First().GetText());
             Assert.IsTrue(methodAnalyzer.GetReturnStatements().First().GetText().Equals("return Enumerable.Empty<Object>();"));
+        }
+
+        [TestMethod]
+        public void TestMethod8()
+        {
+            methodAnalyzer.SetMethodDeclaration(getMethod(5));
+            var usages = methodAnalyzer.GetParameterUsages();
+            var paras = methodAnalyzer.GetParameters();
+            Assert.IsTrue(usages.Count() == paras.Count());
+            Assert.IsTrue(usages.Count() == 3);
+            Assert.IsTrue(usages.ElementAt(0).Count() == usages.ElementAt(1).Count());
+            Assert.IsTrue(usages.ElementAt(1).Count() == usages.ElementAt(2).Count());
+            Assert.IsTrue(usages.ElementAt(2).Count() == 2);
+        }
+
+        [TestMethod]
+        public void TestMethod9()
+        {
+            methodAnalyzer.SetMethodDeclaration(getMethod(5));
+            var paras = methodAnalyzer.GetParameters();
+            var paraAnalyzer = AnalyzerFactory.GetParameterAnalyzer();
+            for (int i = 0; i < 3; i++ )
+            {
+                paraAnalyzer.SetParameter(paras.ElementAt(i));
+                var type = paraAnalyzer.GetParameterType();
+                Assert.IsTrue(type.GetText().Equals("int"));
+            }
+        }
+
+        [TestMethod]
+        public void TestMethod10()
+        {
+            methodAnalyzer.SetMethodDeclaration(getMethod(6));
+            var paras = methodAnalyzer.GetParameters();
+            var paraAnalyzer = AnalyzerFactory.GetParameterAnalyzer();
+            paraAnalyzer.SetParameter(paras.First());
+            Assert.IsTrue(paraAnalyzer.GetModifiers().GetText().Equals("out"));
+            Assert.IsTrue(paraAnalyzer.GetIdentifier().ValueText.Equals("things"));
+            Assert.IsTrue(paraAnalyzer.GetParameterType().GetText().Equals("IEnumerable<IEnumerable<object>>"));
         }
     }
 }

@@ -26,9 +26,9 @@ namespace warnings.refactoring
          * Create a manual rename refactoring, the token (of type identifier token) is where the rename is performed on,
          * the new name is the name given to the identifier. Token is in the before version. 
          */
-        public static IManualRenameRefactoring CreateManualRenameRefactoring(SyntaxToken token, string newName)
+        public static IManualRenameRefactoring CreateManualRenameRefactoring(SyntaxNode node, string newName)
         {
-            return new ManualRenameRefactoring(token, newName);
+            return new ManualRenameRefactoring(node, newName);
         }
     }
 }

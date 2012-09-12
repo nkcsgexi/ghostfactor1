@@ -38,7 +38,7 @@ namespace WarningTest
         {
             var retriever = RetrieverFactory.GetRenamableRetriever();
             retriever.SetRoot(node);
-            var tokens = retriever.GetIdentifierTokens();
+            var tokens = retriever.GetIdentifierNodes();
             Assert.IsTrue(idIndex < tokens.Count());
             TextSpan span = tokens.ElementAt(idIndex).Span;
             string beforeTokenCode = node.GetText().Substring(0, span.Start);

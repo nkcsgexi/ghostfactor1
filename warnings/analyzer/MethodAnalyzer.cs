@@ -18,14 +18,20 @@ namespace warnings.analyzer
     {
         void SetMethodDeclaration(SyntaxNode method);
         SyntaxNode GetMethodName();
+
+        /* Statement related queries. */
         IEnumerable<SyntaxNode> GetStatements();
         IEnumerable<SyntaxNode> GetStatementsByIndexRange(int start, int end);
         IEnumerable<SyntaxNode> GetStatementsBefore(int position);
         SyntaxNode GetStatementAt(int position);
-        IEnumerable<SyntaxNode> GetStatementsAfter(int position); 
-        IEnumerable<SyntaxNode> GetParameters();
-        SyntaxNode GetReturnType();
+        IEnumerable<SyntaxNode> GetStatementsAfter(int position);
         IEnumerable<SyntaxNode> GetReturnStatements();
+        
+        /* Parameter related queries. */
+        IEnumerable<SyntaxNode> GetParameters();
+        IEnumerable<IEnumerable<SyntaxNode>> GetParameterUsages();
+
+        SyntaxNode GetReturnType();
         bool HasReturnStatement();
         string DumpTree();
     }
@@ -133,6 +139,29 @@ namespace warnings.analyzer
         {
             // Any node that in the parameter type, different from argument type
             return method.DescendantNodes().Where(n => n.Kind == SyntaxKind.Parameter);
+        }
+
+        public IEnumerable<IEnumerable<SyntaxNode>> GetParameterUsages()
+        {
+            // Containing the results.
+            var list = new List<IEnumerable<SyntaxNode>>();
+            
+            // All the parameters taken.
+            var parameters = GetParameters();
+
+            // Block of the method declaration.
+            var block = ASTUtil.GetBlockOfMethod(method);
+
+            // For each parameter.
+            foreach (ParameterSyntax para in parameters)
+            {
+                // If an identifier name equals the paraemeter's name, it is one usage of the 
+                // parameter.
+                var usage = block.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName 
+                    && n.GetText().Equals(para.Identifier.ValueText));
+                list.Add(usage);
+            }
+            return list.AsEnumerable();
         }
 
         public SyntaxNode GetReturnType()

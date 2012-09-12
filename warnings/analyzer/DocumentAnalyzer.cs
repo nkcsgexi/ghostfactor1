@@ -19,7 +19,7 @@ namespace warnings.analyzer
     {
         void SetDocument(IDocument document);
         IEnumerable<SyntaxNode> GetNamespaceDecalarations();
-        IEnumerable<SyntaxNode> GetClassDeclarations(SyntaxNode mamespaceDeclaration);
+        IEnumerable<SyntaxNode> GetClassDeclarations(SyntaxNode mamespaceDeclaration);      
         IEnumerable<SyntaxNode> GetFieldDeclarations(SyntaxNode classDeclaration);
         IEnumerable<SyntaxNode> GetMethodDeclarations(SyntaxNode classDeclaration);
         IEnumerable<SyntaxNode> GetVariableDeclarations(SyntaxNode methodDeclaration);
