@@ -30,7 +30,7 @@ namespace WarningTest
             var sourceAfter = FileUtil.readAllText(TestUtil.getFakeSourceFolder() + "RenameDetectorExampleAfter.txt");
             before = ASTUtil.getSyntaxTreeFromSource(sourceBefore).GetRoot();
             after = ASTUtil.getSyntaxTreeFromSource(sourceAfter).GetRoot();
-            detector = RefactoringDetectorFactory.createRenameDetector();
+            detector = RefactoringDetectorFactory.CreateRenameDetector();
             logger = NLoggerUtil.getNLogger(typeof (RenameDetectorTests));
         }
 

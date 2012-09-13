@@ -30,5 +30,12 @@ namespace warnings.refactoring
         {
             return new ManualRenameRefactoring(node, newName);
         }
+
+        /* Create a manual change method signature refactoring. */
+        public static IChangeMethodSignatureRefactoring CreateManualChangeMethodSignatureRefactoring
+            (SyntaxNode afterMethod, List<Tuple<int, int>> parametersMap)
+        {
+            return new ChangeMethodSignatureRefactoring(afterMethod, parametersMap);
+        }
     }
 }

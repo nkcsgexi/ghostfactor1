@@ -21,7 +21,7 @@ namespace warnings.util
         public static List<MethodDeclarationSyntax> getAllMethodDeclarations(SyntaxTree tree)
         {
             SyntaxNode root = tree.GetRoot();
-            List<MethodDeclarationSyntax> methods = new List<MethodDeclarationSyntax>();
+            var methods = new List<MethodDeclarationSyntax>();
             IEnumerable<SyntaxNode> ite = root.DescendantNodes();
             foreach (SyntaxNode node in ite)
             {

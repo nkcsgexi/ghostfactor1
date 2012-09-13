@@ -11,6 +11,7 @@ using warnings.util;
 namespace warnings.refactoring
 {
     /* Refactoring input that shall be feed in to the checker. */
+
     public interface IManualRefactoring : IHasRefactoringType
     {
         string ToString();
@@ -20,10 +21,11 @@ namespace warnings.refactoring
         void MapToDocuments(IDocument before, IDocument after);
 
         // Get the node where the issue should show.
-        SyntaxNode GetIssuedNode();
+        SyntaxNode GetIssuedNode(IDocument document);
     }
 
     /* public interface for communicateing a manual extract method refactoring.*/
+
     public interface IManualExtractMethodRefactoring : IManualRefactoring
     {
         /* Method declaration node of the extracted method. */
@@ -41,13 +43,27 @@ namespace warnings.refactoring
     }
 
     /* public interface for communicating a manual rename refactoring. */
+
     public interface IManualRenameRefactoring : IManualRefactoring
     {
-        
+
+    }
+
+    /* public interface for a manual change method signature refactoring. */
+
+    public interface IChangeMethodSignatureRefactoring : IManualRefactoring
+    {
+        /* New method declaration after the signature is updated. */
+        SyntaxNode ChangedMethodDeclaration { get; }
+
+        /* Parameters' map from previous version to new version. */
+        List<Tuple<int, int>> ParametersMap { get; }
     }
 
 
+
     /* Containing all the information about the extract method information. */
+
     internal class ManualExtractMethodRefactoring : IManualExtractMethodRefactoring
     {
         /* Method declaration node of the extracted method. */
@@ -67,7 +83,8 @@ namespace warnings.refactoring
             get { return RefactoringType.EXTRACT_METHOD; }
         }
 
-        internal ManualExtractMethodRefactoring(SyntaxNode declaration, SyntaxNode invocation, IEnumerable<SyntaxNode> statements )
+        internal ManualExtractMethodRefactoring(SyntaxNode declaration, SyntaxNode invocation,
+                                                IEnumerable<SyntaxNode> statements)
         {
             ExtractedMethodDeclaration = declaration;
             ExtractMethodInvocation = invocation;
@@ -84,6 +101,7 @@ namespace warnings.refactoring
         }
 
         /* Output the information of a detected extract method refactoring for testing and log purposes.*/
+
         public string ToString()
         {
             var sb = new StringBuilder();
@@ -93,7 +111,8 @@ namespace warnings.refactoring
             if (ExtractedStatements == null)
                 sb.AppendLine("Extracted Expression:\n" + ExtractedExpression);
             else
-                sb.AppendLine("Extracted Statements:\n" + StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
+                sb.AppendLine("Extracted Statements:\n" +
+                              StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
             return sb.ToString();
         }
 
@@ -110,14 +129,14 @@ namespace warnings.refactoring
             ExtractMethodInvocation = nodeAnalyzer.MapToAnotherDocument(after);
 
             // Map the extracted expression to the before document.
-            if(ExtractedExpression != null)
+            if (ExtractedExpression != null)
             {
                 nodeAnalyzer.SetSyntaxNode(ExtractedExpression);
                 ExtractedExpression = nodeAnalyzer.MapToAnotherDocument(before);
             }
 
             // Map the extracted statements to the before document.
-            if(ExtractedStatements != null)
+            if (ExtractedStatements != null)
             {
                 var nodesAnalyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
                 nodesAnalyzer.SetSyntaxNodes(ExtractedStatements);
@@ -125,7 +144,7 @@ namespace warnings.refactoring
             }
         }
 
-        public SyntaxNode GetIssuedNode()
+        public SyntaxNode GetIssuedNode(IDocument document)
         {
             return ExtractMethodInvocation;
         }
@@ -152,9 +171,40 @@ namespace warnings.refactoring
             throw new NotImplementedException();
         }
 
-        public SyntaxNode GetIssuedNode()
+        public SyntaxNode GetIssuedNode(IDocument document)
         {
             return node;
         }
     }
+
+    internal class ChangeMethodSignatureRefactoring : IChangeMethodSignatureRefactoring
+    {
+
+        public ChangeMethodSignatureRefactoring(SyntaxNode ChangedMethodDeclaration, 
+            List<Tuple<int, int>> ParametersMap)
+        {
+            this.ChangedMethodDeclaration = ChangedMethodDeclaration;
+            this.ParametersMap = ParametersMap;
+        }
+
+        public RefactoringType type
+        {
+            get { return RefactoringType.CHANGE_METHOD_SIGNATURE;}
+        }
+
+        public void MapToDocuments(IDocument before, IDocument after)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SyntaxNode GetIssuedNode(IDocument document)
+        {
+            throw new NotImplementedException();
+        }
+
+        public SyntaxNode ChangedMethodDeclaration { get; private set; }
+
+        public List<Tuple<int, int>> ParametersMap { get; private set; }
+    }
+
 }

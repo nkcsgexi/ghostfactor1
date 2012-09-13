@@ -48,7 +48,7 @@ namespace warnings.components
 
         protected override IExternalRefactoringDetector getRefactoringDetector()
         {
-            return RefactoringDetectorFactory.createExtractMethodDetector();
+            return RefactoringDetectorFactory.CreateExtractMethodDetector();
         }
 
         protected override int getSearchDepth()

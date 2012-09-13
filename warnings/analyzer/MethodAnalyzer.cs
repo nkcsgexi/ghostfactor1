@@ -17,7 +17,7 @@ namespace warnings.analyzer
     public interface IMethodAnalyzer
     {
         void SetMethodDeclaration(SyntaxNode method);
-        SyntaxNode GetMethodName();
+        SyntaxToken GetMethodName();
 
         /* Statement related queries. */
         IEnumerable<SyntaxNode> GetStatements();
@@ -63,9 +63,9 @@ namespace warnings.analyzer
             this.method = (MethodDeclarationSyntax) method;   
         }
 
-        public SyntaxNode GetMethodName()
+        public SyntaxToken GetMethodName()
         {
-            throw new NotImplementedException();
+            return method.Identifier;
         }
 
         public IEnumerable<SyntaxNode> GetStatements()
@@ -155,11 +155,18 @@ namespace warnings.analyzer
             // For each parameter.
             foreach (ParameterSyntax para in parameters)
             {
+                // Need a new subList to copy out nodes, IEnumerable is a read only interface that will not copy out as new
+                // elements. To copy out as new elements, a list is needed.
+                // ATTENTION: cannot list.add(block.DecendantNodes()...), because if have multiple paras the previous added IEnumerable 
+                // will be rewrite.
+                var sublist = new List<SyntaxNode>();
+
                 // If an identifier name equals the paraemeter's name, it is one usage of the 
                 // parameter.
-                var usage = block.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName 
-                    && n.GetText().Equals(para.Identifier.ValueText));
-                list.Add(usage);
+                sublist.AddRange(block.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName 
+                    && n.GetText().Equals(para.Identifier.ValueText)));
+                logger.Info("Parameter "+ para.Identifier +" usage:" + StringUtil.ConcatenateAll(",", sublist.Select(n => n.Span.ToString())));
+                list.Add(sublist.AsEnumerable());
             }
             return list.AsEnumerable();
         }

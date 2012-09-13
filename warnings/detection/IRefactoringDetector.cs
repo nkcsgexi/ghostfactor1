@@ -35,14 +35,19 @@ namespace warnings.refactoring.detection
 
     public static class RefactoringDetectorFactory
     {
-        public static IExternalRefactoringDetector createRenameDetector()
+        public static IExternalRefactoringDetector CreateRenameDetector()
         {
             return new RenameDetector();
         }
 
-        public static IExternalRefactoringDetector createExtractMethodDetector()
+        public static IExternalRefactoringDetector CreateExtractMethodDetector()
         {
-            return  new ExtractMethodDetector();
+            return new ExtractMethodDetector();
+        }
+
+        public static IExternalRefactoringDetector CreateChangeMethodSignatureDetector()
+        {
+            return  new ChangeMethodSignatureDetector();
         }
     }
 }

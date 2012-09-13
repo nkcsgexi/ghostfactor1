@@ -144,7 +144,7 @@ namespace warnings.components
             if (combined.HasProblem())
             {
                 // Create an issued node.
-                var issuedNode = new IssueTracedNode(refactoring.GetIssuedNode(), combined);
+                var issuedNode = new IssueTracedNode(refactoring.GetIssuedNode(null), combined);
 
                 // Add an add issue item to the component.
                 GhostFactorComponents.refactoringIssuedNodeComponent.Enqueue(new AddIssueTracedNodeWorkItem(issuedNode, 
