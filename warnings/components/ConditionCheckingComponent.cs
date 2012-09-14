@@ -121,6 +121,15 @@ namespace warnings.components
                         AddIssuesToRefactoringIssueComponent(refactoring, results);
                         break;
 
+                    // Checking conditions for change method signature.
+                    case RefactoringType.CHANGE_METHOD_SIGNATURE:
+                        logger.Info("Checking conditions for change method signature.");
+                        results = ConditionCheckingFactory.GetChangeMethodSignatureConditionsList().
+                            CheckAllConditions(before, after, refactoring);
+
+                        // Add founded issues to the issue component.
+                        AddIssuesToRefactoringIssueComponent(refactoring, results);
+                        break;
                     default:
                         logger.Fatal("Unknown refactoring type for conditions checking.");
                         break;
@@ -144,7 +153,7 @@ namespace warnings.components
             if (combined.HasProblem())
             {
                 // Create an issued node.
-                var issuedNode = new IssueTracedNode(refactoring.GetIssuedNode(null), combined);
+                var issuedNode = new IssueTracedNode(refactoring.GetIssuedNode(), combined);
 
                 // Add an add issue item to the component.
                 GhostFactorComponents.refactoringIssuedNodeComponent.Enqueue(new AddIssueTracedNodeWorkItem(issuedNode, 

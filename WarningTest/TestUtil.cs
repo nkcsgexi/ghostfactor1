@@ -32,6 +32,11 @@ namespace WarningTest
             return @"D:\VS workspaces\BeneWar\warnings\WarningTest\";
         }
 
+        public static string GetTestProjectFilePath()
+        {
+            return @"D:\VS workspaces\BeneWar\warnings\WarningTest\WarningTest.csproj";
+        }
+
         public static string getFakeSourceFolder()
         {
             return @"D:\VS workspaces\BeneWar\warnings\WarningTest\fakesource\";
@@ -40,6 +45,11 @@ namespace WarningTest
         public static string getSolutionPath()
         {
             return @"D:\VS workspaces\BeneWar\warnings\warnings.sln";
+        }
+
+        public static string GetAnotherSolutionPath()
+        {
+            return @"D:\VS workspaces\BeneWarShadow\CodeIssue1\CodeIssue1.sln";
         }
     }
 }

@@ -13,5 +13,10 @@ namespace warnings.retriever
         {
             return new RenamablesRetriever();
         }
+
+        public static ITypablesRetriever GetTypablesRetriever()
+        {
+            return new TypableRetriever();
+        }
     }
 }

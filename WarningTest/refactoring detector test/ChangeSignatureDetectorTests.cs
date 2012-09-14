@@ -37,13 +37,36 @@ namespace WarningTest
             Assert.IsNotNull(sourceBefore);
             Assert.IsTrue(detector.hasRefactoring());
             var refactorings = detector.getRefactorings();
-            Assert.IsTrue(refactorings.Count() == 1);
+            Assert.IsTrue(refactorings.Count() == 2);
             var refactoring = (IChangeMethodSignatureRefactoring) refactorings.First();
             var map = refactoring.ParametersMap;
             logger.Info(refactoring.ChangedMethodDeclaration);
             logger.Info(refactoring.ParametersMap.Count());
             Assert.IsTrue(map.Count() == 2);
-            
+            Assert.AreEqual(map.ElementAt(0).Item1, 0);
+            Assert.AreEqual(map.ElementAt(0).Item2, 1);
+            Assert.AreEqual(map.ElementAt(1).Item1, 1);
+            Assert.AreEqual(map.ElementAt(1).Item2, 0);
+        }
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            Assert.IsTrue(detector.hasRefactoring());
+            var refactoring = (IChangeMethodSignatureRefactoring)detector.getRefactorings().ElementAt(1);
+            var map = refactoring.ParametersMap;
+
+            logger.Info(map.ElementAt(0).ToString());
+            logger.Info(map.ElementAt(1).ToString());
+            logger.Info(map.ElementAt(2).ToString());
+
+            Assert.IsTrue(map.Count() == 3);
+            Assert.AreEqual(map.ElementAt(0).Item1, 0);
+            Assert.AreEqual(map.ElementAt(0).Item2, 2);
+            Assert.AreEqual(map.ElementAt(1).Item1, 1);
+            Assert.AreEqual(map.ElementAt(1).Item2, 0);
+            Assert.AreEqual(map.ElementAt(2).Item1, 2);
+            Assert.AreEqual(map.ElementAt(2).Item2, 1);
         }
     }
 }

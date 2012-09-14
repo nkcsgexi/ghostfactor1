@@ -116,5 +116,10 @@ namespace WarningTest.fakesource
 		{
 			return a - b;
 		}
+
+		pirvate int changeSignatureExample0(int b, int c, int a)
+		{
+			return a - b - c;
+		}
     }
 }

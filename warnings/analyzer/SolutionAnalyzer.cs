@@ -12,8 +12,8 @@ namespace warnings.analyzer
     public interface ISolutionAnalyzer
     {
         void SetSolution(ISolution solution);
-        IEnumerable GetProjects();
-        IEnumerable GetDocuments(IProject project);
+        IEnumerable<IProject> GetProjects();
+        IEnumerable<IDocument> GetDocuments(IProject project);
         String DumpSolutionStructure();
     }
 
@@ -44,21 +44,21 @@ namespace warnings.analyzer
             this.solution = solution;
         }
 
-        public IEnumerable GetProjects()
+        public IEnumerable<IProject> GetProjects()
         {
             return solution.Projects;
         }
 
-        public IEnumerable GetDocuments(IProject project)
+        public IEnumerable<IDocument> GetDocuments(IProject project)
         {
             return project.Documents;
         }
 
         public string DumpSolutionStructure()
         {
-            StringBuilder sb = new StringBuilder();
-            
-            sb.Append("\n");
+            var sb = new StringBuilder();
+
+            sb.AppendLine();
             sb.AppendLine("solution");
 
             foreach (IProject project in GetProjects())

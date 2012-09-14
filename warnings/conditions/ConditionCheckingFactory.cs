@@ -16,5 +16,10 @@ namespace warnings.conditions
         {
             return RenameConditionsList.GetInstance();
         }
+
+        public static IRefactoringConditionsList GetChangeMethodSignatureConditionsList()
+        {
+            return ChangeMethodSignatureConditionsList.GetInstance();
+        }
     }
 }

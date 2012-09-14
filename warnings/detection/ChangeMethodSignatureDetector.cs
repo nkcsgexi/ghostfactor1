@@ -192,12 +192,12 @@ namespace warnings.refactoring.detection
                             // If all the indexes are equal, finding a map.
                             if(AreAllElemenetsEqual(afterIndex, beforeIndex))
                             {
-                                logger.Info("Para " + i + " in before version's usage indexes:" + 
+                                logger.Info("Para " + j + " in before version's usage indexes:" + 
                                     StringUtil.ConcatenateAll(",", beforeIndex.Select(integer => integer.ToString())));
-                                logger.Info("Para " + j + " in after version's usage indexes:" + 
+                                logger.Info("Para " + i + " in after version's usage indexes:" + 
                                     StringUtil.ConcatenateAll(",", afterIndex.Select(integer => integer.ToString())));
-                                logger.Info("Parameter mapping: " + i + "=>" + j);
-                                parametersMap.Add(Tuple.Create(i, j));
+                                logger.Info("Parameter mapping: " + j + "=>" + i);
+                                parametersMap.Add(Tuple.Create(j, i));
                             }
                         }
                     }
@@ -208,8 +208,11 @@ namespace warnings.refactoring.detection
                         // If a tuple has values that are different, positions of parameters are changed.
                         if (pair.Item1 != pair.Item2)
                         {
+                            // Order the map by indexes in before versions.
+                            var orderedList = new List<Tuple<int,int>>();
+                            orderedList.AddRange(parametersMap.OrderBy(t => t.Item1));
                             refactoring = ManualRefactoringFactory.
-                                CreateManualChangeMethodSignatureRefactoring(afterMethod, parametersMap);
+                                CreateManualChangeMethodSignatureRefactoring(afterMethod, orderedList);
                             return true;
                         }
                     }

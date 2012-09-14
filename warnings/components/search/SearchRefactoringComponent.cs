@@ -22,8 +22,7 @@ namespace warnings.components
         protected SearchRefactoringComponent()
         {
             // Single thread workqueue. 
-            queue = new WorkQueue();
-            queue.ConcurrentLimit = 1;
+            queue = new WorkQueue {ConcurrentLimit = 1};
             queue.FailedWorkItem += onFailedWorkItem;
 
             // Initialize the logger.

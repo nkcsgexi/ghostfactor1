@@ -21,7 +21,7 @@ namespace warnings.refactoring
         void MapToDocuments(IDocument before, IDocument after);
 
         // Get the node where the issue should show.
-        SyntaxNode GetIssuedNode(IDocument document);
+        SyntaxNode GetIssuedNode();
     }
 
     /* public interface for communicateing a manual extract method refactoring.*/
@@ -144,7 +144,7 @@ namespace warnings.refactoring
             }
         }
 
-        public SyntaxNode GetIssuedNode(IDocument document)
+        public SyntaxNode GetIssuedNode()
         {
             return ExtractMethodInvocation;
         }
@@ -171,12 +171,13 @@ namespace warnings.refactoring
             throw new NotImplementedException();
         }
 
-        public SyntaxNode GetIssuedNode(IDocument document)
+        public SyntaxNode GetIssuedNode()
         {
             return node;
         }
     }
 
+    /* Describing a change method signature refactoring. */
     internal class ChangeMethodSignatureRefactoring : IChangeMethodSignatureRefactoring
     {
 
@@ -194,16 +195,20 @@ namespace warnings.refactoring
 
         public void MapToDocuments(IDocument before, IDocument after)
         {
-            throw new NotImplementedException();
+            var analyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
+            analyzer.SetSyntaxNode(ChangedMethodDeclaration);
+            ChangedMethodDeclaration = analyzer.MapToAnotherDocument(after);
         }
 
-        public SyntaxNode GetIssuedNode(IDocument document)
+        public SyntaxNode GetIssuedNode()
         {
             throw new NotImplementedException();
         }
 
+        /* Method declaration after the changed declaration, should map to the after document. */
         public SyntaxNode ChangedMethodDeclaration { get; private set; }
 
+        /* Parameters map from before version of the method and the after version of the methods. */ 
         public List<Tuple<int, int>> ParametersMap { get; private set; }
     }
 

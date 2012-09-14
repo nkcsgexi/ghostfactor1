@@ -9,6 +9,7 @@ using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
+using warnings.components.search;
 using warnings.source;
 using warnings.source.history;
 using warnings.util;
@@ -142,8 +143,13 @@ namespace warnings.components
                     // After add the new record, search for extract method refactoring.
                     GhostFactorComponents.searchExtractMethodComponent.Enqueue(new SearchExtractMethodWorkitem(record));
 
-                    // After detecting extract method refactoring, search for rename refacotoring.
+                    // Search for rename refacotoring.
                     GhostFactorComponents.searchRenameComponent.Enqueue(new SearchRenameWorkItem(record));
+
+                    // Search for change method signature refactorings.
+                    GhostFactorComponents.searchChangeMethodSignatureComponent.Enqueue(
+                        new SearchChangeMethodSignatureWorkItem(record));
+
                 }
                 catch (Exception e)
                 {
