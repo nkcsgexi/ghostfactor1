@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Windows.Documents;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
+using warnings.analyzer;
 
 namespace warnings.retriever
 {
@@ -13,6 +15,8 @@ namespace warnings.retriever
     {
         void SetDocument(IDocument document);
         IEnumerable<Tuple<SyntaxNode, ITypeSymbol>> GetTypableIdentifierTypeTuples();
+        IEnumerable<Tuple<SyntaxNode, ITypeSymbol>> GetMemberAccessAndAccessedTypes();
+        ITypeSymbol GetMemberAccessType(SyntaxNode node);
     }
 
     internal class TypableRetriever : ITypablesRetriever
@@ -26,7 +30,7 @@ namespace warnings.retriever
             root = (SyntaxNode) document.GetSyntaxRoot();
         }
 
-        /* Get tuples of node and type. */
+        /* Get tuples of node and type. Nodes shall be identifier names. */
         public IEnumerable<Tuple<SyntaxNode, ITypeSymbol>> GetTypableIdentifierTypeTuples()
         {
             var typedIdentifiers = new List<Tuple<SyntaxNode, ITypeSymbol>>();
@@ -43,6 +47,41 @@ namespace warnings.retriever
                     typedIdentifiers.Add(Tuple.Create(id, info.Type));
             }
             return typedIdentifiers.AsEnumerable();
+        }
+
+  
+        /* 
+         * Get the member access in the document, returning a tuple of member access node and the type it is accessing.
+         */
+        public IEnumerable<Tuple<SyntaxNode, ITypeSymbol>> GetMemberAccessAndAccessedTypes()
+        {
+            // For all the classes whose memeber is accessed and their types. 
+            var typedAccesses = new List<Tuple<SyntaxNode, ITypeSymbol>>();
+
+            // Get all nodes whose type is member access.
+            var accesses = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.MemberAccessExpression);
+
+            // For all the access in the list.
+            foreach (SyntaxNode access in accesses)
+            {
+                // Get left and right side of the access.
+                var analyzer = AnalyzerFactory.GetMemberAccessAnalyzer();
+                analyzer.SetMemberAccess(access);
+                var left = analyzer.GetLeftPart();
+              
+                // Query about the type of the left side of the access, if it is not null, add to the results.
+                // ATTENTION: mode.GetTypeInfo() cannot get primitive type such as int.
+                var infor = model.GetTypeInfo(left);
+                if(infor.Type != null)
+                    typedAccesses.Add(Tuple.Create(access, infor.Type));
+            }
+            return typedAccesses.AsEnumerable();
+        }
+
+        /* Given a node of the left side of a member access, e.g. A for A.B, as an input, return the type symbol. */
+        public ITypeSymbol GetMemberAccessType(SyntaxNode node)
+        {
+            return model.GetTypeInfo(node).Type;
         }
     }
 }

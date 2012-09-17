@@ -64,6 +64,17 @@ namespace warnings.analyzer
         }
 
 
+        public static IMemberAccessAnalyzer GetMemberAccessAnalyzer()
+        {
+            return new MemberAccessAnalyzer();
+        }
+
+        public static IQualifiedNameAnalyzer GetQualifiedNameAnalyzer()
+        {
+            return new QualifiedNameAnalyzer();
+        }
+
+
         public static String GetAnalyzersCountInfo()
         {
             StringBuilder sb = new StringBuilder(Environment.NewLine);
@@ -79,6 +90,6 @@ namespace warnings.analyzer
             return sb.ToString();
         }
 
-      
+
     }
 }

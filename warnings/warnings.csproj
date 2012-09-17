@@ -100,9 +100,11 @@
     <Compile Include="analyzer\CallGraphBuilder.cs" />
     <Compile Include="analyzer\DataFlowAnalyzer.cs" />
     <Compile Include="analyzer\DocumentAnalyzer.cs" />
+    <Compile Include="analyzer\MemberAccessAnalyzer.cs" />
     <Compile Include="analyzer\MethodAnalyzer.cs" />
     <Compile Include="analyzer\MethodInvocationAnalyzer.cs" />
     <Compile Include="analyzer\ParameterAnalyzer.cs" />
+    <Compile Include="analyzer\ScopeAnalyzer.cs" />
     <Compile Include="analyzer\SemanticModelAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodeAnalyzer.cs" />
@@ -134,6 +136,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="retriever\MethodInvocationsRetriever.cs" />
     <Compile Include="retriever\RenamablesRetriever.cs" />
     <Compile Include="retriever\RetrieverFactory.cs" />
     <Compile Include="retriever\TypablesRetriever.cs" />

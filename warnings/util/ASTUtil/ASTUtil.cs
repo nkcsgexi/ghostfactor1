@@ -84,6 +84,7 @@ namespace warnings.util
         {
             // Where the results are stored.
             IList<InvocationExpressionSyntax> results = new List<InvocationExpressionSyntax>();
+            
             // Create semantic model of the given tree.
             SemanticModel model = createSemanticModel(tree);
 
@@ -91,7 +92,8 @@ namespace warnings.util
             Symbol calleeSymbol = model.GetDeclaredSymbol(callee);
 
             // Get the invocations of the callee methods in the given tree.
-            IEnumerable<InvocationExpressionSyntax> allInvocations = tree.GetRoot().DescendantNodes().OfType<InvocationExpressionSyntax>();
+            IEnumerable<InvocationExpressionSyntax> allInvocations = tree.GetRoot().DescendantNodes().
+                OfType<InvocationExpressionSyntax>();
             IEnumerable<InvocationExpressionSyntax> calleeInvocations = allInvocations.Where
                 (i => model.GetSymbolInfo(i).Symbol == calleeSymbol);
 

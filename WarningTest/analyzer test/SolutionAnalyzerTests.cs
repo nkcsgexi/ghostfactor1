@@ -101,5 +101,16 @@ namespace WarningTest.analyzer_test
                 logger.Info(tuple.Item1.GetText() + ":" + tuple.Item2.ToString());
             }
         }
+        [TestMethod]
+        public void TestMethod5()
+        {
+            var typableRetrievers = RetrieverFactory.GetTypablesRetriever();
+            typableRetrievers.SetDocument(documents.ElementAt(0));
+            var tuples = typableRetrievers.GetMemberAccessAndAccessedTypes();
+            foreach (var tuple in tuples)
+            {
+                logger.Info(tuple.Item1.GetText() + ":" + tuple.Item2);
+            }
+        }
     }
 }
