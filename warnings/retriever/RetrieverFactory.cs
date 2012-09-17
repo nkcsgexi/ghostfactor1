@@ -18,5 +18,10 @@ namespace warnings.retriever
         {
             return new TypableRetriever();
         }
+
+        public static IMethodInvocationsRetriever GetMethodInvocationRetriever()
+        {
+            return new MethodInvocationsRetriever();
+        }
     }
 }

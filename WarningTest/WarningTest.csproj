@@ -55,6 +55,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="analyzer test\SolutionAnalyzerTests.cs" />
+    <Compile Include="retriever test\MethodInvocationRetrieverTests.cs" />
     <Compile Include="util test\ASTUtilTests.cs" />
     <Compile Include="analyzer test\CallGraphTest.cs" />
     <Compile Include="refactoring detector test\ChangeSignatureDetectorTests.cs" />

@@ -3,10 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
+using warnings.util;
 
 namespace warnings.retriever
 {
@@ -21,6 +23,9 @@ namespace warnings.retriever
 
     internal class MethodInvocationsRetriever : IMethodInvocationsRetriever
     {
+        private readonly Logger logger = NLoggerUtil.
+            getNLogger(typeof(IMethodInvocationsRetriever));
+
         private ISemanticModel model;
         private SyntaxNode root;
         private MethodDeclarationSyntax declaration;
@@ -90,7 +95,7 @@ namespace warnings.retriever
                         // For the left side of the member access expression, query whether it is the type 
                         // that contains the method declaration. 
                         typableRetriever.SetDocument(document);
-                        var type = typableRetriever.GetMemberAccessType(invokedName);
+                        var type = typableRetriever.GetMemberAccessType(memberAccessAnalyzer.GetLeftPart());
                         if (type.ToString().Equals(declarationScopeName))
                         {
                             results.Add(invocation);

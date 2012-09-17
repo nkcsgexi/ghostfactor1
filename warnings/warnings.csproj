@@ -104,7 +104,7 @@
     <Compile Include="analyzer\MethodAnalyzer.cs" />
     <Compile Include="analyzer\MethodInvocationAnalyzer.cs" />
     <Compile Include="analyzer\ParameterAnalyzer.cs" />
-    <Compile Include="analyzer\ScopeAnalyzer.cs" />
+    <Compile Include="analyzer\QualifiedNameAnalyzer.cs" />
     <Compile Include="analyzer\SemanticModelAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodeAnalyzer.cs" />
