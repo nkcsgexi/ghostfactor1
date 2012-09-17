@@ -23,6 +23,7 @@ namespace warnings.analyzer
         IEnumerable<SyntaxNode> GetFieldDeclarations(SyntaxNode classDeclaration);
         IEnumerable<SyntaxNode> GetMethodDeclarations(SyntaxNode classDeclaration);
         IEnumerable<SyntaxNode> GetVariableDeclarations(SyntaxNode methodDeclaration);
+        String GetKey();
 
         /* Given a node of declaration, returns the symbol in the semantic model. */
         ISymbol GetSymbol(SyntaxNode declaration);
@@ -114,6 +115,11 @@ namespace warnings.analyzer
             return GetDecendantOfKind(methodDeclaration, SyntaxKind.VariableDeclarator);
         }
 
+        public string GetKey()
+        {
+            throw new NotImplementedException();
+        }
+
         public ISymbol GetSymbol(SyntaxNode declaration)
         {
             ISemanticModel model = document.GetSemanticModel();
@@ -187,24 +193,24 @@ namespace warnings.analyzer
         public ISymbol GetFirstLocalVariable()
         {
             var first_namespace = GetNamespaceDecalarations().First();
-            var first_class = GetClassDeclarations((NamespaceDeclarationSyntax)first_namespace).First();
-            var first_method = GetMethodDeclarations((ClassDeclarationSyntax)first_class).First();
-            var first_variable = GetVariableDeclarations((MethodDeclarationSyntax)first_method).First();
+            var first_class = GetClassDeclarations(first_namespace).First();
+            var first_method = GetMethodDeclarations(first_class).First();
+            var first_variable = GetVariableDeclarations(first_method).First();
             return GetSymbol(first_variable);
         }
         
         public ISymbol GetFirstMethod()
         {
             var first_namespace = GetNamespaceDecalarations().First();
-            var first_class = GetClassDeclarations((NamespaceDeclarationSyntax)first_namespace).First();
-            var first_method = GetMethodDeclarations((ClassDeclarationSyntax)first_class).First();
+            var first_class = GetClassDeclarations(first_namespace).First();
+            var first_method = GetMethodDeclarations(first_class).First();
             return GetSymbol(first_method);
         }
 
         public ISymbol GetFirstClass()
         {
             var first_namespace = GetNamespaceDecalarations().First();
-            var first_class = GetClassDeclarations((NamespaceDeclarationSyntax)first_namespace).First();
+            var first_class = GetClassDeclarations(first_namespace).First();
             return GetSymbol(first_class);
         }
 

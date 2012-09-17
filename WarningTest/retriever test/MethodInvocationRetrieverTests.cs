@@ -68,5 +68,41 @@ namespace WarningTest.retriever_test
             Assert.IsNotNull(invocations);
             Assert.IsTrue(invocations.Count() == 1);
         }
+
+        [TestMethod]
+        public void TestMethod3()
+        {
+            var method = GetMethodDeclaration(document2, "increment");
+            var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+            retriever.SetDocument(document2);
+            retriever.SetMethodDeclaration(method);
+            var invocations = retriever.GetInvocations();
+            Assert.IsNotNull(invocations);
+            Assert.IsTrue(invocations.Count() == 2);
+        }
+
+        [TestMethod]
+        public void TestMethod4()
+        {
+            var method = GetMethodDeclaration(document1, "method1");
+            var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+            retriever.SetDocument(document1);
+            retriever.SetMethodDeclaration(method);
+            var invocations = retriever.GetInvocations();
+            Assert.IsNotNull(invocations);
+            Assert.IsTrue(invocations.Count() == 1);
+        }
+
+        [TestMethod]
+        public void TestMethod5()
+        {
+            var method = GetMethodDeclaration(document2, "decrement");
+            var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+            retriever.SetDocument(document1);
+            retriever.SetMethodDeclaration(method);
+            var invocations = retriever.GetInvocations();
+            Assert.IsNotNull(invocations);
+            Assert.IsTrue(invocations.Count() == 1);
+        }
     }
 }

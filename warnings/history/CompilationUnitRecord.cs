@@ -4,10 +4,28 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Roslyn.Compilers.CSharp;
+using Roslyn.Services;
 using warnings.util;
 
 namespace warnings.source.history
 {
+
+    public interface ICodeHistoryRecord
+    {
+        String getSolution();
+        String getNameSpace();
+        String getFile();
+        String getSource();
+        String getKey();
+        SyntaxTree getSyntaxTree();
+        long getTime();
+        bool hasPreviousRecord();
+        ICodeHistoryRecord getPreviousRecord();
+        ICodeHistoryRecord createNextRecord(string source);
+        IDocument Convert2Document();
+        void delete();
+    }
+
     class CompilationUnitRecord : ICodeHistoryRecord
     {
         /* The metadata describing this souce version. */
@@ -55,6 +73,11 @@ namespace warnings.source.history
             return FileUtil.readAllText(metaData.getSourcePath());
         }
 
+        public string getKey()
+        {
+            return getSolution() + getNameSpace() + getFile();
+        }
+
         public SyntaxTree getSyntaxTree()
         {
             throw new NotImplementedException();
@@ -87,6 +110,13 @@ namespace warnings.source.history
                 RecordMetaData.createMetaData(metaData.getSolution(), metaData.getNameSpace(), metaData.getFile(),
                     sourcePath, metaData.getMetaDataPath(), time);
             return new CompilationUnitRecord(nextMetaData);
+        }
+
+        /* Convert the source code to an IDocument instance. */
+        public IDocument Convert2Document()
+        {
+            var converter = new String2IDocumentConverter();
+            return (IDocument)converter.Convert(getSource(), null, null, null);
         }
 
         public void delete()

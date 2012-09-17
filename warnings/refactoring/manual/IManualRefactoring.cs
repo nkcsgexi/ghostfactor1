@@ -11,7 +11,6 @@ using warnings.util;
 namespace warnings.refactoring
 {
     /* Refactoring input that shall be feed in to the checker. */
-
     public interface IManualRefactoring : IHasRefactoringType
     {
         string ToString();

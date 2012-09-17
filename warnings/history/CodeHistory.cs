@@ -9,6 +9,15 @@ using warnings.util;
 
 namespace warnings.source.history
 {
+
+
+    public interface ICodeHistory
+    {
+        void addRecord(String solution, String nameSpace, String file, String source);
+        bool hasRecord(String solution, String nameSpace, String file);
+        ICodeHistoryRecord getLatestRecord(string solution, string nameSpace, string file);
+    }
+
     public class CodeHistory : ICodeHistory
     {
         /* Singleton the code history instance. */

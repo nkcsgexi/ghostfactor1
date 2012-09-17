@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using BlackHen.Threading;
 using NLog;
+using warnings.refactoring;
 using warnings.refactoring.detection;
 using warnings.source;
+using warnings.source.history;
 using warnings.util;
 
 namespace warnings.components
@@ -54,17 +56,15 @@ namespace warnings.components
             return 3;
         }
 
-        protected override void onRefactoringDetected(IExternalRefactoringDetector detector)
+        protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,
+            IEnumerable<IManualRefactoring> refactorings)
         {
             logger.Info("Rename dectected.");
-            logger.Info("\nBefore: \n" + detector.getSourceBefore());
-            logger.Info("\nAfter: \n" + detector.getSourceAfter());
-
-            // Get the 
-            var refactoring = detector.getRefactorings().FirstOrDefault();
+            logger.Info("\nBefore: \n" + before.getSource());
+            logger.Info("\nAfter: \n" + after.getSource());
         }
 
-        protected override void onNoRefactoringDetected()
+        protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
         {
             logger.Info("No Rename Detected.");
         }

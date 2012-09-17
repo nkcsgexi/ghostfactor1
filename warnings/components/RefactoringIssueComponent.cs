@@ -7,6 +7,7 @@ using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
+using warnings.analyzer;
 using warnings.conditions;
 using warnings.quickfix;
 using warnings.util;
@@ -16,24 +17,24 @@ namespace warnings.components
     /* A repository from issues can be queried, added, and updated. */
     public interface IIssuedNodesRepository
     {
-        void AddIssueTracedNode(IIssueTracedNode tracedNode);
-
-        CodeIssue GetCodeIssue(SyntaxNode node);
-
+        ISolution solution { set; get; }
+        void AddSingleIssueTracedNode(IIssueTracedNode tracedNode);
+        void AddMultipleIssueTracedNodes(IEnumerable<IIssueTracedNode> nodes);
+        CodeIssue GetCodeIssue(IDocument document, SyntaxNode node);
         // TODO: when to remove a issued node.
-
     }
 
     /* The componenet itself is a issue repository and also is a Factor component. */
     public interface IRefactoringIssuedNodesComponent :  IFactorComponent, IIssuedNodesRepository
     {
-        
+            
     }
 
     internal class RefactoringIssuedNodesComponent : IRefactoringIssuedNodesComponent
     {
         /* Singleton this component. */
-        private static readonly IRefactoringIssuedNodesComponent intance = new RefactoringIssuedNodesComponent();
+        private static readonly IRefactoringIssuedNodesComponent intance = 
+            new RefactoringIssuedNodesComponent();
 
         public static IRefactoringIssuedNodesComponent GetInstance()
         {
@@ -47,6 +48,8 @@ namespace warnings.components
         private WorkQueue queue;
 
         private Logger logger;
+
+        public ISolution solution { get; set; }
 
         private RefactoringIssuedNodesComponent()
         {
@@ -68,10 +71,7 @@ namespace warnings.components
 
         public void Enqueue(IWorkItem item)
         {
-            if(queue.Count == 0)
-            {
-                queue.Add(item);
-            }
+            queue.Add(item);
         }
 
         public string GetName()
@@ -89,21 +89,35 @@ namespace warnings.components
         }
 
         /* Add a issue traced node to the repository, if such node does not exist. */
-        public void AddIssueTracedNode(IIssueTracedNode tracedNode)
+        public void AddSingleIssueTracedNode(IIssueTracedNode tracedNode)
         {
             // First lock the issuedNodes, cannot read.
             lock(issuedNodes){
+                
                 // Whether the issued node is already there.
                 if (!issuedNodes.Contains(tracedNode))
                 {
                     issuedNodes.Add(tracedNode);
-                    logger.Info("IIssueTracedNode is added. Count: " + issuedNodes.Count);
+                }
+            }
+        }
+
+        public void AddMultipleIssueTracedNodes(IEnumerable<IIssueTracedNode> nodes)
+        {
+            lock(issuedNodes)
+            {
+                foreach (IIssueTracedNode node in nodes)
+                {
+                    if(!issuedNodes.Contains(node))
+                    {
+                        issuedNodes.Add(node);
+                    }
                 }
             }
         }
 
 
-        public CodeIssue GetCodeIssue(SyntaxNode node)
+        public CodeIssue GetCodeIssue(IDocument document, SyntaxNode node)
         {
             // First lock the issued nodes.
             lock (issuedNodes)
@@ -111,14 +125,15 @@ namespace warnings.components
                 foreach (var iNode in issuedNodes)
                 {
                     if(iNode.IsIssuedAt(node))
-                        return new CodeIssue(CodeIssue.Severity.Warning, node.Span, iNode.GetCheckResult().GetProblemDescription());
+                        return new CodeIssue(CodeIssue.Severity.Warning, node.Span, 
+                            iNode.GetCheckResult().GetProblemDescription());
                 }
                 return null;
             }
         }
     }
 
-    /* Work item to add a new issue traced node to the repository. */
+    /* Work item to directly add a new issue traced node to the repository. */
     internal class AddIssueTracedNodeWorkItem : WorkItem
     {
         private readonly IIssuedNodesRepository repository;
@@ -136,12 +151,47 @@ namespace warnings.components
         {
             try
             {
-                repository.AddIssueTracedNode(node);
+                repository.AddSingleIssueTracedNode(node);
             }catch(Exception e)
             {
                logger.Fatal(e);
             }
             
         }
-    } 
+    }
+
+    /* Indirect way of adding issued nodes.*/
+    internal class ComputeTracedNodeWorkItem : WorkItem
+    {
+        private readonly ITracedNodesComputer computer;
+        private readonly IIssuedNodesRepository repository;
+
+        public ComputeTracedNodeWorkItem(ITracedNodesComputer computer, IIssuedNodesRepository repository)
+        {
+            this.computer = computer;
+            this.repository = repository;
+        }
+
+        public override void Perform()
+        {
+            // Get all document in the solution.
+            var solutionAnalyzer = AnalyzerFactory.GetSolutionAnalyzer();
+            solutionAnalyzer.SetSolution(repository.solution);
+            var documents = solutionAnalyzer.GetProjects().SelectMany(solutionAnalyzer.GetDocuments);
+            
+            // For each document, use the given issued nodes computer to compute issued nodes in the 
+            // document.
+            var issues = documents.SelectMany(computer.ComputeIssuedNodes);
+            repository.AddMultipleIssueTracedNodes(issues);
+        }
+    }
+
+    /*
+     * All the other components that want to use the indirect way of adding issued nodes shall implement their
+     * own version of ITracedNodesComputer.
+     */
+    public interface ITracedNodesComputer
+    {
+        IEnumerable<IIssueTracedNode> ComputeIssuedNodes(IDocument document);
+    }
 }

@@ -8,6 +8,7 @@ using Roslyn.Services;
 using warnings.refactoring;
 using warnings.refactoring.detection;
 using warnings.source;
+using warnings.source.history;
 using warnings.util;
 
 namespace warnings.components
@@ -56,25 +57,22 @@ namespace warnings.components
             return 30;
         }
 
-        protected override void onRefactoringDetected(IExternalRefactoringDetector detector)
+        protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after, 
+            IEnumerable<IManualRefactoring> refactorings)
         {
             logger.Info("\n Extract Method dectected.");
-            logger.Info("\n Before: \n" + detector.getSourceBefore());
-            logger.Info("\n After: \n" + detector.getSourceAfter());
+            logger.Info("\n Before: \n" + before.getSource());
+            logger.Info("\n After: \n" + after.getSource());
 
             // Get the first refactoring detected.
-            IManualRefactoring refactoring = detector.getRefactorings().First();
-
-            // Convert before and after source as IDocument.
-            var converter = new String2IDocumentConverter();
-            var beforeDoc = (IDocument)converter.Convert(detector.getSourceBefore(), null, null, null);
-            var afterDoc = (IDocument)converter.Convert(detector.getSourceAfter(), null, null, null);
+            IManualRefactoring refactoring = refactorings.First();
 
             // Enqueue workitem for conditions checking component.
-            GhostFactorComponents.conditionCheckingComponent.Enqueue(new ConditionCheckWorkItem(beforeDoc, afterDoc, refactoring));
+            GhostFactorComponents.conditionCheckingComponent.Enqueue
+                (new ConditionCheckWorkItem(before, after, refactoring));
         }
 
-        protected override void onNoRefactoringDetected()
+        protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
         {
             logger.Info("No extract method detected.");
         }

@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using BlackHen.Threading;
 using NLog;
+using warnings.refactoring;
 using warnings.refactoring.detection;
 using warnings.source;
+using warnings.source.history;
 using warnings.util;
 
 namespace warnings.components
@@ -102,15 +104,15 @@ namespace warnings.components
                     // Detect manual refactoring.
                     if (detector.hasRefactoring())
                     {
-                        onRefactoringDetected(detector);
+                        onRefactoringDetected(currentRecord, latestRecord, detector.getRefactorings());
 
                         // If refactoring detected, return directly.
                         return;
                     }
                 }
-                onNoRefactoringDetected();
+                onNoRefactoringDetected(latestRecord);
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
                 logger.Fatal(e);
             }
@@ -122,10 +124,11 @@ namespace warnings.components
         protected abstract int getSearchDepth();
         
         /* Called when manual refactoring is detected. */
-        protected abstract void onRefactoringDetected(IExternalRefactoringDetector detector);
+        protected abstract void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after, 
+            IEnumerable<IManualRefactoring> refactorings);
         
         /* Called when no manual refactoring is detected. */
-        protected abstract void onNoRefactoringDetected();
+        protected abstract void onNoRefactoringDetected(ICodeHistoryRecord after);
         
         public abstract Logger GetLogger();
     }

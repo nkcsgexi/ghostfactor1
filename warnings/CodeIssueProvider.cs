@@ -23,15 +23,13 @@ namespace warnings
     {
         private readonly Logger logger = NLoggerUtil.getNLogger(typeof(CodeIssueProvider));
 
-        private ISolution solution;
-
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
         {
             initialize(document);
 
             // Add the new record to the history component.
             GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
-            var issue = GhostFactorComponents.refactoringIssuedNodeComponent.GetCodeIssue((SyntaxNode) node);  
+            var issue = GhostFactorComponents.refactoringIssuedNodeComponent.GetCodeIssue(document, (SyntaxNode) node);  
             yield return issue;
         }
 
@@ -41,11 +39,11 @@ namespace warnings
         private void initialize(IDocument document)
         {
             if (!initialized)
-            {
-                solution = document.Project.Solution;
-              
+            {              
                 // Start all the components.
                 GhostFactorComponents.StartAllComponents();
+
+                GhostFactorComponents.refactoringIssuedNodeComponent.solution = document.Project.Solution;
                 initialized = true;
             }
         }

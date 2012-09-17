@@ -10,6 +10,7 @@ using warnings.conditions;
 using warnings.conditions.CheckResults;
 using warnings.quickfix;
 using warnings.refactoring;
+using warnings.source.history;
 using warnings.util;
 
 namespace warnings.components
@@ -81,16 +82,18 @@ namespace warnings.components
         
         // A document instance whose code is identical to the detector's after code.
         private readonly IDocument before;
-        
+
+        public String DocumentKey { private set; get; }
+
         private readonly Logger logger;
 
-        public ConditionCheckWorkItem (IDocument before, IDocument after, IManualRefactoring refactoring)
+        public ConditionCheckWorkItem(ICodeHistoryRecord before, ICodeHistoryRecord after, IManualRefactoring refactoring)
         {
-            this.before = before;
-            this.after = after;
+            this.before = before.Convert2Document();
+            this.after = after.Convert2Document();
+            this.DocumentKey = before.getKey();
             this.refactoring = refactoring;
             logger = NLoggerUtil.getNLogger(typeof (ConditionCheckWorkItem));
-           
         }
 
         public override void Perform()
@@ -130,6 +133,7 @@ namespace warnings.components
                         // Add founded issues to the issue component.
                         AddIssuesToRefactoringIssueComponent(refactoring, results);
                         break;
+
                     default:
                         logger.Fatal("Unknown refactoring type for conditions checking.");
                         break;
@@ -153,7 +157,7 @@ namespace warnings.components
             if (combined.HasProblem())
             {
                 // Create an issued node.
-                var issuedNode = new IssueTracedNode(refactoring.GetIssuedNode(), combined);
+                var issuedNode = new IssueTracedNode(DocumentKey, refactoring.GetIssuedNode(), combined);
 
                 // Add an add issue item to the component.
                 GhostFactorComponents.refactoringIssuedNodeComponent.Enqueue(new AddIssueTracedNodeWorkItem(issuedNode, 

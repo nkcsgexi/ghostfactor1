@@ -164,9 +164,6 @@
     <Compile Include="detection\IRefactoringDetector.cs" />
     <Compile Include="refactoring\manual\RefactoringType.cs" />
     <Compile Include="refactoring\manual\IManualRefactoring.cs" />
-    <Compile Include="history\interfaces\ICodeHistory.cs" />
-    <Compile Include="history\interfaces\ICodeHistoryRecord.cs" />
-    <Compile Include="history\interfaces\IRecordMetaData.cs" />
     <Compile Include="history\RecordMetaData.cs" />
   </ItemGroup>
   <ItemGroup>

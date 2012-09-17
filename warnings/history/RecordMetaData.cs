@@ -8,9 +8,19 @@ using warnings.util;
 
 namespace warnings.source.history
 {
+
+    public interface IRecordMetaData
+    {
+        String getPreviousMetaPath();
+        String getNameSpace();
+        String getSolution();
+        String getFile();
+        String getSourcePath();
+        String getMetaDataPath();
+        long getTime();
+    }
     internal class RecordMetaData : IRecordMetaData
     {
-
         private static readonly int RECORD_COUNT = 6;
         public static readonly String ROOT = "MetaData";
         private static readonly String EXTENSION = ".met";

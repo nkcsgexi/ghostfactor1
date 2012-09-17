@@ -12,6 +12,7 @@ namespace warnings.quickfix
     /* Interface to keep track of a node who has a refactoring issue related to it. */
     public interface IIssueTracedNode : IEquatable<IIssueTracedNode>
     {
+        string DocumentKey { get; }
         bool IsIssuedAt(SyntaxNode another);
         SyntaxNode GetSyntaxNode();
         ICheckingResult GetCheckResult();
@@ -25,10 +26,14 @@ namespace warnings.quickfix
         // The problem detected.
         private readonly ICheckingResult result;
 
-        public IssueTracedNode(SyntaxNode node, ICheckingResult result)
+        // In which document the issue is 
+        public string DocumentKey { private set; get; }
+
+        public IssueTracedNode(string DocumentKey, SyntaxNode node, ICheckingResult result)
         {
             this.node = node;
             this.result = result;
+            this.DocumentKey = DocumentKey;
         }
 
         /* Under which condition the traced nodes are equivalent to each other.*/
