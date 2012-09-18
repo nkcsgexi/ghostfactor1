@@ -6,8 +6,10 @@ using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
+using Roslyn.Services.Editor;
 using warnings.analyzer;
 using warnings.refactoring;
+using warnings.retriever;
 using warnings.util;
 
 namespace warnings.conditions
@@ -18,7 +20,7 @@ namespace warnings.conditions
     {
         private Logger logger = NLoggerUtil.getNLogger(typeof (ReturnTypeChecker));
 
-        protected override ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after, IManualExtractMethodRefactoring input)
+        protected override ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualExtractMethodRefactoring input)
         {
             // Calculate the outflow data
             IEnumerable<ISymbol> flowOuts;
@@ -41,11 +43,11 @@ namespace warnings.conditions
 
             if(missing.Any())
             {
-                return new ReturnTypeCheckingResult(true, missing.Select(s => s.Name));
+                return new ReturnTypeCheckingResult(input.ExtractedMethodDeclaration, missing.Select(s => s.Name));
             }
             else
             {
-                return new ReturnTypeCheckingResult(false);
+                return new NullCodeIssueComputer();
             }
         }
 
@@ -106,45 +108,35 @@ namespace warnings.conditions
             logger.Info("Returning Data: " + StringUtil.ConcatenateAll(", ", returningData.Select(s => s.Name)));
             return returningData;
         }
+
+        private class ReturnTypeCheckingResult : ICodeIssueComputer
+        {
+            private IEnumerable<string> returns;
+            private SyntaxNode declaration;
+
+            public ReturnTypeCheckingResult(SyntaxNode declaration, IEnumerable<string> returns)
+            {
+                this.declaration = declaration;
+                this.returns = returns;
+            }
+            public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
+            {
+                if (node.Kind == SyntaxKind.InvocationExpression)
+                {
+                    var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+                    retriever.SetDocument(document);
+                    retriever.SetMethodDeclaration(declaration);
+                    var invocations = retriever.GetInvocations();
+                    if (invocations.Any(i => i.Span.Equals(node.Span)))
+                    {
+                        yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
+                            "Missing return values: " + StringUtil.ConcatenateAll(",", returns));
+                    }
+                }
+            }
+        }
     }
 
     
-    class ReturnTypeCheckingResult : ExtractMethodConditionCheckingResult
-    {
-        private readonly string description;
-        private readonly bool hasProblem;
-        private readonly IEnumerable<string> missingSymbolNames;
-        private readonly Logger logger;
 
-        internal ReturnTypeCheckingResult(bool hasProblem, IEnumerable<string> missingSymbolNames = null)
-        {
-            logger = NLoggerUtil.getNLogger(typeof (ReturnTypeCheckingResult));
-            this.hasProblem = hasProblem;
-            if (this.hasProblem)
-            {
-                this.missingSymbolNames = missingSymbolNames;
-                description = "Missing Return Value: " + StringUtil.ConcatenateAll(", ", missingSymbolNames);
-                logger.Info(description);
-            }
-            else
-            {
-                logger.Info("Checking passed.");
-            }
-        }
-
-        public override bool HasProblem()
-        {
-            return hasProblem;
-        }
-
-        public override string GetProblemDescription()
-        {
-            return description;
-        }
-
-        public IEnumerable<String> GetMissingReturnSymbolNames()
-        {
-            return missingSymbolNames;
-        }
-    }
 }

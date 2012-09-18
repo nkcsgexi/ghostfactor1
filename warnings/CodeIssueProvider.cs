@@ -29,8 +29,7 @@ namespace warnings
 
             // Add the new record to the history component.
             GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
-            var issue = GhostFactorComponents.refactoringIssuedNodeComponent.GetCodeIssue(document, (SyntaxNode) node);  
-            yield return issue;
+            return GhostFactorComponents.RefactoringCodeIssueComputerComponent.GetCodeIssues(document, (SyntaxNode) node);  
         }
 
         private bool initialized = false;
@@ -42,8 +41,6 @@ namespace warnings
             {              
                 // Start all the components.
                 GhostFactorComponents.StartAllComponents();
-
-                GhostFactorComponents.refactoringIssuedNodeComponent.solution = document.Project.Solution;
                 initialized = true;
             }
         }

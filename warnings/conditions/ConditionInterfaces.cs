@@ -1,9 +1,12 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
+using Roslyn.Services.Editor;
+using warnings.quickfix;
 using warnings.refactoring;
 
 namespace warnings.conditions
@@ -17,23 +20,22 @@ namespace warnings.conditions
     /* All refactoring conditions should be derived from this interface. */
     public interface IRefactoringConditionChecker : IHasRefactoringType
     {
-        ICheckingResult CheckCondition(IDocument before, IDocument after, IManualRefactoring input);  
+        ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualRefactoring input);  
     }
 
     /* interface that containing checkings for all the conditions of a refactoring type. */
     public interface IRefactoringConditionsList : IHasRefactoringType
     {
-        IEnumerable<ICheckingResult> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input);
+        IEnumerable<ICodeIssueComputer> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input);
     }
-
 
     /* Refactoring conditions for a specific refactoring type is stored in.*/
     public abstract class RefactoringConditionsList : IRefactoringConditionsList
     {
         /* suppose to return all the condition checkers for this specific refactoring. */
-        public IEnumerable<ICheckingResult> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input)
+        public IEnumerable<ICodeIssueComputer> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input)
         {
-            List<ICheckingResult> results = new List<ICheckingResult>();
+            List<ICodeIssueComputer> results = new List<ICodeIssueComputer>();
             foreach (var checker in GetAllConditionCheckers())
             {
                 results.Add(checker.CheckCondition(before, after, input));
@@ -45,10 +47,20 @@ namespace warnings.conditions
         public abstract RefactoringType type { get; }
     }
 
-    /* After checking the conditon, the condtion shall return this as a result. */
-    public interface ICheckingResult : IHasRefactoringType
+    /*
+     * This interface is used returning values for condition checkers. It is a convenient way of computing code issues. 
+     */
+    public interface ICodeIssueComputer
     {
-        bool HasProblem();
-        string GetProblemDescription();
+        IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node);
+    }
+
+    /* The null code issue computer return no code issue at any time. */
+    public class NullCodeIssueComputer : ICodeIssueComputer
+    {
+        public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
+        {
+            return Enumerable.Empty<CodeIssue>();
+        }
     }
 }

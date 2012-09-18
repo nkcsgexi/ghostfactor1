@@ -14,36 +14,33 @@ using warnings.util;
 
 namespace warnings.components
 {
-    /* A repository from issues can be queried, added, and updated. */
-    public interface IIssuedNodesRepository
+    /* A repository for issue computers to be queried, added, and deleted. */
+    public interface ICodeIssueComputersRepository
     {
-        ISolution solution { set; get; }
-        void AddSingleIssueTracedNode(IIssueTracedNode tracedNode);
-        void AddMultipleIssueTracedNodes(IEnumerable<IIssueTracedNode> nodes);
-        CodeIssue GetCodeIssue(IDocument document, SyntaxNode node);
-        // TODO: when to remove a issued node.
+        void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
+        IEnumerable<CodeIssue> GetCodeIssues(IDocument document, SyntaxNode node);
     }
 
     /* The componenet itself is a issue repository and also is a Factor component. */
-    public interface IRefactoringIssuedNodesComponent :  IFactorComponent, IIssuedNodesRepository
+    public interface IRefactoringCodeIssueComputersComponent :  IFactorComponent, ICodeIssueComputersRepository
     {
             
     }
 
-    internal class RefactoringIssuedNodesComponent : IRefactoringIssuedNodesComponent
+    internal class RefactoringCodeIssueComputersComponent : IRefactoringCodeIssueComputersComponent
     {
         /* Singleton this component. */
-        private static readonly IRefactoringIssuedNodesComponent intance = 
-            new RefactoringIssuedNodesComponent();
+        private static readonly IRefactoringCodeIssueComputersComponent intance = 
+            new RefactoringCodeIssueComputersComponent();
 
-        public static IRefactoringIssuedNodesComponent GetInstance()
+        public static IRefactoringCodeIssueComputersComponent GetInstance()
         {
             return intance;
         }
 
-        /* A list containing all the issuedNodes with issues. */
-        private List<IIssueTracedNode> issuedNodes;
-        
+        /* Saving all of the code issue computers. */
+        private readonly List<ICodeIssueComputer> codeIssueComputers; 
+
         /* A single thread workqueue. */
         private WorkQueue queue;
 
@@ -51,17 +48,17 @@ namespace warnings.components
 
         public ISolution solution { get; set; }
 
-        private RefactoringIssuedNodesComponent()
+        private RefactoringCodeIssueComputersComponent()
         {
-            issuedNodes = new List<IIssueTracedNode>();
+            codeIssueComputers = new List<ICodeIssueComputer>();
 
-            queue = new WorkQueue();
-            queue.ConcurrentLimit = 1;
+            // Single thread workqueue.
+            queue = new WorkQueue {ConcurrentLimit = 1};
 
             // Add a listener for failed work item.
             queue.FailedWorkItem += OnItemFailed;
 
-            logger = NLoggerUtil.getNLogger(typeof (RefactoringIssuedNodesComponent));
+            logger = NLoggerUtil.getNLogger(typeof (RefactoringCodeIssueComputersComponent));
         }
 
         private void OnItemFailed(object sender, WorkItemEventArgs workItemEventArgs)
@@ -88,110 +85,46 @@ namespace warnings.components
         {
         }
 
-        /* Add a issue traced node to the repository, if such node does not exist. */
-        public void AddSingleIssueTracedNode(IIssueTracedNode tracedNode)
+
+        public void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
-            // First lock the issuedNodes, cannot read.
-            lock(issuedNodes){
-                
-                // Whether the issued node is already there.
-                if (!issuedNodes.Contains(tracedNode))
-                {
-                    issuedNodes.Add(tracedNode);
-                }
+            lock (codeIssueComputers)
+            {
+                // Select the computers that are not null computers. 
+                var validComputers = computers.Where(c => !c.GetType().Equals(typeof(NullCodeIssueComputer)));
+                codeIssueComputers.AddRange(validComputers);
             }
         }
 
-        public void AddMultipleIssueTracedNodes(IEnumerable<IIssueTracedNode> nodes)
+        public IEnumerable<CodeIssue> GetCodeIssues(IDocument document, SyntaxNode node)
         {
-            lock(issuedNodes)
+            lock (codeIssueComputers)
             {
-                foreach (IIssueTracedNode node in nodes)
+                var issues = new List<CodeIssue>();
+                foreach (var computer in codeIssueComputers)
                 {
-                    if(!issuedNodes.Contains(node))
-                    {
-                        issuedNodes.Add(node);
-                    }
+                    issues.AddRange(computer.ComputeCodeIssues(document, node));
                 }
-            }
-        }
-
-
-        public CodeIssue GetCodeIssue(IDocument document, SyntaxNode node)
-        {
-            // First lock the issued nodes.
-            lock (issuedNodes)
-            {
-                foreach (var iNode in issuedNodes)
-                {
-                    if(iNode.IsIssuedAt(node))
-                        return new CodeIssue(CodeIssue.Severity.Warning, node.Span, 
-                            iNode.GetCheckResult().GetProblemDescription());
-                }
-                return null;
+                return issues.AsEnumerable();
             }
         }
     }
 
-    /* Work item to directly add a new issue traced node to the repository. */
-    internal class AddIssueTracedNodeWorkItem : WorkItem
+    /* Work item to add new issue computers to the repository. */
+    internal class AddCodeIssueComputersWorkItem : WorkItem
     {
-        private readonly IIssuedNodesRepository repository;
-        private readonly IIssueTracedNode node;
-        private readonly Logger logger;
+        private readonly IEnumerable<ICodeIssueComputer> computers;
+        private readonly ICodeIssueComputersRepository repository;
 
-        public AddIssueTracedNodeWorkItem(IIssueTracedNode node, IIssuedNodesRepository repository)
+        public AddCodeIssueComputersWorkItem(IEnumerable<ICodeIssueComputer> computers, ICodeIssueComputersRepository repository)
         {
-            this.node = node;
-            this.repository = repository;
-            this.logger = NLoggerUtil.getNLogger(typeof (AddIssueTracedNodeWorkItem));
-        }
-
-        public override void Perform()
-        {
-            try
-            {
-                repository.AddSingleIssueTracedNode(node);
-            }catch(Exception e)
-            {
-               logger.Fatal(e);
-            }
-            
-        }
-    }
-
-    /* Indirect way of adding issued nodes.*/
-    internal class ComputeTracedNodeWorkItem : WorkItem
-    {
-        private readonly ITracedNodesComputer computer;
-        private readonly IIssuedNodesRepository repository;
-
-        public ComputeTracedNodeWorkItem(ITracedNodesComputer computer, IIssuedNodesRepository repository)
-        {
-            this.computer = computer;
+            this.computers = computers;
             this.repository = repository;
         }
 
         public override void Perform()
         {
-            // Get all document in the solution.
-            var solutionAnalyzer = AnalyzerFactory.GetSolutionAnalyzer();
-            solutionAnalyzer.SetSolution(repository.solution);
-            var documents = solutionAnalyzer.GetProjects().SelectMany(solutionAnalyzer.GetDocuments);
-            
-            // For each document, use the given issued nodes computer to compute issued nodes in the 
-            // document.
-            var issues = documents.SelectMany(computer.ComputeIssuedNodes);
-            repository.AddMultipleIssueTracedNodes(issues);
+            repository.AddCodeIssueComputers(computers);
         }
-    }
-
-    /*
-     * All the other components that want to use the indirect way of adding issued nodes shall implement their
-     * own version of ITracedNodesComputer.
-     */
-    public interface ITracedNodesComputer
-    {
-        IEnumerable<IIssueTracedNode> ComputeIssuedNodes(IDocument document);
     }
 }

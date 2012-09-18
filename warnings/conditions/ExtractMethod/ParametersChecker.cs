@@ -6,8 +6,10 @@ using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
+using Roslyn.Services.Editor;
 using warnings.analyzer;
 using warnings.refactoring;
+using warnings.retriever;
 using warnings.util;
 
 namespace warnings.conditions
@@ -17,8 +19,7 @@ namespace warnings.conditions
     {
         private Logger logger = NLoggerUtil.getNLogger(typeof (ParametersChecker));
 
-
-        protected override ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after, 
+        protected override ICodeIssueComputer CheckCondition(IDocument before, IDocument after, 
             IManualExtractMethodRefactoring input)
         {
             InvocationExpressionSyntax invocation = (InvocationExpressionSyntax) input.ExtractMethodInvocation;
@@ -30,7 +31,7 @@ namespace warnings.conditions
             else
                 needed = GetFlowInData(input.ExtractedExpression, before);
               
-            // Calculate the used symbols in the method invocation.
+            // Calculate the used symbols in the method declaration.
             var expressionDataFlowAnalyzer = AnalyzerFactory.GetExpressionDataFlowAnalyzer();
             expressionDataFlowAnalyzer.SetDocument(after);
             expressionDataFlowAnalyzer.SetExpression(invocation);
@@ -42,12 +43,12 @@ namespace warnings.conditions
             // if missing is not empty, then some parameters are needed. 
             if (missing.Any())
             {
-                return new ParameterCheckingResult(true, missing.Select(s => s.Name));   
+                return new ParameterCheckingCodeIssueComputer(input.ExtractedMethodDeclaration, missing.Select(s => s.Name));   
             }
             else
             {
                 // Otherwise, return no problem.
-                return new ParameterCheckingResult(false);
+                return new NullCodeIssueComputer();
             }
         }
 
@@ -68,43 +69,35 @@ namespace warnings.conditions
             expressionDataFlowAnalyzer.SetExpression(expression);
             return expressionDataFlowAnalyzer.GetFlowInData();
         }
-    }
 
-    /* The check result of the parameter checkings of newly extracted method. */
-    internal class ParameterCheckingResult : ExtractMethodConditionCheckingResult
-    {
-        private readonly string description;
-        private readonly bool hasProblem;
-        private readonly IEnumerable<string> missingParaNames;
-        private readonly Logger logger;
-
-        internal ParameterCheckingResult(bool hasProblem, IEnumerable<string> missingParaNames = null )
+        private class ParameterCheckingCodeIssueComputer : ICodeIssueComputer
         {
-            this.hasProblem = hasProblem;
-            logger = NLoggerUtil.getNLogger(typeof (ParameterCheckingResult));
-            if(hasProblem)
+            private SyntaxNode declaration;
+            private IEnumerable<string> parameters;
+
+            public ParameterCheckingCodeIssueComputer(SyntaxNode declaration, IEnumerable<string> parameters)
             {
-                this.missingParaNames = missingParaNames;
-                description = "Missing Parameters: " + StringUtil.ConcatenateAll(", ", missingParaNames);
-                logger.Info(description);
+                this.declaration = declaration;
+                this.parameters = parameters;
             }
-            else
-                logger.Info("Checking Passed.");
+
+            public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
+            {
+                if(node.Kind == SyntaxKind.InvocationExpression)
+                {
+                    var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+                    retriever.SetDocument(document);
+                    retriever.SetMethodDeclaration(declaration);
+                    var invocations = retriever.GetInvocations();
+                    if(invocations.Any(i => i.Span.Equals(node)))
+                    {
+                        yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
+                            "Missing parameters " + StringUtil.ConcatenateAll(",", parameters));
+                    }
+                }
+            }
         }
 
-        public override bool HasProblem()
-        {
-            return hasProblem;
-        }
 
-        public override string GetProblemDescription()
-        {
-            return description;
-        }
-
-        public IEnumerable<String> GetMissingParametersNames()
-        {
-            return missingParaNames;
-        }
-    }
+    }  
 }

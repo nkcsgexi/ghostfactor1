@@ -37,8 +37,8 @@ namespace warnings.components
         public static readonly IFactorComponent conditionCheckingComponent = ConditionCheckingComponent.GetInstance();
 
         /* Component for keeping track of all the refactoring issues and posting them to the editor.*/
-        public static readonly IRefactoringIssuedNodesComponent refactoringIssuedNodeComponent =
-            RefactoringIssuedNodesComponent.GetInstance();
+        public static readonly IRefactoringCodeIssueComputersComponent RefactoringCodeIssueComputerComponent =
+            RefactoringCodeIssueComputersComponent.GetInstance();
 
 
 
@@ -57,7 +57,7 @@ namespace warnings.components
             conditionCheckingComponent.Start();
 
             // Start refactoring issues.
-            refactoringIssuedNodeComponent.Start();
+            RefactoringCodeIssueComputerComponent.Start();
         }
     }
 }

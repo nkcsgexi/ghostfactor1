@@ -2,12 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
+using Roslyn.Services.Editor;
+using warnings.analyzer;
+using warnings.components.search;
+using warnings.quickfix;
 using warnings.refactoring;
+using warnings.retriever;
 
 namespace warnings.conditions
 {
-    class UnupdatedMethodSignatureChecker : IRefactoringConditionChecker
+    internal class UnupdatedMethodSignatureChecker : IRefactoringConditionChecker
     {
         private static IRefactoringConditionChecker instance;
 
@@ -26,9 +32,42 @@ namespace warnings.conditions
             get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
         }
 
-        public ICheckingResult CheckCondition(IDocument before, IDocument after, IManualRefactoring input)
+        public ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualRefactoring input)
         {
-            throw new NotImplementedException();
+            return new UnchangedMethodInvocationComputer(((IChangeMethodSignatureRefactoring)input).ChangedMethodDeclaration);
+        }
+
+
+        /* The computer for calculating the unchanged method invocations. */
+        private class UnchangedMethodInvocationComputer : ICodeIssueComputer
+        {
+            private readonly SyntaxNode declaration;
+
+            public UnchangedMethodInvocationComputer(SyntaxNode declaration)
+            {
+                this.declaration = declaration;
+            }
+
+            public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
+            {
+                if(node.Kind == SyntaxKind.InvocationExpression)
+                {
+                    // Retrievers for method invocations.
+                    var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+                    retriever.SetDocument(document);
+
+                    // Get all the invocations in the current document.
+                    retriever.SetMethodDeclaration(declaration);
+                    var invocations = retriever.GetInvocations();
+
+                    // If the given node is in the invocations, return a corresponding code issue.
+                    if (invocations.Any(n => n.Span.Equals(node.Span)))
+                    {
+                        yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
+                            "Method invocation needs update.");
+                    }
+                }
+            }
         }
     }
 }

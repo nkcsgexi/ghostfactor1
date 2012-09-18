@@ -123,7 +123,6 @@
     <Compile Include="components\RefactoringIssueComponent.cs" />
     <Compile Include="conditions\ChangeMethodSignature\ChangeMethodSignatureConditionsList.cs" />
     <Compile Include="conditions\ChangeMethodSignature\UnupdatedMethodSignatureChecker.cs" />
-    <Compile Include="conditions\CheckResults\CombinedCheckingResult.cs" />
     <Compile Include="conditions\ConditionCheckingFactory.cs" />
     <Compile Include="conditions\ConditionInterfaces.cs" />
     <Compile Include="conditions\ExtractMethod\ExtractMethodConditionChecker.cs" />
@@ -140,7 +139,6 @@
     <Compile Include="retriever\RenamablesRetriever.cs" />
     <Compile Include="retriever\RetrieverFactory.cs" />
     <Compile Include="retriever\TypablesRetriever.cs" />
-    <Compile Include="ui\IssueTracedNode.cs" />
     <Compile Include="ui\RefactoringQuickFix.cs" />
     <Compile Include="detection\ExtractMethodDetector.cs" />
     <Compile Include="detection\rename\RenameDetector.cs" />

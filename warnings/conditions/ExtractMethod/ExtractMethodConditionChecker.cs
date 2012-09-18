@@ -16,7 +16,7 @@ namespace warnings.conditions
             get { return RefactoringType.EXTRACT_METHOD; }
         }
 
-        public ICheckingResult CheckCondition(IDocument before, IDocument after, IManualRefactoring input)
+        public ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualRefactoring input)
         {
             return CheckCondition(before, after, (IManualExtractMethodRefactoring)input);
         }
@@ -43,24 +43,8 @@ namespace warnings.conditions
         }
 
 
-        protected abstract ExtractMethodConditionCheckingResult CheckCondition(IDocument before, IDocument after,
-                                                                   IManualExtractMethodRefactoring input);
+        protected abstract ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualExtractMethodRefactoring input);
     }
-
-
-    /* All checking result for extract method shall derive from this. */
-    abstract class ExtractMethodConditionCheckingResult : ICheckingResult
-    {
-        public RefactoringType type
-        {
-            get { return RefactoringType.EXTRACT_METHOD; }
-        }
-
-        public abstract bool HasProblem();
-        public abstract string GetProblemDescription();
-    }
-
- 
 
     /* Condition list for extract method. */
     internal class ExtractMethodConditionsList : RefactoringConditionsList

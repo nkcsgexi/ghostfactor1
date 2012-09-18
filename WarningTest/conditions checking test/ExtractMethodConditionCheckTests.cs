@@ -85,14 +85,6 @@ namespace WarningTest
             return methodAnalyzer.GetStatementsByIndexRange(start, end);
         }
 
-        /* Logging all the problems' descriptions. */
-        private void logResults(IEnumerable<ICheckingResult> results)
-        {
-            foreach (var r in results)
-            {
-                logger.Info(Environment.NewLine + r.GetProblemDescription());
-            }
-        }
 
         /* Get the manual refactoring extracts statements indexed 'start' to 'end' in 'methodN' (before) to 'extractedN' (after)*/
         private IManualExtractMethodRefactoring GetTestInput(int methodIndex, int start, int end)
@@ -119,7 +111,7 @@ namespace WarningTest
         {
             var refactoring = GetTestInput(1, 0, 2);
             var results = conditionsList.CheckAllConditions(before, after, refactoring);
-            logResults(results);
+           
         }
 
         [TestMethod]
@@ -127,7 +119,7 @@ namespace WarningTest
         {
             var refactoring = GetTestInput(2, 2, 2);
             var results = conditionsList.CheckAllConditions(before, after, refactoring);
-            logResults(results);
+            
         }
 
         [TestMethod]
@@ -135,7 +127,6 @@ namespace WarningTest
         {
             var refactoring = GetTestInput(3, 1, 1);
             var results = conditionsList.CheckAllConditions(before, after, refactoring);
-            logResults(results);
         }
 
         [TestMethod]
@@ -143,7 +134,6 @@ namespace WarningTest
         {
             var refactoring = GetTestInput(4, 2, 2);
             var results = conditionsList.CheckAllConditions(before, after, refactoring);
-            logResults(results);
         }
 
      

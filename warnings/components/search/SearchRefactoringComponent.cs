@@ -38,11 +38,8 @@ namespace warnings.components
 
         public void Enqueue(IWorkItem item)
         {
-            if (queue.Count == 0)
-            {
-                logger.Info("enqueue");
-                queue.Add(item);
-            }
+            logger.Info("enqueue");
+            queue.Add(item);
         }
 
         public int GetWorkQueueLength()

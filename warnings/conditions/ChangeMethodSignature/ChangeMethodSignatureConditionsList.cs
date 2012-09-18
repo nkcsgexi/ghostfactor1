@@ -22,9 +22,9 @@ namespace warnings.conditions
             get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
         }
 
-        public IEnumerable<ICheckingResult> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input)
+        public IEnumerable<ICodeIssueComputer> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input)
         {
-            var results = new List<ICheckingResult>();
+            var results = new List<ICodeIssueComputer>();
 
             results.Add(UnupdatedMethodSignatureChecker.GetInstance().CheckCondition(before, after, input));
 
