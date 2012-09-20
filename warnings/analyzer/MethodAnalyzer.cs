@@ -18,6 +18,7 @@ namespace warnings.analyzer
     {
         void SetMethodDeclaration(SyntaxNode method);
         SyntaxToken GetMethodName();
+        String GetQualifiedName();
 
         /* Statement related queries. */
         IEnumerable<SyntaxNode> GetStatements();
@@ -68,12 +69,25 @@ namespace warnings.analyzer
             return method.Identifier;
         }
 
+        /* Get fully qualified name of this method. */
+        public string GetQualifiedName()
+        {
+            // Get the qualified name of the type containing this method.
+            var qualifiedAnalyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
+            qualifiedAnalyzer.SetSyntaxNode(method);
+
+            // Combine the type's qualified name and the method's identifier.
+            return qualifiedAnalyzer.GetOutsideTypeQualifiedName() + "." + method.Identifier.ValueText;
+        }
+
         public IEnumerable<SyntaxNode> GetStatements()
         {
-            BlockSyntax block = ASTUtil.GetBlockOfMethod(method);
+            var block = ASTUtil.GetBlockOfMethod(method);
             var statements = new StatementSyntax[] {};
             if (block != null)
-                statements = ASTUtil.getStatementsInBlock(block);
+            {
+                statements = ASTUtil.GetStatementsInBlock(block);
+            }
             return statements.OrderBy(n => n.Span.Start).AsEnumerable();
          }
 
@@ -103,7 +117,9 @@ namespace warnings.analyzer
             {
                 // For statement whose end point is before the position, add it to the result
                 if (statement.Span.End < position)
+                {
                     result.Add(statement);
+                }
             }
             return result.AsEnumerable();
         }
@@ -130,7 +146,9 @@ namespace warnings.analyzer
             {
                 // For statement whose end point is after the position, add it to the result
                 if (statement.Span.Start > position)
+                {
                     result.Add(statement);
+                }
             }
             return result.AsEnumerable();
         }
@@ -138,7 +156,8 @@ namespace warnings.analyzer
         public IEnumerable<SyntaxNode> GetParameters()
         {
             // Any node that in the parameter type, different from argument type
-            return method.DescendantNodes().Where(n => n.Kind == SyntaxKind.Parameter);
+            var paras = method.DescendantNodes().Where(n => n.Kind == SyntaxKind.Parameter);
+            return paras.Any() ? paras : Enumerable.Empty<SyntaxNode>();
         }
 
         public IEnumerable<IEnumerable<SyntaxNode>> GetParameterUsages()
@@ -153,6 +172,7 @@ namespace warnings.analyzer
             var block = ASTUtil.GetBlockOfMethod(method);
 
             // For each parameter.
+            // ATTENTION: foreach will throw null exception if it has nothing in it.
             foreach (ParameterSyntax para in parameters)
             {
                 // Need a new subList to copy out nodes, IEnumerable is a read only interface that will not copy out as new
@@ -161,11 +181,16 @@ namespace warnings.analyzer
                 // will be rewrite.
                 var sublist = new List<SyntaxNode>();
 
-                // If an identifier name equals the paraemeter's name, it is one usage of the 
-                // parameter.
-                sublist.AddRange(block.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName 
-                    && n.GetText().Equals(para.Identifier.ValueText)));
-                logger.Info("Parameter "+ para.Identifier +" usage:" + StringUtil.ConcatenateAll(",", sublist.Select(n => n.Span.ToString())));
+                // Only able to retrieve the parameter usages if the method block exists.
+                if (block != null)
+                {
+                    // If an identifier name equals the paraemeter's name, it is one usage of the 
+                    // parameter.
+                    sublist.AddRange(block.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName
+                        && n.GetText().Equals(para.Identifier.ValueText)));    
+                }
+                logger.Info("Parameter " + para.Identifier + " usage:" +
+                               StringUtil.ConcatenateAll(",", sublist.Select(n => n.Span.ToString())));
                 list.Add(sublist.AsEnumerable());
             }
             return list.AsEnumerable();
@@ -201,10 +226,13 @@ namespace warnings.analyzer
                                                                   n.Span.Start < limit);
 
             if (types.Count() == 1)
+            {
                 return types.First();
-
+            }
             if (genericTypes.Count() == 1)
+            {
                 return genericTypes.First();
+            }
             
             int leftMost = int.MaxValue;
             SyntaxNode leftMostIdentifier = null;

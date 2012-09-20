@@ -57,7 +57,9 @@ namespace warnings.components
 
             // Add a listener for failed work item.
             queue.FailedWorkItem += OnItemFailed;
-
+            
+            // Add a null computer to avoid adding more null computers.
+            codeIssueComputers.Add( new NullCodeIssueComputer());
             logger = NLoggerUtil.getNLogger(typeof (RefactoringCodeIssueComputersComponent));
         }
 
@@ -90,9 +92,12 @@ namespace warnings.components
         {
             lock (codeIssueComputers)
             {
-                // Select the computers that are not null computers. 
-                var validComputers = computers.Where(c => !c.GetType().Equals(typeof(NullCodeIssueComputer)));
-                codeIssueComputers.AddRange(validComputers);
+                // If a computer is not already in the list, add it.
+                foreach (var computer in computers)
+                {
+                    if(!codeIssueComputers.Contains(computer))
+                        codeIssueComputers.Add(computer);
+                }
             }
         }
 

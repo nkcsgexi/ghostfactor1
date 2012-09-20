@@ -10,6 +10,8 @@ using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
 using warnings.components.search;
+using warnings.configuration;
+using warnings.refactoring;
 using warnings.source;
 using warnings.source.history;
 using warnings.util;
@@ -61,7 +63,6 @@ namespace warnings.components
         }
 
         /* Add a new work item to the queue. */
-        [MethodImpl(MethodImplOptions.Synchronized)]
         public void Enqueue(IWorkItem item)
         {
             activeDocument = ((DocumentWorkItem)item).document;
@@ -89,7 +90,7 @@ namespace warnings.components
         private void TimeUpHandler(object o, EventArgs args)
         {
             logger.Info("Time up handler.");
-            if(activeDocument != null && queue.Count == 0)
+            lock(activeDocument)
             {
                 logger.Info("enqueue");
 
@@ -132,24 +133,15 @@ namespace warnings.components
                 try
                 {
                     logger.Info(solutionName + "," + namespaceName + "," + fileName);
-                    logger.Info(Environment.NewLine + code);
+
+                    // Log the saved code if needed.
+                    // logger.Info(Environment.NewLine + code);
 
                     // Add the new IDocuemnt to the code history.
                     CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
-
-                    // Get the latest record of the file just editted.    
-                    ICodeHistoryRecord record = CodeHistory.getInstance().getLatestRecord(solutionName, namespaceName, fileName);
-
-                    // After add the new record, search for extract method refactoring.
-                    GhostFactorComponents.searchExtractMethodComponent.Enqueue(new SearchExtractMethodWorkitem(record));
-
-                    // Search for rename refacotoring.
-                    GhostFactorComponents.searchRenameComponent.Enqueue(new SearchRenameWorkItem(record));
-
-                    // Search for change method signature refactorings.
-                    GhostFactorComponents.searchChangeMethodSignatureComponent.Enqueue(
-                        new SearchChangeMethodSignatureWorkItem(record));
-
+                    
+                    // Add work item to search component.
+                    AddSearchRefactoringWorkItem();
                 }
                 catch (Exception e)
                 {
@@ -157,6 +149,32 @@ namespace warnings.components
                     logger.Fatal(e.StackTrace);
                 }
             }
+
+            private void AddSearchRefactoringWorkItem()
+            {
+                // Get the latest record of the file just editted.    
+                ICodeHistoryRecord record = CodeHistory.getInstance().getLatestRecord(solutionName, namespaceName, fileName);
+
+                if (GlobalConfigurations.IsSupported(RefactoringType.EXTRACT_METHOD))
+                {
+                    // Search for extract method refactoring.
+                    GhostFactorComponents.searchExtractMethodComponent.Enqueue(new SearchExtractMethodWorkitem(record));
+                }
+                
+                if(GlobalConfigurations.IsSupported(RefactoringType.RENAME))
+                {
+                    // Search for rename refacotoring.
+                    GhostFactorComponents.searchRenameComponent.Enqueue(new SearchRenameWorkItem(record));
+                }
+
+               if(GlobalConfigurations.IsSupported(RefactoringType.CHANGE_METHOD_SIGNATURE))
+               {
+                   // Search for change method signature refactorings.
+                   GhostFactorComponents.searchChangeMethodSignatureComponent.Enqueue(
+                       new SearchChangeMethodSignatureWorkItem(record));
+               }
+            }
+
         }
     }
 

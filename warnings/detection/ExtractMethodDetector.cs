@@ -143,7 +143,7 @@ namespace warnings.refactoring.detection
                         var callerBefore = callGraphBefore.getVertice((String)caller.Identifier.Value);
 
                         // Create in method detector;
-                        var detector = new InMethodExtraceMethodDectector(callerBefore, caller, callee);
+                        var detector = new InMethodExtractMethodDectector(callerBefore, caller, callee);
 
                         // Set the trees to the detector.
                         detector.setSyntaxTreeBefore(treeBefore);
@@ -176,7 +176,7 @@ namespace warnings.refactoring.detection
         }
     }
     /* Extract method detector for a given caller and an added callee. */
-    class InMethodExtraceMethodDectector : IRefactoringDetector, IBeforeAndAfterSyntaxTreeKeeper
+    class InMethodExtractMethodDectector : IRefactoringDetector, IBeforeAndAfterSyntaxTreeKeeper
     {
         /* The caller declaration before. */
         private readonly MethodDeclarationSyntax callerBefore;
@@ -196,13 +196,13 @@ namespace warnings.refactoring.detection
        
         private readonly Logger logger;
 
-        public InMethodExtraceMethodDectector(MethodDeclarationSyntax callerBefore, MethodDeclarationSyntax callerAfter, 
+        public InMethodExtractMethodDectector(MethodDeclarationSyntax callerBefore, MethodDeclarationSyntax callerAfter, 
             MethodDeclarationSyntax calleeAfter)
         {
             this.callerBefore = callerBefore;
             this.callerAfter = callerAfter;
             this.calleeAfter = calleeAfter;
-            logger = NLoggerUtil.getNLogger(typeof (InMethodExtraceMethodDectector));
+            logger = NLoggerUtil.getNLogger(typeof (InMethodExtractMethodDectector));
         }
 
         public bool hasRefactoring()
@@ -214,10 +214,11 @@ namespace warnings.refactoring.detection
             
             /* Flatten the caller after by replacing callee invocation with the code in the calle method body. */
             String callerAfterFlattenned = ASTUtil.flattenMethodInvocation(callerAfter, calleeAfter, invocation);
-            logger.Info("Caller Before:\n" + callerBefore.GetText());
-            logger.Info("Caller After:\n" + callerAfter.GetText());
-            logger.Info("Callee after:\n" + calleeAfter.GetText());
-            logger.Info("Flattened Caller:\n" + callerAfterFlattenned);
+            
+            // logger.Info("Caller Before:\n" + callerBefore.GetText());
+            // logger.Info("Caller After:\n" + callerAfter.GetText());
+            // logger.Info("Callee after:\n" + calleeAfter.GetText());
+            // logger.Info("Flattened Caller:\n" + callerAfterFlattenned);
 
             var beforeWithoutSpace = callerBefore.GetFullText().Replace(" ", "");
 

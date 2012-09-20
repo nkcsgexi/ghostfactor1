@@ -35,11 +35,10 @@ namespace warnings.conditions
         /* suppose to return all the condition checkers for this specific refactoring. */
         public IEnumerable<ICodeIssueComputer> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input)
         {
-            List<ICodeIssueComputer> results = new List<ICodeIssueComputer>();
-            foreach (var checker in GetAllConditionCheckers())
-            {
-                results.Add(checker.CheckCondition(before, after, input));
-            }
+            var results = new List<ICodeIssueComputer>();
+            
+            // Check all conditions, and push the results into the list.
+            results.AddRange(GetAllConditionCheckers().Select(checker => checker.CheckCondition(before, after, input)));
             return results.AsEnumerable();
         }
 
@@ -47,10 +46,8 @@ namespace warnings.conditions
         public abstract RefactoringType type { get; }
     }
 
-    /*
-     * This interface is used returning values for condition checkers. It is a convenient way of computing code issues. 
-     */
-    public interface ICodeIssueComputer
+    /* This interface is used returning values for condition checkers. It is a convenient way of computing code issues. */
+    public interface ICodeIssueComputer : IEquatable<ICodeIssueComputer>
     {
         IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node);
     }
@@ -61,6 +58,11 @@ namespace warnings.conditions
         public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
         {
             return Enumerable.Empty<CodeIssue>();
+        }
+
+        public bool Equals(ICodeIssueComputer other)
+        {
+            return other is NullCodeIssueComputer;
         }
     }
 }

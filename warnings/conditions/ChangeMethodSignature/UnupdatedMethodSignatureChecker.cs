@@ -2,14 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
 using warnings.analyzer;
+using warnings.analyzer.comparators;
 using warnings.components.search;
 using warnings.quickfix;
 using warnings.refactoring;
 using warnings.retriever;
+using warnings.util;
 
 namespace warnings.conditions
 {
@@ -26,7 +29,6 @@ namespace warnings.conditions
             return instance;
         }
 
-
         public RefactoringType type
         {
             get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
@@ -42,7 +44,7 @@ namespace warnings.conditions
         private class UnchangedMethodInvocationComputer : ICodeIssueComputer
         {
             private readonly SyntaxNode declaration;
-
+           
             public UnchangedMethodInvocationComputer(SyntaxNode declaration)
             {
                 this.declaration = declaration;
@@ -67,6 +69,17 @@ namespace warnings.conditions
                             "Method invocation needs update.");
                     }
                 }
+            }
+
+            public bool Equals(ICodeIssueComputer o)
+            {
+                if(o is UnchangedMethodInvocationComputer)
+                {
+                    var comparator = new MethodsComparator();
+                    var other = (UnchangedMethodInvocationComputer) o;
+                    return comparator.Compare(declaration, other.declaration) == 0;
+                }
+                return false;
             }
         }
     }

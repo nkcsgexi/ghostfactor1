@@ -64,7 +64,7 @@ namespace warnings.conditions
 
         protected override IEnumerable<IRefactoringConditionChecker> GetAllConditionCheckers()
         {
-            List<IRefactoringConditionChecker> checkers = new List<IRefactoringConditionChecker>();
+            var checkers = new List<IRefactoringConditionChecker>();
             checkers.Add(new ParametersChecker());
             checkers.Add(new ReturnTypeChecker());
             return checkers.AsEnumerable();

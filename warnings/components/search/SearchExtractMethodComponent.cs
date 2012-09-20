@@ -74,7 +74,7 @@ namespace warnings.components
 
         protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
         {
-            logger.Info("No extract method detected.");
+            //logger.Info("No extract method detected.");
         }
 
         public override Logger GetLogger()

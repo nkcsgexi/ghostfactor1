@@ -8,6 +8,7 @@ using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
 using warnings.analyzer;
+using warnings.analyzer.comparators;
 using warnings.refactoring;
 using warnings.retriever;
 using warnings.util;
@@ -109,9 +110,13 @@ namespace warnings.conditions
             return returningData;
         }
 
+        /* Code issue computers for the checking results of retrun type.*/
         private class ReturnTypeCheckingResult : ICodeIssueComputer
         {
+            /* The names for missing return values. */
             private IEnumerable<string> returns;
+
+            /* Declaration of the extracted method. */
             private SyntaxNode declaration;
 
             public ReturnTypeCheckingResult(SyntaxNode declaration, IEnumerable<string> returns)
@@ -119,20 +124,46 @@ namespace warnings.conditions
                 this.declaration = declaration;
                 this.returns = returns;
             }
+
             public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
             {
+                // If the given node is not method invocation, return directly.
                 if (node.Kind == SyntaxKind.InvocationExpression)
                 {
+                    // Retrieving all the method invocations of the extracted method 
+                    // in the given document instance.
                     var retriever = RetrieverFactory.GetMethodInvocationRetriever();
                     retriever.SetDocument(document);
                     retriever.SetMethodDeclaration(declaration);
                     var invocations = retriever.GetInvocations();
+
+                    // For all the invocations, if one of them equals the given node,
+                    // create a code issue at the given node.
                     if (invocations.Any(i => i.Span.Equals(node.Span)))
                     {
                         yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
                             "Missing return values: " + StringUtil.ConcatenateAll(",", returns));
                     }
                 }
+            }
+
+            public bool Equals(ICodeIssueComputer o)
+            {
+                // If the other is not in the same type, return false
+                if (o is ReturnTypeCheckingResult)
+                {
+                    var other = (ReturnTypeCheckingResult)o;
+                    var methodsComparator = new MethodsComparator();
+                    var stringEnumerablesComparator = new StringEnumerablesComparator();
+
+                    // If the method declarations are equal to each other.
+                    return methodsComparator.Compare(declaration, other.declaration) == 0 &&
+                        // Also the contained return names are equal to each other, return true;
+                        stringEnumerablesComparator.Compare(returns, other.returns) == 0;
+                }
+                return false;
+               
+
             }
         }
     }

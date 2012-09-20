@@ -38,11 +38,11 @@ namespace warnings.util
             methodNames = new List<string>();
             foreach (MethodDeclarationSyntax method in methods)
             {
-                BlockSyntax block = ASTUtil.GetBlockOfMethod(method);
+                SyntaxNode block = ASTUtil.GetBlockOfMethod(method);
                 if(block != null)
                 {
                     StringBuilder sb = new StringBuilder();
-                    StatementSyntax[] stats = ASTUtil.getStatementsInBlock(block);
+                    StatementSyntax[] stats = ASTUtil.GetStatementsInBlock(block);
                     foreach(StatementSyntax st in stats)
                     {
                         sb.AppendLine(st.GetText());

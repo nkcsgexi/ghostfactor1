@@ -31,17 +31,12 @@ namespace warnings.util
             return methods;
         }
 
-        public static BlockSyntax GetBlockOfMethod(SyntaxNode method)
+        public static SyntaxNode GetBlockOfMethod(SyntaxNode method)
         {
-            foreach (SyntaxNode node in method.ChildNodes())
-            {
-                if (node.Kind == SyntaxKind.Block)
-                    return (BlockSyntax)node;
-            }
-            return null;
+            return method.DescendantNodes().FirstOrDefault(n => n.Kind == SyntaxKind.Block);
         }
 
-        public static StatementSyntax[] getStatementsInBlock(BlockSyntax block)
+        public static StatementSyntax[] GetStatementsInBlock(SyntaxNode block)
         {
             List<StatementSyntax> stats = new List<StatementSyntax>();
             foreach (SyntaxNode node in block.ChildNodes())
@@ -112,7 +107,7 @@ namespace warnings.util
             MethodDeclarationSyntax callee, InvocationExpressionSyntax invocation)
         {
             // Get the statements in the callee method body except the return statement;
-            var statements = getStatementsInBlock(ASTUtil.GetBlockOfMethod(callee))
+            var statements = GetStatementsInBlock(ASTUtil.GetBlockOfMethod(callee))
                 .Where(s => !(s is ReturnStatementSyntax));
 
             // Combine the statements into one string;

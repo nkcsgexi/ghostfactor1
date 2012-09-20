@@ -68,8 +68,8 @@ namespace warnings.retriever
             {
                 // Get the invoked method name.
                 invocationAnalyzer.SetMethodInvocation(invocation);
-                var invokedName =invocationAnalyzer.GetMethodName();
-                
+                var invokedName = invocationAnalyzer.GetMethodName();
+
                 // If invoked name is a identifier name and the name is equal to the declared method,
                 // the invocation is direct invoking by simple name.
                 if(invokedName.Kind == SyntaxKind.IdentifierName && 
@@ -79,6 +79,7 @@ namespace warnings.retriever
                     qualifiedNameAnalyzer.SetSyntaxNode(invocation);
                     if (qualifiedNameAnalyzer.GetOutsideTypeQualifiedName().Equals(declarationScopeName))
                     {
+                        logger.Info(invocation.GetText());
                         results.Add(invocation);
                     }
                 }
@@ -98,6 +99,7 @@ namespace warnings.retriever
                         var type = typableRetriever.GetMemberAccessType(memberAccessAnalyzer.GetLeftPart());
                         if (type.ToString().Equals(declarationScopeName))
                         {
+                            logger.Info(invocation.GetText());
                             results.Add(invocation);
                         }
                     }

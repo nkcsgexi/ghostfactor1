@@ -67,7 +67,7 @@ namespace warnings.components.search
 
         protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
         {
-            logger.Info("No change method signature detected.");
+            //logger.Info("No change method signature detected.");
         }
 
         public override Logger GetLogger()

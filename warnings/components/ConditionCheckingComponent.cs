@@ -22,7 +22,6 @@ namespace warnings.components
         {
             return instance;
         }
-
    
         private readonly WorkQueue queue;
         private readonly Logger logger;
@@ -98,27 +97,27 @@ namespace warnings.components
                 // The refactoring instance was generated from pure strings, need to map them to real 
                 // docuement to facilitate semantic analyze.
                 refactoring.MapToDocuments(before, after);
-                IEnumerable<ICodeIssueComputer> results = Enumerable.Empty<ICodeIssueComputer>();
+                IEnumerable<ICodeIssueComputer> computers = Enumerable.Empty<ICodeIssueComputer>();
                 switch (refactoring.type)
                 {
                     // Checking all conditions for extract method.
                     case RefactoringType.EXTRACT_METHOD:
                         logger.Info("Checking conditions for extract method.");
-                        results = ConditionCheckingFactory.GetExtractMethodConditionsList().
+                        computers = ConditionCheckingFactory.GetExtractMethodConditionsList().
                             CheckAllConditions(before, after, refactoring);
                         break;
 
                     // Checking all conditions for rename.
                     case RefactoringType.RENAME:
                         logger.Info("Checking conditions for rename.");
-                        results = ConditionCheckingFactory.GetRenameConditionsList().
+                        computers = ConditionCheckingFactory.GetRenameConditionsList().
                             CheckAllConditions(before, after, refactoring);
                         break;
 
                     // Checking conditions for change method signature.
                     case RefactoringType.CHANGE_METHOD_SIGNATURE:
                         logger.Info("Checking conditions for change method signature.");
-                        results = ConditionCheckingFactory.GetChangeMethodSignatureConditionsList().
+                        computers = ConditionCheckingFactory.GetChangeMethodSignatureConditionsList().
                             CheckAllConditions(before, after, refactoring);
                         break;
 
@@ -128,7 +127,7 @@ namespace warnings.components
                 }
 
                 // Add issue computers to the issue component.
-                GhostFactorComponents.RefactoringCodeIssueComputerComponent.Enqueue(new AddCodeIssueComputersWorkItem(results,
+                GhostFactorComponents.RefactoringCodeIssueComputerComponent.Enqueue(new AddCodeIssueComputersWorkItem(computers,
                     GhostFactorComponents.RefactoringCodeIssueComputerComponent));
             }catch(Exception e)
             {

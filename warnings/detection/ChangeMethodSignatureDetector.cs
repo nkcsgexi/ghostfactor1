@@ -141,7 +141,7 @@ namespace warnings.refactoring.detection
 
         private class InMethodChangeSignatureDetector : IRefactoringDetector
         {
-            private readonly Logger logger = NLoggerUtil.getNLogger(typeof (InMethodExtraceMethodDectector));
+            private readonly Logger logger = NLoggerUtil.getNLogger(typeof (InMethodExtractMethodDectector));
 
             private readonly SyntaxNode beforeMethod;
             private readonly SyntaxNode afterMethod;

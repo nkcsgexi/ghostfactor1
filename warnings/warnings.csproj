@@ -98,6 +98,7 @@
     <Compile Include="Algorithm\Levenshtein.cs" />
     <Compile Include="analyzer\AnalyzerFactory.cs" />
     <Compile Include="analyzer\CallGraphBuilder.cs" />
+    <Compile Include="analyzer\comparators\Comparators.cs" />
     <Compile Include="analyzer\DataFlowAnalyzer.cs" />
     <Compile Include="analyzer\DocumentAnalyzer.cs" />
     <Compile Include="analyzer\MemberAccessAnalyzer.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="conditions\ExtractMethod\ParametersChecker.cs" />
     <Compile Include="conditions\ExtractMethod\ReturnTypeChecker.cs" />
     <Compile Include="conditions\Rename\RenameConditionChecker.cs" />
+    <Compile Include="configuration\GlobalConfigurations.cs" />
     <Compile Include="detection\ChangeMethodSignatureDetector.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

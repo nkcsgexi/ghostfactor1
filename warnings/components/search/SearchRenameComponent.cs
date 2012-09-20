@@ -66,7 +66,7 @@ namespace warnings.components
 
         protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
         {
-            logger.Info("No Rename Detected.");
+            //logger.Info("No Rename Detected.");
         }
 
         public override Logger GetLogger()
