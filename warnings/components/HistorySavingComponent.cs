@@ -42,7 +42,7 @@ namespace warnings.components
         private readonly ComponentTimer timer;
 
         /* Timer interval used by timer. */
-        private readonly int TIME_INTERVAL = 5000;
+        private readonly int TIME_INTERVAL = GlobalConfigurations.GetSnapshotTakingInterval();
 
         private HistorySavingComponent()
         {

@@ -19,10 +19,33 @@ namespace warnings.configuration
                 case RefactoringType.EXTRACT_METHOD:
                     return true;
                 case RefactoringType.CHANGE_METHOD_SIGNATURE:
-                    return false;
+                    return true;
                 default:
                     throw new Exception("Unknown Refactoring Type.");
             }
         }
+
+        /* Get the time interval between two snapshots, in millisencond. */
+        public static int GetSnapshotTakingInterval()
+        {
+            return 2000;
+        }
+
+        /* Get the search depth for different refactoring types, how many snapshots to look back. */
+        public static int GetSearchDepth(RefactoringType type)
+        {
+            switch (type)
+            {
+                case RefactoringType.RENAME:
+                    return 30;
+                case RefactoringType.EXTRACT_METHOD:
+                    return 30;
+                case RefactoringType.CHANGE_METHOD_SIGNATURE:
+                    return 30;
+                default:
+                    throw new Exception("Unknown Refactoring Type.");
+            }
+        }
+
     }
 }

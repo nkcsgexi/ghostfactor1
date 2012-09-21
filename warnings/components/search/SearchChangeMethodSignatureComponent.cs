@@ -7,6 +7,7 @@ using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
 using warnings.analyzer;
 using warnings.conditions;
+using warnings.configuration;
 using warnings.quickfix;
 using warnings.refactoring;
 using warnings.refactoring.detection;
@@ -50,7 +51,7 @@ namespace warnings.components.search
 
         protected override int getSearchDepth()
         {
-            return 10;
+            return GlobalConfigurations.GetSearchDepth(RefactoringType.CHANGE_METHOD_SIGNATURE);
         }
 
         protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,

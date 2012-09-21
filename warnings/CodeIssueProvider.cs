@@ -46,18 +46,6 @@ namespace warnings
         }
 
 
-
-        /* Initialize the service archive. */
-        private void retrieveService(IDocument document, bool show)
-        {
-            ServiceArchive instance = ServiceArchive.getInstance();
-            instance.ExtractMethodService = document.LanguageServices.GetService<IExtractMethodService>();
-            if (show)
-                MessageBox.Show(instance.ToString());
-        }
-
-
-
         #region Unimplemented ICodeIssueProvider members
 
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxToken token, CancellationToken cancellationToken)

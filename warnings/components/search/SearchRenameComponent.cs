@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using BlackHen.Threading;
 using NLog;
+using warnings.configuration;
 using warnings.refactoring;
 using warnings.refactoring.detection;
 using warnings.source;
@@ -53,7 +54,7 @@ namespace warnings.components
 
         protected override int getSearchDepth()
         {
-            return 3;
+            return GlobalConfigurations.GetSearchDepth(RefactoringType.RENAME);
         }
 
         protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,

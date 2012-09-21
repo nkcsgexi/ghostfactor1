@@ -5,6 +5,7 @@ using System.Text;
 using BlackHen.Threading;
 using NLog;
 using Roslyn.Services;
+using warnings.configuration;
 using warnings.refactoring;
 using warnings.refactoring.detection;
 using warnings.source;
@@ -54,7 +55,7 @@ namespace warnings.components
 
         protected override int getSearchDepth()
         {
-            return 30;
+            return GlobalConfigurations.GetSearchDepth(RefactoringType.EXTRACT_METHOD);
         }
 
         protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after, 

@@ -141,7 +141,7 @@ namespace warnings.refactoring.detection
 
         private class InMethodChangeSignatureDetector : IRefactoringDetector
         {
-            private readonly Logger logger = NLoggerUtil.getNLogger(typeof (InMethodExtractMethodDectector));
+            private readonly Logger logger = NLoggerUtil.getNLogger(typeof(InMethodChangeSignatureDetector));
 
             private readonly SyntaxNode beforeMethod;
             private readonly SyntaxNode afterMethod;
@@ -243,16 +243,16 @@ namespace warnings.refactoring.detection
                 // Combine usages, and sort them by the start position.
                 var combinedUsages = CombineNodesGroups(usages);
                 combinedUsages = combinedUsages.OrderBy(n => n.Span.Start);
-                logger.Info("Combined usages:" + StringUtil.ConcatenateAll(",", combinedUsages.Select(n => n.Span.ToString())));
+                // logger.Info("Combined usages:" + StringUtil.ConcatenateAll(",", combinedUsages.Select(n => n.Span.ToString())));
 
                 // for each parameter
                 foreach(var group in usages)
                 {
-                    logger.Info("Group usages:" + StringUtil.ConcatenateAll(",", group.Select(n => n.Span.ToString())));
+                    // logger.Info("Group usages:" + StringUtil.ConcatenateAll(",", group.Select(n => n.Span.ToString())));
 
                     // Get the indexes of its usages in the combined pool, and sort them.
                     var indexes = GetNodesIndexes(group, combinedUsages).OrderBy(i => i);
-                    logger.Info("Indexes are: " + StringUtil.ConcatenateAll(",", indexes.Select(i => i.ToString())));
+                    // logger.Info("Indexes are: " + StringUtil.ConcatenateAll(",", indexes.Select(i => i.ToString())));
                     list.Add(indexes);
                 }
                 return list.AsEnumerable();
@@ -286,10 +286,10 @@ namespace warnings.refactoring.detection
             private IEnumerable<SyntaxNode> CombineNodesGroups(IEnumerable<IEnumerable<SyntaxNode>> groups)
             {
                 var list = new List<SyntaxNode>();
-                foreach (var g in groups)
+                foreach (var group in groups)
                 {
-                    list.AddRange(g);
-                    logger.Info("Group: " + StringUtil.ConcatenateAll(",", g.Select(n => n.Span.ToString())));
+                    list.AddRange(group);
+                    // logger.Info("Group: " + StringUtil.ConcatenateAll(",", group.Select(n => n.Span.ToString())));
                 }
                 return list.AsEnumerable();
             }

@@ -24,15 +24,16 @@ namespace warnings.components
         public ComponentTimer(int timeInterval, doSomething handler)
         {
             this.timeInterval = timeInterval;
-            this.thread = new Thread(new ThreadStart(run));
+            this.thread = new Thread(run);
             this.thread.Priority = ThreadPriority.BelowNormal;
             TimesUp += handler;
         }
 
         public void start()
         {
-            // Start the thread
-            thread.Start();
+            // Start the thread if not started.
+            if(thread.ThreadState == ThreadState.Unstarted)
+                thread.Start();
         }
 
         public void end()
