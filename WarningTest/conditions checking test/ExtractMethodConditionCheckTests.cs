@@ -80,7 +80,7 @@ namespace WarningTest
         private IEnumerable<SyntaxNode> GetStatementsBeforeExtract(string methodName, int start, int end)
         {
             var originalMethod = beforeMethods.First(n => ((MethodDeclarationSyntax)n).Identifier.Value.Equals(methodName));
-            var methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
+            var methodAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
             methodAnalyzer.SetMethodDeclaration(originalMethod);
             return methodAnalyzer.GetStatementsByIndexRange(start, end);
         }

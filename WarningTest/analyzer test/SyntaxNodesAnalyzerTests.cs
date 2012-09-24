@@ -20,7 +20,7 @@ namespace WarningTest
 
         private readonly ISyntaxNodesAnalyzer nodesAnalyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
 
-        private readonly IMethodAnalyzer methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
+        private readonly IMethodDeclarationAnalyzer _methodDeclarationAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
 
         private readonly IDocumentAnalyzer documentAnalyzer = AnalyzerFactory.GetDocumentAnalyzer();
 
@@ -51,8 +51,8 @@ namespace WarningTest
 
         private IEnumerable<SyntaxNode> GetStatementsInMethod(int index)
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(index));
-            return methodAnalyzer.GetStatements();
+            _methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(index));
+            return _methodDeclarationAnalyzer.GetStatements();
         } 
 
         private IEnumerable<SyntaxNode> SelectSubSet(IEnumerable<SyntaxNode> nodes, int[] indexes)

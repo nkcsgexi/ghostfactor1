@@ -8,9 +8,9 @@ namespace warnings.analyzer
     /* Factory method for returning different types of analyzer, one instance of each anlayzer is enough. */
     public class AnalyzerFactory
     {
-        public static IMethodAnalyzer GetMethodAnalyzer()
+        public static IMethodDeclarationAnalyzer GetMethodDeclarationAnalyzer()
         {
-            return new MethodAnalyzer();
+            return new MethodDeclarationAnalyzer();
         }
 
         public static IMethodInvocationAnalyzer GetMethodInvocationAnalyzer()
@@ -77,10 +77,10 @@ namespace warnings.analyzer
 
         public static String GetAnalyzersCountInfo()
         {
-            StringBuilder sb = new StringBuilder(Environment.NewLine);
+            var sb = new StringBuilder(Environment.NewLine);
             sb.AppendLine("SolutionAnalyzer: " + SolutionAnalyzer.GetCount());
             sb.AppendLine("DocumentAnalyzer: " + DocumentAnalyzer.GetCount());
-            sb.AppendLine("MethodAnalyzer: " + MethodAnalyzer.GetCount());
+            sb.AppendLine("_methodDeclarationAnalyzer: " + MethodDeclarationAnalyzer.GetCount());
             sb.AppendLine("MethodInvocationAnalyzer: " + MethodInvocationAnalyzer.GetCount());
             sb.AppendLine("StatementAnalyzer :" + StatementAnalyzer.GetCount());
             sb.AppendLine("SyntaxNodesAnalyzer: " + SyntaxNodesAnalyzer.GetCount());

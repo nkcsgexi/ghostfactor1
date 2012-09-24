@@ -14,7 +14,7 @@ using warnings.util;
 namespace warnings.analyzer
 {
     /* Analyzer for a method declaration. */
-    public interface IMethodAnalyzer
+    public interface IMethodDeclarationAnalyzer
     {
         void SetMethodDeclaration(SyntaxNode method);
         SyntaxToken GetMethodName();
@@ -35,9 +35,14 @@ namespace warnings.analyzer
         SyntaxNode GetReturnType();
         bool HasReturnStatement();
         string DumpTree();
+
+        /* Update part of the method delaration. */
+        SyntaxNode ChangeReturnValue(string symbolName);
+        SyntaxNode ChangeReturnType(string typeName);
+        SyntaxNode AddParameters(IEnumerable<Tuple<string, string>> parameters);
     }
 
-    internal class MethodAnalyzer : IMethodAnalyzer
+    internal class MethodDeclarationAnalyzer : IMethodDeclarationAnalyzer
     {
         private static int ANALYZER_COUNT = 0;
 
@@ -47,14 +52,14 @@ namespace warnings.analyzer
         }
 
         private MethodDeclarationSyntax method;
-        private Logger logger = NLoggerUtil.getNLogger(typeof(MethodAnalyzer));
+        private Logger logger = NLoggerUtil.getNLogger(typeof(MethodDeclarationAnalyzer));
 
-        internal MethodAnalyzer()
+        internal MethodDeclarationAnalyzer()
         {
             Interlocked.Increment(ref ANALYZER_COUNT);
         }
 
-        ~MethodAnalyzer()
+        ~MethodDeclarationAnalyzer()
         {
             Interlocked.Decrement(ref ANALYZER_COUNT);
         }
@@ -270,6 +275,65 @@ namespace warnings.analyzer
             var analyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
             analyzer.SetSyntaxNode(method);
             return analyzer.DumpTree();
+        }
+
+        /* Update every return statements in the method declaration (if any), to return the specified symbol.*/
+        public SyntaxNode ChangeReturnValue(string symbolName)
+        {
+            // Create a return statement with the given symbol name.
+            var returnStatement = Syntax.ReturnStatement
+                (Syntax.ParseToken("return").WithTrailingTrivia(Syntax.Whitespace(" ")), 
+                Syntax.ParseExpression(symbolName), Syntax.ParseToken(";"));
+
+            // Replace every return statements in the method with the created new return statement.
+            method = method.ReplaceNodes(
+                method.DescendantNodes().Where(n => n.Kind == SyntaxKind.ReturnStatement),
+                (n1, n2) => returnStatement);
+
+            // Get all statements in the updated method.
+            var statements = GetStatements();
+
+            // If the last statement is not return statement, it needs adding one.
+            if (statements.Last().Kind != SyntaxKind.ReturnStatement)
+            {
+                // Get the leading and trailing white space of the last statement.
+                var leading = statements.Last().GetLeadingTrivia();
+                var trailing = statements.Last().GetTrailingTrivia();
+
+                // Add a return statement to the end of the body.
+                method = method.AddBodyStatements(new StatementSyntax[] 
+                    {returnStatement.WithLeadingTrivia(leading).WithTrailingTrivia(trailing)});
+            }
+            return method;
+        }
+
+
+        public SyntaxNode ChangeReturnType(string typeName)
+        {
+            // Get the trivias of the existing return type.
+            var trailing = method.ReturnType.GetTrailingTrivia();
+            var leading = method.ReturnType.GetLeadingTrivia();
+
+            // Replace the existing return type with a new one by the given type name.
+            return method.ReplaceNodes(new[] { method.ReturnType}, 
+                (n1, n2) => Syntax.ParseTypeName(typeName).WithTrailingTrivia(trailing).WithLeadingTrivia(leading));
+        }
+
+
+        /* Add parameters to the method declaration acccroding to the given type-name tuples. <int, a>. */
+        public SyntaxNode AddParameters(IEnumerable<Tuple<string, string>> parameters)
+        {
+            foreach (var tuple in parameters)
+            {
+                // Create parameter according to the corrent tuple.
+                var parameter = Syntax.Parameter(Syntax.List<AttributeDeclarationSyntax>(), Syntax.TokenList(), 
+                    Syntax.ParseTypeName(tuple.Item1).WithTrailingTrivia(Syntax.Whitespace(" ")), 
+                        Syntax.ParseToken(tuple.Item2), null);
+                
+                // Add the parameter to the method declaration.
+                method = method.AddParameterListParameters(parameter);
+            }
+            return method;
         }
     }
 }

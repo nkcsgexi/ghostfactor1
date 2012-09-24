@@ -24,7 +24,7 @@ namespace WarningTest
 
         private readonly IStatementsDataFlowAnalyzer _statementsDataFlowanalyzer = AnalyzerFactory.GetStatementsDataFlowAnalyzer();
 
-        private readonly IMethodAnalyzer methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
+        private readonly IMethodDeclarationAnalyzer _methodDeclarationAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
 
         private readonly IList<SyntaxNode> statementsToAnalyze = new List<SyntaxNode>(); 
 
@@ -56,15 +56,15 @@ namespace WarningTest
             Assert.IsNotNull(methods);
             Assert.IsTrue(methods.Count() == METHOD_COUNT);
             Assert.IsNotNull(_statementsDataFlowanalyzer);
-            Assert.IsNotNull(methodAnalyzer);
+            Assert.IsNotNull(_methodDeclarationAnalyzer);
         }
 
         [TestMethod]
         public void TestMethod2()
         {
             var method = GetMethodByIndex(0);
-            methodAnalyzer.SetMethodDeclaration(method);
-            var statements = methodAnalyzer.GetStatements();
+            _methodDeclarationAnalyzer.SetMethodDeclaration(method);
+            var statements = _methodDeclarationAnalyzer.GetStatements();
             statementsToAnalyze.Clear();
             
             // the while loop.
@@ -86,8 +86,8 @@ namespace WarningTest
         public void TestMethod3()
         {
             var method = GetMethodByIndex(1);
-            methodAnalyzer.SetMethodDeclaration(method);
-            var statements = methodAnalyzer.GetStatements();
+            _methodDeclarationAnalyzer.SetMethodDeclaration(method);
+            var statements = _methodDeclarationAnalyzer.GetStatements();
             statementsToAnalyze.Clear();
             statementsToAnalyze.Add(statements.ElementAt(2));
             _statementsDataFlowanalyzer.SetStatements(statementsToAnalyze);

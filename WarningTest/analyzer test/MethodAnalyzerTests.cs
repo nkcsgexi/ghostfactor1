@@ -17,7 +17,7 @@ namespace WarningTest
     {
         private IDocument document;
 
-        private IMethodAnalyzer methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
+        private IMethodDeclarationAnalyzer methodDeclarationAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
 
         private IDocumentAnalyzer documentAnalyzer = AnalyzerFactory.GetDocumentAnalyzer();
         
@@ -52,7 +52,7 @@ namespace WarningTest
         {
             Assert.IsNotNull(document);
             Assert.IsNotNull(documentAnalyzer);
-            Assert.IsNotNull(methodAnalyzer);
+            Assert.IsNotNull(methodDeclarationAnalyzer);
             Assert.IsNotNull(methods);
             Assert.IsTrue(methods.Count() == METHOD_COUNT);
         }
@@ -60,9 +60,9 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod2()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(0));
-            var returnType = methodAnalyzer.GetReturnType();
-            var para = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(0));
+            var returnType = methodDeclarationAnalyzer.GetReturnType();
+            var para = methodDeclarationAnalyzer.GetParameters();
             Assert.IsTrue(returnType.Kind == SyntaxKind.PredefinedType);
             Assert.IsTrue(returnType.GetText().Equals("void"));
             Assert.IsFalse(para.Any());
@@ -71,9 +71,9 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod3()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(1));
-            var returnType = methodAnalyzer.GetReturnType();
-            var para = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(1));
+            var returnType = methodDeclarationAnalyzer.GetReturnType();
+            var para = methodDeclarationAnalyzer.GetParameters();
             Assert.IsTrue(returnType.Kind == SyntaxKind.PredefinedType);
             Assert.IsTrue(returnType.GetText().Equals("int"));
             Assert.IsFalse(para.Any());
@@ -82,9 +82,9 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod4()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(2));
-            var returnType = methodAnalyzer.GetReturnType();
-            var para = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(2));
+            var returnType = methodDeclarationAnalyzer.GetReturnType();
+            var para = methodDeclarationAnalyzer.GetParameters();
             Assert.IsTrue(returnType.Kind == SyntaxKind.IdentifierName);
             Assert.IsTrue(returnType.GetText().Equals("IEnumerable"));
             Assert.IsFalse(para.Any());
@@ -93,9 +93,9 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod5()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(3));
-            var returnType = methodAnalyzer.GetReturnType();
-            var para = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(3));
+            var returnType = methodDeclarationAnalyzer.GetReturnType();
+            var para = methodDeclarationAnalyzer.GetParameters();
             Assert.IsTrue(returnType.Kind == SyntaxKind.PredefinedType);
             Assert.IsTrue(returnType.GetText().Equals("void"));
             Assert.IsTrue(para.Any());
@@ -105,12 +105,12 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod6()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(4));
-            var returnType = methodAnalyzer.GetReturnType();
-            var para = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(4));
+            var returnType = methodDeclarationAnalyzer.GetReturnType();
+            var para = methodDeclarationAnalyzer.GetParameters();
             Assert.IsTrue(returnType.Kind == SyntaxKind.GenericName);
             Assert.IsTrue(returnType.GetText().Equals("IEnumerable<Object>"));
-            logger.Info(methodAnalyzer.DumpTree());
+            logger.Info(methodDeclarationAnalyzer.DumpTree());
             Assert.IsTrue(para.Any());
             Assert.IsTrue(para.Count() == 5);
             Assert.IsTrue(para.ElementAt(0).GetText().Equals("int a"));
@@ -123,18 +123,18 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod7()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(4));
-            Assert.IsTrue(methodAnalyzer.HasReturnStatement());
-            logger.Info(methodAnalyzer.GetReturnStatements().First().GetText());
-            Assert.IsTrue(methodAnalyzer.GetReturnStatements().First().GetText().Equals("return Enumerable.Empty<Object>();"));
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(4));
+            Assert.IsTrue(methodDeclarationAnalyzer.HasReturnStatement());
+            logger.Info(methodDeclarationAnalyzer.GetReturnStatements().First().GetText());
+            Assert.IsTrue(methodDeclarationAnalyzer.GetReturnStatements().First().GetText().Equals("return Enumerable.Empty<Object>();"));
         }
 
         [TestMethod]
         public void TestMethod8()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(5));
-            var usages = methodAnalyzer.GetParameterUsages();
-            var paras = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(5));
+            var usages = methodDeclarationAnalyzer.GetParameterUsages();
+            var paras = methodDeclarationAnalyzer.GetParameters();
             Assert.IsTrue(usages.Count() == paras.Count());
             Assert.IsTrue(usages.Count() == 3);
             Assert.IsTrue(usages.ElementAt(0).Count() == usages.ElementAt(1).Count());
@@ -145,8 +145,8 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod9()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(5));
-            var paras = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(5));
+            var paras = methodDeclarationAnalyzer.GetParameters();
             var paraAnalyzer = AnalyzerFactory.GetParameterAnalyzer();
             for (int i = 0; i < 3; i++ )
             {
@@ -159,13 +159,32 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod10()
         {
-            methodAnalyzer.SetMethodDeclaration(getMethod(6));
-            var paras = methodAnalyzer.GetParameters();
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(6));
+            var paras = methodDeclarationAnalyzer.GetParameters();
             var paraAnalyzer = AnalyzerFactory.GetParameterAnalyzer();
             paraAnalyzer.SetParameter(paras.First());
             Assert.IsTrue(paraAnalyzer.GetModifiers().GetText().Equals("out"));
             Assert.IsTrue(paraAnalyzer.GetIdentifier().ValueText.Equals("things"));
             Assert.IsTrue(paraAnalyzer.GetParameterType().GetText().Equals("IEnumerable<IEnumerable<object>>"));
+        }
+
+        [TestMethod]
+        public void TestMethod11()
+        {
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(0));
+            var node = methodDeclarationAnalyzer.ChangeReturnValue("i");
+            methodDeclarationAnalyzer.SetMethodDeclaration(node);
+            node = methodDeclarationAnalyzer.ChangeReturnType("int");
+            logger.Info(node);
+        }
+
+        [TestMethod]
+        public void TestMethod12()
+        {
+            methodDeclarationAnalyzer.SetMethodDeclaration(getMethod(0));
+            var names = new [] {Tuple.Create("int", "a"), Tuple.Create("int", "b"), Tuple.Create("int", "c")};
+            var node = methodDeclarationAnalyzer.AddParameters(names);
+            logger.Info(node);
         }
     }
 }

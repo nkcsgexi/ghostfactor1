@@ -147,7 +147,7 @@ namespace warnings.refactoring.detection
             private readonly SyntaxNode afterMethod;
            
             private readonly IParameterAnalyzer paraAnalzyer;
-            private readonly IMethodAnalyzer methodAnalyzer;
+            private readonly IMethodDeclarationAnalyzer _methodDeclarationAnalyzer;
 
             private IManualRefactoring refactoring;
            
@@ -156,7 +156,7 @@ namespace warnings.refactoring.detection
             {
                 this.beforeMethod = beforeMethod;
                 this.afterMethod = afterMethod;
-                this.methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
+                this._methodDeclarationAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
                 this.paraAnalzyer = AnalyzerFactory.GetParameterAnalyzer();
             }
 
@@ -237,8 +237,8 @@ namespace warnings.refactoring.detection
                 var list = new List<IEnumerable<int>>();
 
                 // Get usages for each parameter.
-                methodAnalyzer.SetMethodDeclaration(method);
-                var usages = methodAnalyzer.GetParameterUsages();
+                _methodDeclarationAnalyzer.SetMethodDeclaration(method);
+                var usages = _methodDeclarationAnalyzer.GetParameterUsages();
                 
                 // Combine usages, and sort them by the start position.
                 var combinedUsages = CombineNodesGroups(usages);
@@ -268,8 +268,8 @@ namespace warnings.refactoring.detection
                 var sb = new StringBuilder();
                 
                 // Get all the parameters in the method.
-                methodAnalyzer.SetMethodDeclaration(method);
-                var paras = methodAnalyzer.GetParameters();
+                _methodDeclarationAnalyzer.SetMethodDeclaration(method);
+                var paras = _methodDeclarationAnalyzer.GetParameters();
 
                 // For each parameter, get its type and combined to the string builder
                 foreach (SyntaxNode para in paras)

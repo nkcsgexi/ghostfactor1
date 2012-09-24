@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Windows.Media;
 using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
@@ -10,6 +12,7 @@ using Roslyn.Services.Editor;
 using warnings.analyzer;
 using warnings.analyzer.comparators;
 using warnings.refactoring;
+using warnings.resources;
 using warnings.retriever;
 using warnings.util;
 
@@ -32,7 +35,7 @@ namespace warnings.conditions
 
             // Get the returning data of the return statements.
             var delaration = input.ExtractedMethodDeclaration;
-            var methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
+            var methodAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
             methodAnalyzer.SetMethodDeclaration(delaration);
 
             // Get the returning data in the return statements of the extracted method, also log them.
@@ -72,17 +75,17 @@ namespace warnings.conditions
             return flowOuts;
         }
 
-        private IEnumerable<ISymbol> GetMethodReturningData(IMethodAnalyzer methodAnalyzer, IDocument document)
+        private IEnumerable<ISymbol> GetMethodReturningData(IMethodDeclarationAnalyzer _methodDeclarationAnalyzer, IDocument document)
         {
             
             // The returning data from the return statements is initiated as empty.
             var returningData = Enumerable.Empty<ISymbol>();
 
             // If having return statement, then retuning data could be not empty.
-            if(methodAnalyzer.HasReturnStatement())
+            if(_methodDeclarationAnalyzer.HasReturnStatement())
             {
                 // Get all the return statements.
-                var return_statements = methodAnalyzer.GetReturnStatements();
+                var return_statements = _methodDeclarationAnalyzer.GetReturnStatements();
 
                 // Get the data flow analyzer for statements.
                 var dataFlowAnalyzer = AnalyzerFactory.GetStatementsDataFlowAnalyzer();
@@ -162,8 +165,101 @@ namespace warnings.conditions
                         stringEnumerablesComparator.Compare(returns, other.returns) == 0;
                 }
                 return false;
-               
+            }
+        }
 
+        /* Code action to add a return value automatically. */
+        private class AddReturnValueCodeAction : ICodeAction
+        {
+            private readonly string returnSymbolName;
+            private readonly SyntaxNode declaration;
+            private readonly ISolution solution;
+            private readonly Logger logger;
+
+            internal AddReturnValueCodeAction(ISolution solution, SyntaxNode declaration, string returnSymbolName)
+            {
+                this.solution = solution;
+                this.declaration = declaration;
+                this.returnSymbolName = returnSymbolName;
+                this.logger = NLoggerUtil.getNLogger(typeof (AddReturnValueCodeAction));
+            }
+
+            public CodeActionEdit GetEdit(CancellationToken cancellationToken = new CancellationToken())
+            {
+                // First find the document containing the method declaration.
+                var document = FindContainingDocument();
+                
+                // Use the rewrite visiter to change the target method declaration.
+                var newRoot = new AddReturnValueRewriter(declaration, returnSymbolName).
+                    Visit((SyntaxNode) document.GetSyntaxRoot());
+
+                // Update the document with the new root and return the code action.
+                document = document.UpdateSyntaxRoot(newRoot);
+                return new CodeActionEdit(document);
+            }
+
+            private IDocument FindContainingDocument()
+            {
+                // Get the type encloses the given method declaration.
+                var nameAnalyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
+                nameAnalyzer.SetSyntaxNode(declaration);
+                var methodInType = nameAnalyzer.GetOutsideTypeQualifiedName();
+                
+                // Get all the documents in the solution.
+                var solutionAnalyzer = AnalyzerFactory.GetSolutionAnalyzer();
+                solutionAnalyzer.SetSolution(solution);
+                var documents = solutionAnalyzer.GetAllDocuments();
+                var documentAnalyzer = AnalyzerFactory.GetDocumentAnalyzer();
+
+                // For each document in the solution.
+                foreach (var document in documents)
+                {
+                    documentAnalyzer.SetDocument(document);
+                    if(documentAnalyzer.ContainsQualifiedName(methodInType))
+                    {
+                        return document;
+                    }
+                }
+
+                // If not found, return null.
+                logger.Fatal("Cannot find method declaration.");
+                return null;
+            }
+
+
+            public ImageSource Icon
+            {
+                get { return ResourcePool.getIcon(); }
+            }
+
+            public string Description
+            {
+                get { return "Add return value " + returnSymbolName; }
+            }
+
+            /* Sytnax rewriter for updating a given method declaration by adding the given returning value. */
+            private class AddReturnValueRewriter : SyntaxRewriter
+            {
+                private readonly SyntaxNode declaration;
+                private readonly string returnSymbolName;
+
+                internal AddReturnValueRewriter(SyntaxNode declaration, String returnSymbolName)
+                {
+                    this.declaration = declaration;
+                    this.returnSymbolName = returnSymbolName;
+                }
+
+                public override SyntaxNode VisitMethodDeclaration(MethodDeclarationSyntax node)
+                {
+                    if(node.Span.Equals(declaration.Span))
+                    {
+                        // Use method analyzer to add the return value.
+                        var methodAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
+                        methodAnalyzer.SetMethodDeclaration(node);
+                        return methodAnalyzer.ChangeReturnValue(returnSymbolName);
+                    }
+                    return node;
+                }
             }
         }
     }

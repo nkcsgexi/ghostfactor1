@@ -102,7 +102,7 @@
     <Compile Include="analyzer\DataFlowAnalyzer.cs" />
     <Compile Include="analyzer\DocumentAnalyzer.cs" />
     <Compile Include="analyzer\MemberAccessAnalyzer.cs" />
-    <Compile Include="analyzer\MethodAnalyzer.cs" />
+    <Compile Include="analyzer\MethodDeclarationAnalyzer.cs" />
     <Compile Include="analyzer\MethodInvocationAnalyzer.cs" />
     <Compile Include="analyzer\ParameterAnalyzer.cs" />
     <Compile Include="analyzer\QualifiedNameAnalyzer.cs" />
@@ -206,7 +206,9 @@
       <Name>Threading</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="analyzer\syntaxFactory\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\VSSDK\Microsoft.VsSDK.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

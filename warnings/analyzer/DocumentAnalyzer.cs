@@ -34,6 +34,9 @@ namespace warnings.analyzer
         ISymbol GetFirstNamespace();
         ISymbol GetFirstMethod();
         String DumpSyntaxTree();
+
+        /* Whether this document contains the definition of the type of the given qualified name.*/
+        bool ContainsQualifiedName(string qualifiedName);
     }
 
     internal class DocumentAnalyzer : IDocumentAnalyzer
@@ -188,6 +191,13 @@ namespace warnings.analyzer
                 }
             }
             return sb.ToString();
+        }
+
+        public bool ContainsQualifiedName(string qualifiedName)
+        {
+            var nameAnalyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
+            nameAnalyzer.SetSyntaxNode((SyntaxNode) document.GetSyntaxRoot());
+            return nameAnalyzer.GetInsideQualifiedNames().Contains(qualifiedName);
         }
 
         public ISymbol GetFirstLocalVariable()

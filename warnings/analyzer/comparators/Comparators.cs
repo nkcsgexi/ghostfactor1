@@ -11,7 +11,7 @@ namespace warnings.analyzer.comparators
     {
         public override int Compare(SyntaxNode x, SyntaxNode y)
         {
-            var methodAnalyzer = AnalyzerFactory.GetMethodAnalyzer();
+            var methodAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
             methodAnalyzer.SetMethodDeclaration(x);
             var qualifiedName1 = methodAnalyzer.GetQualifiedName();
             methodAnalyzer.SetMethodDeclaration(y);
