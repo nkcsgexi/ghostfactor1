@@ -15,6 +15,7 @@ namespace warnings.analyzer
         SyntaxNode GetMethodName();
         IEnumerable<SyntaxNode> GetArguments();
         bool HasArguments();
+        SyntaxNode ReorderAuguments(IEnumerable<Tuple<int, int>> mapping);
     }
 
     internal class MethodInvocationAnalyzer : IMethodInvocationAnalyzer
@@ -67,6 +68,46 @@ namespace warnings.analyzer
         public bool HasArguments()
         {
             return invocation.ArgumentList.Arguments.Any();
+        }
+
+
+        /* Reorder the arguments according to the given mappings. */
+        public SyntaxNode ReorderAuguments(IEnumerable<Tuple<int, int>> mapping)
+        {
+            // For saving all the arguments after ordering.
+            var orderedArguments = Syntax.SeparatedList<ArgumentSyntax>();
+            var arguments = GetArguments();
+        
+            // Sort the mappings by after positions.
+            mapping = mapping.OrderBy(m => m.Item2);
+           
+            // For every map in the sorted mapping list, append the orginal arguments to the
+            // sorted list.
+            foreach (var map in mapping)
+            {
+                // Get the argument should be at this position.
+                var argument = (ArgumentSyntax) arguments.ElementAt(map.Item1);
+
+                // Get the trailing and leading trivia of the original argument and add these
+                // trivia to the new argument.
+                var leadingTrivia = arguments.ElementAt(map.Item2).GetLeadingTrivia();
+                var trailingTrivia = arguments.ElementAt(map.Item2).GetTrailingTrivia();
+                argument = argument.WithLeadingTrivia(leadingTrivia).WithTrailingTrivia(trailingTrivia);
+                
+                // Append this argument to the list.
+                orderedArguments = orderedArguments.Add(argument);
+            }
+
+            // Update the argumentlist by the ordered arguments.
+            var originalArgumentList = invocation.ArgumentList;
+            var orderedArgumentsList = originalArgumentList.Update(
+                openParenToken: invocation.ArgumentList.OpenParenToken,
+                arguments: orderedArguments,
+                closeParenToken: invocation.ArgumentList.CloseParenToken
+            );
+
+            // Update the invocation using the original expression and the ordered arguments' list.
+            return invocation.Update(invocation.Expression, orderedArgumentsList);
         }
     }
 

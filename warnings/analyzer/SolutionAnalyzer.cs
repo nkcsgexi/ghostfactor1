@@ -14,6 +14,7 @@ namespace warnings.analyzer
         void SetSolution(ISolution solution);
         IEnumerable<IProject> GetProjects();
         IEnumerable<IDocument> GetDocuments(IProject project);
+        IEnumerable<IDocument> GetAllDocuments(); 
         String DumpSolutionStructure();
     }
 
@@ -52,6 +53,16 @@ namespace warnings.analyzer
         public IEnumerable<IDocument> GetDocuments(IProject project)
         {
             return project.Documents;
+        }
+
+        public IEnumerable<IDocument> GetAllDocuments()
+        {
+            var list = new List<IDocument>();
+            foreach (var project in GetProjects())
+            {
+                list.AddRange(GetDocuments(project));
+            }
+            return list.AsEnumerable();
         }
 
         public string DumpSolutionStructure()

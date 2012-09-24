@@ -101,6 +101,7 @@ namespace WarningTest.fakesource
                     return true;
                 }
             }
+			changeSignatureExample0(1, 2, 3);
             return false;
 
         }

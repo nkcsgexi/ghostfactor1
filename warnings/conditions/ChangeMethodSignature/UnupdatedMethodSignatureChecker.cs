@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
+using System.Windows.Media;
 using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
@@ -11,11 +13,13 @@ using warnings.analyzer.comparators;
 using warnings.components.search;
 using warnings.quickfix;
 using warnings.refactoring;
+using warnings.resources;
 using warnings.retriever;
 using warnings.util;
 
 namespace warnings.conditions
 {
+    /* Code issue of an invocation whose method declaration's signature is updated. */
     internal class UnupdatedMethodSignatureChecker : IRefactoringConditionChecker
     {
         private static IRefactoringConditionChecker instance;
@@ -36,7 +40,9 @@ namespace warnings.conditions
 
         public ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualRefactoring input)
         {
-            return new UnchangedMethodInvocationComputer(((IChangeMethodSignatureRefactoring)input).ChangedMethodDeclaration);
+            var signatureRefactoring = (IChangeMethodSignatureRefactoring) input;
+            return new UnchangedMethodInvocationComputer(((IChangeMethodSignatureRefactoring)input).ChangedMethodDeclaration
+                ,  signatureRefactoring.ParametersMap.AsEnumerable());
         }
 
 
@@ -44,10 +50,12 @@ namespace warnings.conditions
         private class UnchangedMethodInvocationComputer : ICodeIssueComputer
         {
             private readonly SyntaxNode declaration;
-           
-            public UnchangedMethodInvocationComputer(SyntaxNode declaration)
+            private readonly IEnumerable<Tuple<int, int>> mappings;
+
+            public UnchangedMethodInvocationComputer(SyntaxNode declaration, IEnumerable<Tuple<int, int>> mappings)
             {
                 this.declaration = declaration;
+                this.mappings = mappings;
             }
 
             public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
@@ -58,7 +66,7 @@ namespace warnings.conditions
                     var retriever = RetrieverFactory.GetMethodInvocationRetriever();
                     retriever.SetDocument(document);
 
-                    // Get all the invocations in the current document.
+                    // Get all the invocations in the current solution.
                     retriever.SetMethodDeclaration(declaration);
                     var invocations = retriever.GetInvocations();
 
@@ -66,20 +74,177 @@ namespace warnings.conditions
                     if (invocations.Any(n => n.Span.Equals(node.Span)))
                     {
                         yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
-                            "Method invocation needs update.");
+                            "Method invocation needs update.", 
+                            // With the code action of change this signature with correct arguments order
+                            new ICodeAction[]{new CorrectSignatureCodeAction(document, node, mappings),
+                            // Another code action to update all invocations of the given method declaration.
+                            new CorrectAllSignaturesInSolution(document.Project.Solution, declaration, mappings)});
                     }
                 }
             }
 
             public bool Equals(ICodeIssueComputer o)
             {
-                if(o is UnchangedMethodInvocationComputer)
+                var other = o as UnchangedMethodInvocationComputer;
+                if (other != null)
                 {
                     var comparator = new MethodsComparator();
-                    var other = (UnchangedMethodInvocationComputer) o;
                     return comparator.Compare(declaration, other.declaration) == 0;
                 }
                 return false;
+            }
+        }
+
+        /* Correct the current invocation expression by changing all the parameters to the right places. */
+        private class CorrectSignatureCodeAction : ICodeAction
+        {
+            private readonly IDocument document;
+            private readonly InvocationExpressionSyntax invocation;
+            private readonly IEnumerable<Tuple<int, int>> mappings;
+
+            public CorrectSignatureCodeAction(IDocument document, SyntaxNode invocation, 
+                IEnumerable<Tuple<int, int>> mappings)
+            {
+                this.document = document;
+                this.invocation = (InvocationExpressionSyntax) invocation;
+                this.mappings = mappings;
+            }
+
+            public CodeActionEdit GetEdit(CancellationToken cancellationToken = new CancellationToken())
+            {
+                // Get the updated invocation.
+                var analyzer = AnalyzerFactory.GetMethodInvocationAnalyzer();
+                analyzer.SetMethodInvocation(invocation);
+                var updatedInvocation = analyzer.ReorderAuguments(mappings);
+                
+                // Rewriting this node.
+                var rewriter = new SingleInvocationRewriter(invocation, updatedInvocation);
+                var newRoot = rewriter.Visit((SyntaxNode) document.GetSyntaxRoot());
+                return new CodeActionEdit(document.UpdateSyntaxRoot(newRoot));
+            }
+
+            public ImageSource Icon
+            {
+                get { return ResourcePool.getIcon(); }
+            }
+
+            public string Description
+            {
+                get { return "Change Method Signature Automatically."; }
+            }
+
+            /* Syntax rewriter to update a single method invocation. */
+            private class SingleInvocationRewriter : SyntaxRewriter
+            {
+                private readonly SyntaxNode updatedInvocation;
+                private readonly SyntaxNode invocation;
+
+                internal SingleInvocationRewriter(SyntaxNode invocation, SyntaxNode updatedInvocation)
+                {
+                    this.invocation = invocation;
+                    this.updatedInvocation = updatedInvocation;
+                }
+
+                public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax visitedInvocation)
+                {
+                    // If the visited node is the invocation where the issue was issued.
+                    if(visitedInvocation.Span.Equals(invocation.Span))
+                    {
+                        // Change it to the updated invocatio.
+                        return updatedInvocation;
+                    }
+                    return visitedInvocation;
+                }
+            }
+        }
+
+        /* Code action that corrects all the invocations of a given method declaration in a solution. */
+        private class CorrectAllSignaturesInSolution : ICodeAction
+        {
+            private readonly SyntaxNode declaration;
+            private readonly IEnumerable<Tuple<int, int>> mappings;
+            private readonly ISolution solution;
+
+            internal CorrectAllSignaturesInSolution(ISolution solution, SyntaxNode declaration,
+                IEnumerable<Tuple<int, int>> mappings)
+            {
+                this.solution = solution;
+                this.declaration = declaration;
+                this.mappings = mappings;
+            }
+
+            public CodeActionEdit GetEdit(CancellationToken cancellationToken = new CancellationToken())
+            {
+                // The updated solution, originally identical to the given solution instance.
+                ISolution updatedSolution = solution;
+
+                // Get all the documents
+                var solutionAnalyzer = AnalyzerFactory.GetSolutionAnalyzer();
+                solutionAnalyzer.SetSolution(solution);
+                var documents = solutionAnalyzer.GetAllDocuments();
+
+                // For each document
+                foreach (var document in documents)
+                {
+                    // Get an invocation retriever and set the declaration and document.
+                    var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+                    retriever.SetMethodDeclaration(declaration);
+                    retriever.SetDocument(document);
+                    
+                    // Get all the invocations in the document.
+                    var invocations = retriever.GetInvocations();
+
+                    // If there is some invocations of the given declaration in the specfic document
+                    if(invocations.Any())
+                    {
+                        var rewriter = new MultipleInvocationsRewriter(invocations, mappings);
+                        var updatedRoot = rewriter.Visit((SyntaxNode) document.GetSyntaxRoot());
+                        updatedSolution = updatedSolution.UpdateDocument(document.Id, updatedRoot);
+                    }
+                }
+                return new CodeActionEdit(updatedSolution);
+            }
+
+            public ImageSource Icon
+            {
+                get { return ResourcePool.getIcon(); }
+            }
+
+            public string Description
+            {
+                get { return "Correct all the non-updated invocations."; }
+            }
+
+            /* 
+             * Rewriting several invocations in a given document according to the given invocation nodes and the 
+             * arguments mapping information.
+             */
+            internal class MultipleInvocationsRewriter : SyntaxRewriter
+            {
+                private readonly IEnumerable<SyntaxNode> invocations;
+                private readonly IEnumerable<Tuple<int, int>> mappings;
+
+                internal MultipleInvocationsRewriter(IEnumerable<SyntaxNode> invocations, 
+                    IEnumerable<Tuple<int, int>> mappings)
+                {
+                    this.invocations = invocations;
+                    this.mappings = mappings;
+                }
+
+                public override SyntaxNode VisitInvocationExpression(InvocationExpressionSyntax visitedInvocation)
+                {
+                    // If the visited node is among the given invocations.
+                    if(invocations.Any(i => i.Span.Equals(visitedInvocation.Span)))
+                    {
+                        // Reorder the arguments of this invocation and return the reorderred invocation.
+                        var analyzer = AnalyzerFactory.GetMethodInvocationAnalyzer();
+                        analyzer.SetMethodInvocation(visitedInvocation);
+                        return analyzer.ReorderAuguments(mappings);
+                    }
+                    return visitedInvocation;
+                }
+
+
             }
         }
     }
