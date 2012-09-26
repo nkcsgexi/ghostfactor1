@@ -16,6 +16,7 @@ namespace warnings.analyzer
         IEnumerable<SyntaxNode> GetArguments();
         bool HasArguments();
         SyntaxNode ReorderAuguments(IEnumerable<Tuple<int, int>> mapping);
+        SyntaxNode AddArguments(IEnumerable<string> names);
     }
 
     internal class MethodInvocationAnalyzer : IMethodInvocationAnalyzer
@@ -109,6 +110,16 @@ namespace warnings.analyzer
             // Update the invocation using the original expression and the ordered arguments' list.
             return invocation.Update(invocation.Expression, orderedArgumentsList);
         }
-    }
 
+        /* Add extra arguments to this invocation. */
+        public SyntaxNode AddArguments(IEnumerable<string> names)
+        {
+            // Convert all the name in names to an argument and add these arguements to 
+            // the method invocation.
+            invocation = invocation.AddArgumentListArguments(
+                names.Select(name => Syntax.Argument( Syntax.ParseExpression(name).WithLeadingTrivia(
+                    Syntax.ParseLeadingTrivia(" ")))).ToArray());
+            return invocation;
+        }
+    }
 }

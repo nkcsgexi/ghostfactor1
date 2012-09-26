@@ -1,5 +1,24 @@
 ﻿<RecentFiles>
   <RecentFiles>
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:StringUtil.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:ASTUtilTests.cs" caret="0" fromTop="0" />
+    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWork.cs" caret="0" fromTop="0" />
+    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:WorkThreadPool.cs" caret="0" fromTop="0" />
+    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:WorkItemEvent.cs" caret="0" fromTop="0" />
+    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWorkQueue.cs" caret="0" fromTop="0" />
+    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWorkItem.cs" caret="0" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:analyzer/f:RefactoringAnalyzerFactory.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:EMDetectorAfter.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:EMDetectorTests.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:EMDetectorBefore.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:SyntaxNodesAnalyzerTests.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:UtilityTest.cs" caret="0" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:CallGraphBuilder.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:DataFlowAnalyzerTests.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:StatementAnalyzerTests.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:TryToUpdate.cs" caret="0" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:DataStructureUtil.cs" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:RoslynUtilTests.cs" caret="0" fromTop="0" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:CallGraphTest.cs" caret="0" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:resources/f:ResourcePool.cs" caret="0" fromTop="0" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:component test/f:ComponentTimerTests.cs" caret="0" fromTop="0" />
@@ -10,57 +29,38 @@
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:RoslynUtil/f:ServiceArchives.cs" caret="0" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
-    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1471" fromTop="19" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:QualifiedNameAnalyzer.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:retriever/f:MethodInvocationsRetriever.cs" caret="4858" fromTop="54" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:retriever/f:RenamablesRetriever.cs" caret="1259" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:MethodAnalyzerTests.cs" caret="1087" fromTop="27" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:MethodAnalyzerExample.cs" caret="1257" fromTop="5" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:retriever/f:RetrieverFactory.cs" caret="214" fromTop="9" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ChangeMethodSignature/f:UnupdatedMethodSignatureChecker.cs" caret="10737" fromTop="124" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="3179" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SemanticModelAnalyzer.cs" caret="903" fromTop="28" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:retriever test/f:MethodInvocationRetrieverTests.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="2691" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:retriever/f:TypablesRetriever.cs" caret="4844" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:manual/f:IManualRefactoring.cs" caret="3732" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:AnalyzerFactory.cs" caret="2279" fromTop="41" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodDeclarationAnalyzer.cs" caret="296" fromTop="11" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:retriever test/f:TypableRetrieverTests.cs" caret="2167" fromTop="44" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="414" fromTop="14" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ExtractMethodConditionChecker.cs" caret="1901" fromTop="40" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="13032" fromTop="160" />
+    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="24" fromTop="0" />
   </RecentFiles>
   <RecentEdits>
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="1376" fromTop="36" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="1105" fromTop="37" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="429" fromTop="16" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:manual/f:IManualRefactoring.cs" caret="3732" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:AnalyzerFactory.cs" caret="2279" fromTop="41" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2969" fromTop="37" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2023" fromTop="31" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2029" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2967" fromTop="47" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2342" fromTop="38" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2980" fromTop="47" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:retriever test/f:TypableRetrieverTests.cs" caret="2237" fromTop="45" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="414" fromTop="14" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="1937" fromTop="31" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ExtractMethodConditionChecker.cs" caret="2221" fromTop="46" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ExtractMethodConditionChecker.cs" caret="1899" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ExtractMethodConditionChecker.cs" caret="1601" fromTop="35" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="12188" fromTop="31" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="11929" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="12868" fromTop="44" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="12596" fromTop="40" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="9736" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="13027" fromTop="29" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="8866" fromTop="38" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="7188" fromTop="29" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="834" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="2047" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="2732" fromTop="34" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="3321" fromTop="45" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="3525" fromTop="38" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="3473" fromTop="38" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="2104" fromTop="36" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="4292" fromTop="31" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="10549" fromTop="34" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:DocumentAnalyzer.cs" caret="10282" fromTop="37" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="3041" fromTop="30" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="4229" fromTop="35" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/d:retriever/f:TypablesRetriever.cs" caret="706" fromTop="20" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/d:retriever/f:TypablesRetriever.cs" caret="3755" fromTop="43" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="903" fromTop="28" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="4224" fromTop="33" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="4224" fromTop="35" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="4224" fromTop="43" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:MethodAnalyzerExample.cs" caret="1180" fromTop="41" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="903" fromTop="23" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="1146" fromTop="31" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:retriever test/f:TypableRetrieverTests.cs" caret="1800" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="3908" fromTop="17" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="4229" fromTop="23" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="3239" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="4044" fromTop="45" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="3406" fromTop="30" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2558" fromTop="30" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="2560" fromTop="11" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="890" fromTop="15" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="1119" fromTop="19" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="1536" fromTop="20" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="903" fromTop="16" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="337" fromTop="12" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:SymbolAnalyzer.cs" caret="713" fromTop="13" />
   </RecentEdits>
 </RecentFiles>

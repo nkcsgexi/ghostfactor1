@@ -325,12 +325,12 @@ namespace warnings.analyzer
         {
             foreach (var tuple in parameters)
             {
-                // Create parameter according to the corrent tuple.
+                // Create parameters according to the corrent tuple.
                 var parameter = Syntax.Parameter(Syntax.List<AttributeDeclarationSyntax>(), Syntax.TokenList(), 
                     Syntax.ParseTypeName(tuple.Item1).WithTrailingTrivia(Syntax.Whitespace(" ")), 
                         Syntax.ParseToken(tuple.Item2), null);
                 
-                // Add the parameter to the method declaration.
+                // Add the parameters to the method declaration.
                 method = method.AddParameterListParameters(parameter);
             }
             return method;

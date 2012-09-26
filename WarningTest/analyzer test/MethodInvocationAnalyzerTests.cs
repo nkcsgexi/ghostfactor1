@@ -73,5 +73,14 @@ namespace WarningTest.analyzer_test
                 logger.Fatal(e);
             }
         }
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            var invocation = GetInvocation("changeSignatureExample0");
+            analyzer.SetMethodInvocation(invocation);
+            analyzer.AddArguments(new string[] {"name"});
+
+        }
     }
 }
