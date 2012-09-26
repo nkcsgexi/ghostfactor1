@@ -36,7 +36,7 @@ namespace warnings.components
 
         public override Logger GetLogger()
         {
-            return NLoggerUtil.getNLogger(typeof (SearchRenameComponent));
+            return NLoggerUtil.GetNLogger(typeof (SearchRenameComponent));
         }
     }
 
@@ -72,7 +72,7 @@ namespace warnings.components
 
         public override Logger GetLogger()
         {
-            return NLoggerUtil.getNLogger(typeof (SearchRenameWorkItem));
+            return NLoggerUtil.GetNLogger(typeof (SearchRenameWorkItem));
         }
     }
 }

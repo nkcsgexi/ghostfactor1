@@ -40,7 +40,7 @@ namespace warnings.analyzer
 
         private InvocationExpressionSyntax invocation;
 
-        private Logger logger = NLoggerUtil.getNLogger(typeof (MethodInvocationAnalyzer));
+        private Logger logger = NLoggerUtil.GetNLogger(typeof (MethodInvocationAnalyzer));
 
         public void SetMethodInvocation(SyntaxNode invocation)
         {

@@ -36,7 +36,7 @@ namespace warnings.components
 
         public override Logger GetLogger()
         {
-            return NLoggerUtil.getNLogger(typeof (SearchExtractMethodComponent));
+            return NLoggerUtil.GetNLogger(typeof (SearchExtractMethodComponent));
         }
     }
 
@@ -80,7 +80,7 @@ namespace warnings.components
 
         public override Logger GetLogger()
         {
-            return NLoggerUtil.getNLogger(typeof(SearchExtractMethodWorkitem));
+            return NLoggerUtil.GetNLogger(typeof(SearchExtractMethodWorkitem));
         }
     }
 }

@@ -48,6 +48,7 @@ namespace WarningTest.fakesource
             var list = new List<int>();
             list.Add(a);
             list.Add(c);
+            var m =1;
         }
 
         public void method7(out IEnumerable<IEnumerable<object>> things)

@@ -26,7 +26,7 @@ namespace WarningTest
             detector = RefactoringDetectorFactory.CreateChangeMethodSignatureDetector();
             detector.setSourceBefore(sourceBefore);
             detector.setSourceAfter(sourceAfter);
-            logger = NLoggerUtil.getNLogger(typeof (ChangeSignatureDetectorTests));
+            logger = NLoggerUtil.GetNLogger(typeof (ChangeSignatureDetectorTests));
         }
 
 

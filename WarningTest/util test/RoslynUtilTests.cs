@@ -15,7 +15,7 @@ namespace WarningTest
     [TestClass]
     public class RoslynUtilTests
     {
-        Logger logger = NLoggerUtil.getNLogger(typeof(RoslynUtilTests));
+        Logger logger = NLoggerUtil.GetNLogger(typeof(RoslynUtilTests));
         private int field1, field2;
 
         [TestMethod]

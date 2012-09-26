@@ -45,7 +45,7 @@ namespace warnings.analyzer
         internal SyntaxNodeAnalyzer()
         {
             Interlocked.Increment(ref ANALYZER_COUNT);
-            logger = NLoggerUtil.getNLogger(typeof (SyntaxNodeAnalyzer));
+            logger = NLoggerUtil.GetNLogger(typeof (SyntaxNodeAnalyzer));
         }
 
         ~SyntaxNodeAnalyzer()

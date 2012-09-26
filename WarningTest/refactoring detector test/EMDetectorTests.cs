@@ -19,7 +19,7 @@ namespace WarningTest
         private static readonly string fileAfter = 
             TestUtil.getFakeSourceFolder() + "EMDetectorAfter.cs";
 
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (EMDetectorTests));
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (EMDetectorTests));
 
         [TestMethod]
         public void TestMethod1()

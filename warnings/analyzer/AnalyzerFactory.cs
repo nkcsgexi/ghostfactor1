@@ -74,6 +74,10 @@ namespace warnings.analyzer
             return new QualifiedNameAnalyzer();
         }
 
+        public static ISymbolAnalyzer GetSymbolAnalyzer()
+        {
+            return new SymbolAnalyzer();
+        }
 
         public static String GetAnalyzersCountInfo()
         {

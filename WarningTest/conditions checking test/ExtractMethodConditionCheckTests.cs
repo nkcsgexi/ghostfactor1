@@ -18,7 +18,7 @@ namespace WarningTest
     [TestClass]
     public class ExtractMethodConditionCheckTests
     {
-        private Logger logger = NLoggerUtil.getNLogger(typeof (ExtractMethodConditionCheckTests));
+        private Logger logger = NLoggerUtil.GetNLogger(typeof (ExtractMethodConditionCheckTests));
 
         private IDocument before, after;
 

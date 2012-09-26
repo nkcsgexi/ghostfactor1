@@ -22,7 +22,7 @@ namespace warnings.quickfix
         internal  RefactoringQuickFix (IDocument document)
         {
             this.document = document;
-            this.logger = NLoggerUtil.getNLogger(typeof (RefactoringQuickFix));
+            this.logger = NLoggerUtil.GetNLogger(typeof (RefactoringQuickFix));
         }
 
         public CodeActionEdit GetEdit(CancellationToken cancellationToken = new CancellationToken())

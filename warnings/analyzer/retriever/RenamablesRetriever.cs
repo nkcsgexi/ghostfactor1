@@ -36,7 +36,7 @@ namespace warnings.retriever
 
     internal class RenamablesRetriever : IRenamableRetriever
     {
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof(RenamablesRetriever));
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof(RenamablesRetriever));
 
         private SyntaxNode root;
 

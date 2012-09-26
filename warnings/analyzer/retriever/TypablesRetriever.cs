@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Windows.Documents;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
+using warnings.util;
 
 namespace warnings.retriever
 {
@@ -23,6 +25,7 @@ namespace warnings.retriever
     {
         private ISemanticModel model;
         private SyntaxNode root;
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (TypableRetriever));
 
         public void SetDocument(IDocument document)
         {
@@ -30,26 +33,28 @@ namespace warnings.retriever
             root = (SyntaxNode) document.GetSyntaxRoot();
         }
 
-        /* Get tuples of node and type. Nodes shall be identifier names. */
+        /* 
+         * Get tuples of node and type. Nodes shall be identifier names. 
+         * ATTENTION: the declarations cannot get type info, only identifiers(references) can.
+         */
         public IEnumerable<Tuple<SyntaxNode, ITypeSymbol>> GetTypableIdentifierTypeTuples()
         {
             var typedIdentifiers = new List<Tuple<SyntaxNode, ITypeSymbol>>();
 
             // Get all identifiers.
             var identifiers = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName);
-            foreach(SyntaxNode id in identifiers)
+            foreach (SyntaxNode id in identifiers)
             {
                 // Query type information of an identifier.
                 var info = model.GetTypeInfo(id);
 
                 // If type is retrieved, add to the result.
-                if(info.Type != null)
+                if (info.Type != null)
                     typedIdentifiers.Add(Tuple.Create(id, info.Type));
             }
             return typedIdentifiers.AsEnumerable();
         }
 
-  
         /* 
          * Get the member access in the document, returning a tuple of member access node and the type it is accessing.
          */
@@ -83,5 +88,7 @@ namespace warnings.retriever
         {
             return model.GetTypeInfo(node).Type;
         }
+
+        
     }
 }

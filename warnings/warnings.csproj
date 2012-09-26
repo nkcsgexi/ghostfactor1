@@ -108,6 +108,7 @@
     <Compile Include="analyzer\QualifiedNameAnalyzer.cs" />
     <Compile Include="analyzer\SemanticModelAnalyzer.cs" />
     <Compile Include="analyzer\SolutionAnalyzer.cs" />
+    <Compile Include="analyzer\SymbolAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodeAnalyzer.cs" />
     <Compile Include="analyzer\SyntaxNodesAnalyzer.cs" />
     <Compile Include="change\ASTChange.cs" />
@@ -137,10 +138,10 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="retriever\MethodInvocationsRetriever.cs" />
-    <Compile Include="retriever\RenamablesRetriever.cs" />
-    <Compile Include="retriever\RetrieverFactory.cs" />
-    <Compile Include="retriever\TypablesRetriever.cs" />
+    <Compile Include="analyzer\retriever\MethodInvocationsRetriever.cs" />
+    <Compile Include="analyzer\retriever\RenamablesRetriever.cs" />
+    <Compile Include="analyzer\retriever\RetrieverFactory.cs" />
+    <Compile Include="analyzer\retriever\TypablesRetriever.cs" />
     <Compile Include="ui\RefactoringQuickFix.cs" />
     <Compile Include="detection\ExtractMethodDetector.cs" />
     <Compile Include="detection\rename\RenameDetector.cs" />

@@ -32,7 +32,7 @@ namespace WarningTest
             var code = TestUtil.getFakeSourceFolder() + "MethodAnalyzerExample.cs";
             var converter = new String2IDocumentConverter();
             document = (IDocument) converter.Convert(FileUtil.readAllText(code), null, null, null);
-            logger = NLoggerUtil.getNLogger(typeof (MethodAnalyzerTests));
+            logger = NLoggerUtil.GetNLogger(typeof (MethodAnalyzerTests));
 
             documentAnalyzer.SetDocument(document);
             var namespaceDec = documentAnalyzer.GetNamespaceDecalarations().First();

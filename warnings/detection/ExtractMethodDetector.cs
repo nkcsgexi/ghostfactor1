@@ -117,7 +117,7 @@ namespace warnings.refactoring.detection
             this.classBefore = classBefore;
             this.classAfter = classAfter;
             this.refactorings = Enumerable.Empty<IManualRefactoring>();
-            logger = NLoggerUtil.getNLogger(typeof (InClassExtractMethodDetector));
+            logger = NLoggerUtil.GetNLogger(typeof (InClassExtractMethodDetector));
         }
 
         public Boolean hasRefactoring()
@@ -202,7 +202,7 @@ namespace warnings.refactoring.detection
             this.callerBefore = callerBefore;
             this.callerAfter = callerAfter;
             this.calleeAfter = calleeAfter;
-            logger = NLoggerUtil.getNLogger(typeof (InMethodExtractMethodDectector));
+            logger = NLoggerUtil.GetNLogger(typeof (InMethodExtractMethodDectector));
         }
 
         public bool hasRefactoring()

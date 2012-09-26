@@ -34,7 +34,7 @@ namespace warnings.components.search
 
         public override Logger GetLogger()
         {
-            return NLoggerUtil.getNLogger(typeof (SearchChangeMethodSignatureComponent));
+            return NLoggerUtil.GetNLogger(typeof (SearchChangeMethodSignatureComponent));
         }
     }
 
@@ -73,7 +73,7 @@ namespace warnings.components.search
 
         public override Logger GetLogger()
         {
-            return NLoggerUtil.getNLogger(typeof (SearchChangeMethodSignatureWorkItem));
+            return NLoggerUtil.GetNLogger(typeof (SearchChangeMethodSignatureWorkItem));
         }
 
         

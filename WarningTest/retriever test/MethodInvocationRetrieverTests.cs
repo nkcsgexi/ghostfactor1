@@ -27,7 +27,7 @@ namespace WarningTest.retriever_test
 
         public MethodInvocationRetrieverTests()
         {
-            this.logger = NLoggerUtil.getNLogger(typeof(SolutionAnalyzerTests));
+            this.logger = NLoggerUtil.GetNLogger(typeof(SolutionAnalyzerTests));
             Assert.IsTrue(File.Exists(TestUtil.GetAnotherSolutionPath()));
             this.solution = Solution.Load(TestUtil.GetAnotherSolutionPath());
             Assert.IsNotNull(solution);

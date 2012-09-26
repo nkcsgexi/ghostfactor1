@@ -52,7 +52,7 @@ namespace warnings.analyzer
         }
 
         private MethodDeclarationSyntax method;
-        private Logger logger = NLoggerUtil.getNLogger(typeof(MethodDeclarationAnalyzer));
+        private Logger logger = NLoggerUtil.GetNLogger(typeof(MethodDeclarationAnalyzer));
 
         internal MethodDeclarationAnalyzer()
         {

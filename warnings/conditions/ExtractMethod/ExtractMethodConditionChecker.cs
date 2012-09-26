@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
+using warnings.analyzer;
 using warnings.refactoring;
 
 namespace warnings.conditions
@@ -41,6 +42,22 @@ namespace warnings.conditions
         {
             return original.Where(s => !s.Name.Equals("this"));
         }
+
+        /* Get the type name tuples by a given symbol list. */
+        protected IEnumerable<Tuple<string, string>> GetTypeNameTuples(IEnumerable<ISymbol> symbols)
+        {
+            var typeNameTuples = new List<Tuple<string, string>>();
+            var symbolAnalyzer = AnalyzerFactory.GetSymbolAnalyzer();
+            foreach (var symbol in symbols)
+            {
+                var symbolName = symbol.Name;
+                symbolAnalyzer.SetSymbol(symbol);
+                var typeName = symbolAnalyzer.GetSymbolTypeName();
+                typeNameTuples.Add(Tuple.Create(typeName, symbolName));
+            }
+            return typeNameTuples.AsEnumerable();
+        }
+
 
 
         protected abstract ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualExtractMethodRefactoring input);

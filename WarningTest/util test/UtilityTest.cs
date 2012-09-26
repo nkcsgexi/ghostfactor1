@@ -15,7 +15,7 @@ namespace WarningTest
         String first = "abcdefgh";
         String second = "123456";
 
-        private Logger logger = NLoggerUtil.getNLogger(typeof (UtilityTest));
+        private Logger logger = NLoggerUtil.GetNLogger(typeof (UtilityTest));
 
         // regression to Insert
         [TestMethod]

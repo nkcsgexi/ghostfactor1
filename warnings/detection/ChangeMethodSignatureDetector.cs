@@ -12,7 +12,7 @@ namespace warnings.refactoring.detection
 {
     class ChangeMethodSignatureDetector : IExternalRefactoringDetector
     {
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (ChangeMethodSignatureDetector));
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (ChangeMethodSignatureDetector));
 
         private string beforeSource;
 
@@ -141,7 +141,7 @@ namespace warnings.refactoring.detection
 
         private class InMethodChangeSignatureDetector : IRefactoringDetector
         {
-            private readonly Logger logger = NLoggerUtil.getNLogger(typeof(InMethodChangeSignatureDetector));
+            private readonly Logger logger = NLoggerUtil.GetNLogger(typeof(InMethodChangeSignatureDetector));
 
             private readonly SyntaxNode beforeMethod;
             private readonly SyntaxNode afterMethod;

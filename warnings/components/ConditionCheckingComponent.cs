@@ -36,7 +36,7 @@ namespace warnings.components
             queue.FailedWorkItem += onFailedItem;
 
             // Initiate the logger.
-            logger = NLoggerUtil.getNLogger(typeof (ConditionCheckingComponent));
+            logger = NLoggerUtil.GetNLogger(typeof (ConditionCheckingComponent));
         }
 
         private void onFailedItem(object sender, WorkItemEventArgs workItemEventArgs)
@@ -87,7 +87,7 @@ namespace warnings.components
             this.after = after.Convert2Document();
             this.DocumentKey = before.getKey();
             this.refactoring = refactoring;
-            logger = NLoggerUtil.getNLogger(typeof (ConditionCheckWorkItem));
+            logger = NLoggerUtil.GetNLogger(typeof (ConditionCheckWorkItem));
         }
 
         public override void Perform()

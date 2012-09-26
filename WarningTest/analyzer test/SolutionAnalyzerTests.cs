@@ -33,7 +33,7 @@ namespace WarningTest.analyzer_test
         {
             try
             {
-                this.logger = NLoggerUtil.getNLogger(typeof (SolutionAnalyzerTests));
+                this.logger = NLoggerUtil.GetNLogger(typeof (SolutionAnalyzerTests));
                 Assert.IsTrue(File.Exists(TestUtil.GetAnotherSolutionPath()));
                 this.solution = Solution.Load(TestUtil.GetAnotherSolutionPath());
                 this.analyzer = AnalyzerFactory.GetSolutionAnalyzer();

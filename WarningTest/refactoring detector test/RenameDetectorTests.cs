@@ -31,7 +31,7 @@ namespace WarningTest
             before = ASTUtil.getSyntaxTreeFromSource(sourceBefore).GetRoot();
             after = ASTUtil.getSyntaxTreeFromSource(sourceAfter).GetRoot();
             detector = RefactoringDetectorFactory.CreateRenameDetector();
-            logger = NLoggerUtil.getNLogger(typeof (RenameDetectorTests));
+            logger = NLoggerUtil.GetNLogger(typeof (RenameDetectorTests));
         }
 
         private SyntaxNode ModifyIdentifierInAfterSource(SyntaxNode node, int idIndex,String newName)

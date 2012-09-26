@@ -21,7 +21,7 @@ namespace warnings
     [ExportSyntaxNodeCodeIssueProvider("CodeIssue", LanguageNames.CSharp)]
     class CodeIssueProvider : ICodeIssueProvider
     {
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof(CodeIssueProvider));
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof(CodeIssueProvider));
 
         public IEnumerable<CodeIssue> GetIssues(IDocument document, CommonSyntaxNode node, CancellationToken cancellationToken)
         {

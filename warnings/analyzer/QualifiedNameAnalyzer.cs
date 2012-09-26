@@ -18,7 +18,7 @@ namespace warnings.analyzer
 
     internal class QualifiedNameAnalyzer : IQualifiedNameAnalyzer
     {
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (QualifiedNameAnalyzer));  
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (QualifiedNameAnalyzer));  
         private SyntaxNode node;
       
         public void SetSyntaxNode(SyntaxNode node)

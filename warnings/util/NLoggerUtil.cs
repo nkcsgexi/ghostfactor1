@@ -50,7 +50,7 @@ namespace warnings.util
         }
 
         /* get a logger using the specified type. */
-        static public Logger getNLogger(Type t)
+        static public Logger GetNLogger(Type t)
         {
             return LogManager.GetLogger(t.FullName);
         }

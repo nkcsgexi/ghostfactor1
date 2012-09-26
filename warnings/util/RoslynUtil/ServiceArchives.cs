@@ -37,7 +37,7 @@ namespace warnings.util
         /* Get the description of available services, for testing purposes. */
         public String ToString()
         {
-            Logger logger = NLoggerUtil.getNLogger(typeof (ServiceArchive));
+            Logger logger = NLoggerUtil.GetNLogger(typeof (ServiceArchive));
             logger.Debug("tostring");
             StringBuilder sb = new StringBuilder();
             if (RenameService != null)

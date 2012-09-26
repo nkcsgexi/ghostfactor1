@@ -9,7 +9,7 @@ namespace warnings.util
 {
     public class FileUtil
     {
-        private static Logger logger = NLoggerUtil.getNLogger(typeof (FileUtil));
+        private static Logger logger = NLoggerUtil.GetNLogger(typeof (FileUtil));
 
         //Xi: read specified lines in a file, starts with line start to line end, inclusively.
         //the minumum value of start is 0.

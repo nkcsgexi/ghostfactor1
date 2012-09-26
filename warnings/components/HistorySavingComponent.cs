@@ -59,7 +59,7 @@ namespace warnings.components
             this.timer = new ComponentTimer( TIME_INTERVAL, TimeUpHandler);
 
             // Initialize the logger used in this component.
-            logger = NLoggerUtil.getNLogger(typeof (HistorySavingComponent));
+            logger = NLoggerUtil.GetNLogger(typeof (HistorySavingComponent));
         }
 
         /* Add a new work item to the queue. */
@@ -123,7 +123,7 @@ namespace warnings.components
                 // TODO: can we get the real solution name?
                 solutionName = "solution";
                 code = document.GetText().GetText();
-                logger = NLoggerUtil.getNLogger(typeof(HistorySavingWorkItem));
+                logger = NLoggerUtil.GetNLogger(typeof(HistorySavingWorkItem));
             }
 
           

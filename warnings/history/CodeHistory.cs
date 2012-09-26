@@ -30,7 +30,7 @@ namespace warnings.source.history
         /* Combined key and the latest record under that key. */
         private readonly Dictionary<String, ICodeHistoryRecord> latestRecordDictionary;
 
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof (CodeHistory));
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (CodeHistory));
 
         private CodeHistory()
         {

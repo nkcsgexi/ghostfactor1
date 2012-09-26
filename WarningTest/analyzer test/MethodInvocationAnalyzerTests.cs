@@ -27,7 +27,7 @@ namespace WarningTest.analyzer_test
                 TestUtil.getFakeSourceFolder() + "ChangeMethodSignatureAfter.txt"), null, null, null);
             this.invocations = ((SyntaxNode)document.GetSyntaxRoot()).
                 DescendantNodes().Where(i => i.Kind == SyntaxKind.InvocationExpression);
-            this.logger = NLoggerUtil.getNLogger(typeof(MethodInvocationAnalyzerTests));
+            this.logger = NLoggerUtil.GetNLogger(typeof(MethodInvocationAnalyzerTests));
         }
 
         SyntaxNode GetInvocation(string method)

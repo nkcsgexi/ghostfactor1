@@ -13,7 +13,7 @@ namespace WarningTest
     [TestClass]
     public class WorkqueueTests
     {
-        private static Logger log = NLoggerUtil.getNLogger(typeof (WorkqueueTests));
+        private static Logger log = NLoggerUtil.GetNLogger(typeof (WorkqueueTests));
         private static WorkQueue queue = new WorkQueue();
 
         static WorkqueueTests()

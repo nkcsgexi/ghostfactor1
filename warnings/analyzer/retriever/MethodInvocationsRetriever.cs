@@ -24,7 +24,7 @@ namespace warnings.retriever
     internal class MethodInvocationsRetriever : IMethodInvocationsRetriever
     {
         private readonly Logger logger = NLoggerUtil.
-            getNLogger(typeof(IMethodInvocationsRetriever));
+            GetNLogger(typeof(IMethodInvocationsRetriever));
 
         private ISemanticModel model;
         private SyntaxNode root;

@@ -13,7 +13,7 @@ namespace WarningTest
     [TestClass]
     public class ComponentTimerTests
     {
-        private Logger log = NLoggerUtil.getNLogger(typeof (ComponentTimerTests));
+        private Logger log = NLoggerUtil.GetNLogger(typeof (ComponentTimerTests));
 
         [TestMethod]
         public void TestMethod1()

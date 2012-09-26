@@ -60,7 +60,7 @@ namespace warnings.components
             
             // Add a null computer to avoid adding more null computers.
             codeIssueComputers.Add( new NullCodeIssueComputer());
-            logger = NLoggerUtil.getNLogger(typeof (RefactoringCodeIssueComputersComponent));
+            logger = NLoggerUtil.GetNLogger(typeof (RefactoringCodeIssueComputersComponent));
         }
 
         private void OnItemFailed(object sender, WorkItemEventArgs workItemEventArgs)

@@ -18,7 +18,7 @@ namespace warnings.conditions
     /* This checker is checking whether the extracted method has taken enough or more than enough parameters than actual need. */
     internal class ParametersChecker : ExtractMethodConditionChecker
     {
-        private Logger logger = NLoggerUtil.getNLogger(typeof (ParametersChecker));
+        private Logger logger = NLoggerUtil.GetNLogger(typeof (ParametersChecker));
 
         protected override ICodeIssueComputer CheckCondition(IDocument before, IDocument after, 
             IManualExtractMethodRefactoring input)
@@ -93,7 +93,7 @@ namespace warnings.conditions
             {
                 this.declaration = declaration;
                 this.parameters = parameters;
-                this.logger = NLoggerUtil.getNLogger(typeof(ParameterCheckingCodeIssueComputer));
+                this.logger = NLoggerUtil.GetNLogger(typeof(ParameterCheckingCodeIssueComputer));
             }
 
             public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)

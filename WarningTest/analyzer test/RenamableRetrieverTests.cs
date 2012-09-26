@@ -18,7 +18,7 @@ namespace WarningTest
     {
         private readonly IRenamableRetriever retriever;
 
-        private readonly Logger logger = NLoggerUtil.getNLogger(typeof(MethodAnalyzerTests));
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof(MethodAnalyzerTests));
 
         private readonly SyntaxNode root;
 
@@ -32,7 +32,7 @@ namespace WarningTest
             var converter = new String2IDocumentConverter();
             this.document = (IDocument) converter.Convert(FileUtil.readAllText(code), null, null, null);
             model = document.GetSemanticModel();
-            logger = NLoggerUtil.getNLogger(typeof (MethodAnalyzerTests));
+            logger = NLoggerUtil.GetNLogger(typeof (MethodAnalyzerTests));
             root = (SyntaxNode) document.GetSyntaxRoot();
             retriever = RetrieverFactory.GetRenamableRetriever(); 
             retriever.SetRoot(root);

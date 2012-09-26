@@ -22,9 +22,10 @@ namespace warnings.conditions
 
     internal class ReturnTypeChecker : ExtractMethodConditionChecker
     {
-        private Logger logger = NLoggerUtil.getNLogger(typeof (ReturnTypeChecker));
+        private Logger logger = NLoggerUtil.GetNLogger(typeof (ReturnTypeChecker));
 
-        protected override ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualExtractMethodRefactoring input)
+        protected override ICodeIssueComputer CheckCondition(IDocument before, IDocument after, 
+            IManualExtractMethodRefactoring input)
         {
             // Calculate the outflow data
             IEnumerable<ISymbol> flowOuts;
@@ -47,12 +48,10 @@ namespace warnings.conditions
 
             if(missing.Any())
             {
-                return new ReturnTypeCheckingResult(input.ExtractedMethodDeclaration, missing.Select(s => s.Name));
+                return new ReturnTypeCheckingResult(input.ExtractedMethodDeclaration, 
+                    GetTypeNameTuples(missing));
             }
-            else
-            {
-                return new NullCodeIssueComputer();
-            }
+            return new NullCodeIssueComputer();
         }
 
         private IEnumerable<ISymbol> GetFlowOutData(IEnumerable<SyntaxNode> statements, IDocument document)
@@ -61,7 +60,8 @@ namespace warnings.conditions
             statementsDataFlowAnalyzer.SetDocument(document);
             statementsDataFlowAnalyzer.SetStatements(statements);
             var flowOuts = statementsDataFlowAnalyzer.GetFlowOutData();
-            logger.Info("Statements Flowing Out Data: " + StringUtil.ConcatenateAll(", ", flowOuts.Select(s => s.Name)));
+            logger.Info("Statements Flowing Out Data: " + StringUtil.ConcatenateAll(", ", 
+                flowOuts.Select(s => s.Name)));
             return flowOuts;
         }
 
@@ -71,21 +71,23 @@ namespace warnings.conditions
             expressionDataFlowAnalyzer.SetDocument(document);
             expressionDataFlowAnalyzer.SetExpression(expression);
             var flowOuts = expressionDataFlowAnalyzer.GetFlowOutData();
-            logger.Info("Expression Flowing Out Data: " + StringUtil.ConcatenateAll(", ", flowOuts.Select(s => s.Name)));
+            logger.Info("Expression Flowing Out Data: " + StringUtil.ConcatenateAll(", ", 
+                flowOuts.Select(s => s.Name)));
             return flowOuts;
         }
 
-        private IEnumerable<ISymbol> GetMethodReturningData(IMethodDeclarationAnalyzer _methodDeclarationAnalyzer, IDocument document)
+        private IEnumerable<ISymbol> GetMethodReturningData(IMethodDeclarationAnalyzer methodDeclarationAnalyzer, 
+            IDocument document)
         {
             
             // The returning data from the return statements is initiated as empty.
             var returningData = Enumerable.Empty<ISymbol>();
 
             // If having return statement, then retuning data could be not empty.
-            if(_methodDeclarationAnalyzer.HasReturnStatement())
+            if(methodDeclarationAnalyzer.HasReturnStatement())
             {
                 // Get all the return statements.
-                var return_statements = _methodDeclarationAnalyzer.GetReturnStatements();
+                var return_statements = methodDeclarationAnalyzer.GetReturnStatements();
 
                 // Get the data flow analyzer for statements.
                 var dataFlowAnalyzer = AnalyzerFactory.GetStatementsDataFlowAnalyzer();
@@ -116,16 +118,16 @@ namespace warnings.conditions
         /* Code issue computers for the checking results of retrun type.*/
         private class ReturnTypeCheckingResult : ICodeIssueComputer
         {
-            /* The names for missing return values. */
-            private IEnumerable<string> returns;
+            /* The type/name tuples for missing return values. */
+            IEnumerable<Tuple<string, string>> typeNameTuples;
 
             /* Declaration of the extracted method. */
             private SyntaxNode declaration;
 
-            public ReturnTypeCheckingResult(SyntaxNode declaration, IEnumerable<string> returns)
+            public ReturnTypeCheckingResult(SyntaxNode declaration, IEnumerable<Tuple<string, string>> typeNameTuples)
             {
                 this.declaration = declaration;
-                this.returns = returns;
+                this.typeNameTuples = typeNameTuples;
             }
 
             public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
@@ -145,7 +147,11 @@ namespace warnings.conditions
                     if (invocations.Any(i => i.Span.Equals(node.Span)))
                     {
                         yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
-                            "Missing return values: " + StringUtil.ConcatenateAll(",", returns));
+                            "Missing return values: " + StringUtil.ConcatenateAll
+                                (",", typeNameTuples.Select(t => t.Item2)),
+                                    // Create a quick fix for adding the first missing return value.
+                                    new ICodeAction[] { new AddReturnValueCodeAction(document.Project.Solution, 
+                                        declaration, typeNameTuples) });
                     }
                 }
             }
@@ -162,7 +168,8 @@ namespace warnings.conditions
                     // If the method declarations are equal to each other.
                     return methodsComparator.Compare(declaration, other.declaration) == 0 &&
                         // Also the contained return names are equal to each other, return true;
-                        stringEnumerablesComparator.Compare(returns, other.returns) == 0;
+                        stringEnumerablesComparator.Compare(typeNameTuples.Select(t => t.Item2), 
+                            other.typeNameTuples.Select(t => t.Item2)) == 0;
                 }
                 return false;
             }
@@ -171,17 +178,22 @@ namespace warnings.conditions
         /* Code action to add a return value automatically. */
         private class AddReturnValueCodeAction : ICodeAction
         {
-            private readonly string returnSymbolName;
+            private readonly IEnumerable<Tuple<string, string>> typeNameTuples;
             private readonly SyntaxNode declaration;
             private readonly ISolution solution;
             private readonly Logger logger;
 
-            internal AddReturnValueCodeAction(ISolution solution, SyntaxNode declaration, string returnSymbolName)
+            // Can only handle one tuple, even though multiple are passed in.
+            private readonly Tuple<string, string> handledTypeName;
+
+            internal AddReturnValueCodeAction(ISolution solution, SyntaxNode declaration, 
+                IEnumerable<Tuple<string, string>> typeNameTuples)
             {
                 this.solution = solution;
                 this.declaration = declaration;
-                this.returnSymbolName = returnSymbolName;
-                this.logger = NLoggerUtil.getNLogger(typeof (AddReturnValueCodeAction));
+                this.typeNameTuples = typeNameTuples;
+                this.handledTypeName = typeNameTuples.FirstOrDefault();
+                this.logger = NLoggerUtil.GetNLogger(typeof (AddReturnValueCodeAction));
             }
 
             public CodeActionEdit GetEdit(CancellationToken cancellationToken = new CancellationToken())
@@ -190,7 +202,8 @@ namespace warnings.conditions
                 var document = FindContainingDocument();
                 
                 // Use the rewrite visiter to change the target method declaration.
-                var newRoot = new AddReturnValueRewriter(declaration, returnSymbolName).
+                var newRoot = new AddReturnValueRewriter(declaration, 
+                    handledTypeName.Item1, handledTypeName.Item2).
                     Visit((SyntaxNode) document.GetSyntaxRoot());
 
                 // Update the document with the new root and return the code action.
@@ -234,7 +247,7 @@ namespace warnings.conditions
 
             public string Description
             {
-                get { return "Add return value " + returnSymbolName; }
+                get { return "Add return value " + handledTypeName.Item2; }
             }
 
             /* Sytnax rewriter for updating a given method declaration by adding the given returning value. */
@@ -242,10 +255,12 @@ namespace warnings.conditions
             {
                 private readonly SyntaxNode declaration;
                 private readonly string returnSymbolName;
+                private readonly string returnSymbolType;
 
-                internal AddReturnValueRewriter(SyntaxNode declaration, String returnSymbolName)
+                internal AddReturnValueRewriter(SyntaxNode declaration, String returnSymbolType, String returnSymbolName)
                 {
                     this.declaration = declaration;
+                    this.returnSymbolType = returnSymbolType;
                     this.returnSymbolName = returnSymbolName;
                 }
 
@@ -253,17 +268,15 @@ namespace warnings.conditions
                 {
                     if(node.Span.Equals(declaration.Span))
                     {
-                        // Use method analyzer to add the return value.
+                        // Use method analyzer to add the return value and change the return type.
                         var methodAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
                         methodAnalyzer.SetMethodDeclaration(node);
-                        return methodAnalyzer.ChangeReturnValue(returnSymbolName);
+                        methodAnalyzer.ChangeReturnValue(returnSymbolName);
+                        return methodAnalyzer.ChangeReturnType(returnSymbolType);
                     }
                     return node;
                 }
             }
         }
     }
-
-    
-
 }

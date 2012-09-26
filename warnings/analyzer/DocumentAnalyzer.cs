@@ -23,6 +23,8 @@ namespace warnings.analyzer
         IEnumerable<SyntaxNode> GetFieldDeclarations(SyntaxNode classDeclaration);
         IEnumerable<SyntaxNode> GetMethodDeclarations(SyntaxNode classDeclaration);
         IEnumerable<SyntaxNode> GetVariableDeclarations(SyntaxNode methodDeclaration);
+        IEnumerable<SyntaxNode> GetAllDeclarations();
+        IEnumerable<ISymbol> GetAllDeclaredSymbols(); 
         String GetKey();
 
         /* Given a node of declaration, returns the symbol in the semantic model. */
@@ -58,7 +60,7 @@ namespace warnings.analyzer
 
         internal DocumentAnalyzer()
         {  
-            this.logger = NLoggerUtil.getNLogger(typeof (DocumentAnalyzer));
+            this.logger = NLoggerUtil.GetNLogger(typeof (DocumentAnalyzer));
             Interlocked.Increment(ref ANALYZER_COUNT);
         }
 
@@ -118,6 +120,7 @@ namespace warnings.analyzer
             return GetDecendantOfKind(methodDeclaration, SyntaxKind.VariableDeclarator);
         }
 
+
         public string GetKey()
         {
             throw new NotImplementedException();
@@ -153,7 +156,7 @@ namespace warnings.analyzer
 
         public string DumpSyntaxTree()
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.AppendLine();
 
             // Iterate each namespace in the file.
@@ -235,8 +238,39 @@ namespace warnings.analyzer
             return parent.DescendantNodes().Where(n => n.Kind == kind);
          }
 
-    }
 
+        public IEnumerable<SyntaxNode> GetAllDeclarations()
+        {
+            var declarations = new List<SyntaxNode>();
+
+            // Add all the namespace declarations.
+            declarations.AddRange(GetNamespaceDecalarations());
+
+            // Add all the class declarations.
+            declarations.AddRange(GetNamespaceDecalarations().SelectMany(GetClassDeclarations));
+            
+            // Add all the method declarations.
+            declarations.AddRange(GetNamespaceDecalarations().SelectMany(GetClassDeclarations).
+                SelectMany(GetMethodDeclarations));
+
+            // Add all the field declarations.
+            declarations.AddRange(GetNamespaceDecalarations().SelectMany(GetClassDeclarations).
+                SelectMany(GetFieldDeclarations));
+
+            // Add all the local variable declarations;
+            declarations.AddRange(GetNamespaceDecalarations().SelectMany(GetClassDeclarations).
+                SelectMany(GetMethodDeclarations).SelectMany(GetVariableDeclarations));
+            return declarations.AsEnumerable();
+        }
+
+        /* For all the declarations in the document, get corresponding symbols declared. */
+        public IEnumerable<ISymbol> GetAllDeclaredSymbols()
+        {
+            var declarations = GetAllDeclarations();
+            var model = document.GetSemanticModel();
+            return declarations.Select(d => model.GetDeclaredSymbol(d));
+        }
+    }
 
     internal class AnalyzerWalker : SyntaxWalker
     {
@@ -244,7 +278,7 @@ namespace warnings.analyzer
 
         public AnalyzerWalker()
         {
-            this.logger = NLoggerUtil.getNLogger(typeof (AnalyzerWalker));
+            this.logger = NLoggerUtil.GetNLogger(typeof (AnalyzerWalker));
         }
 
         public override void Visit(SyntaxNode node)
