@@ -19,7 +19,6 @@ using warnings.util;
 namespace warnings.conditions
 {
     /* Checker for whether the extracted method returns the right value. */
-
     internal class ReturnTypeChecker : ExtractMethodConditionChecker
     {
         private Logger logger = NLoggerUtil.GetNLogger(typeof (ReturnTypeChecker));
@@ -146,7 +145,7 @@ namespace warnings.conditions
                     // create a code issue at the given node.
                     if (invocations.Any(i => i.Span.Equals(node.Span)))
                     {
-                        yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
+                        yield return new CodeIssue(CodeIssue.Severity.Error, node.Span,
                             "Missing return values: " + StringUtil.ConcatenateAll
                                 (",", typeNameTuples.Select(t => t.Item2)),
                                     // Create a quick fix for adding the first missing return value.

@@ -110,8 +110,8 @@ namespace warnings.conditions
                     // If the given node is one of these invocations, return a new issue.
                     if(invocations.Any(i => i.Span.Equals(node.Span)))
                     {
-                        yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
-                            "Missing typeNameTuples " + StringUtil.ConcatenateAll(",", typeNameTuples.Select(n => n.Item2)),
+                        yield return new CodeIssue(CodeIssue.Severity.Error, node.Span,
+                            "Missing parameters: " + StringUtil.ConcatenateAll(",", typeNameTuples.Select(n => n.Item2)),
                             new ICodeAction[]{new AddParamterCodeAction(document.Project.Solution, declaration, typeNameTuples)});
                     }
                 }

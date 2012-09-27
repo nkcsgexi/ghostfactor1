@@ -73,7 +73,7 @@ namespace warnings.conditions
                     // If the given node is in the invocations, return a corresponding code issue.
                     if (invocations.Any(n => n.Span.Equals(node.Span)))
                     {
-                        yield return new CodeIssue(CodeIssue.Severity.Warning, node.Span,
+                        yield return new CodeIssue(CodeIssue.Severity.Error, node.Span,
                             "Method invocation needs update.", 
                             // With the code action of change this signature with correct arguments order
                             new ICodeAction[]{new CorrectSignatureCodeAction(document, node, mappings),
