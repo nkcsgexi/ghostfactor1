@@ -75,6 +75,24 @@ namespace warnings.conditions
             return flowOuts;
         }
 
+
+        private void foo ()
+        {
+            
+
+            for(;;)
+            {
+                
+            }
+
+            for(;;)
+            {
+                break;
+         
+            }
+        }
+
+
         private IEnumerable<ISymbol> GetMethodReturningData(IMethodDeclarationAnalyzer methodDeclarationAnalyzer, 
             IDocument document)
         {

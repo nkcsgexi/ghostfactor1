@@ -1,19 +1,5 @@
 ﻿<RecentFiles>
   <RecentFiles>
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:ASTUtilTests.cs" caret="0" fromTop="0" />
-    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWork.cs" caret="0" fromTop="0" />
-    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:WorkThreadPool.cs" caret="0" fromTop="0" />
-    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:WorkItemEvent.cs" caret="0" fromTop="0" />
-    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWorkQueue.cs" caret="0" fromTop="0" />
-    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:IWorkItem.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:analyzer/f:RefactoringAnalyzerFactory.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:EMDetectorAfter.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:EMDetectorTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:EMDetectorBefore.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:SyntaxNodesAnalyzerTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:UtilityTest.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:CallGraphBuilder.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:DataFlowAnalyzerTests.cs" caret="0" fromTop="0" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:StatementAnalyzerTests.cs" caret="0" fromTop="0" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:TryToUpdate.cs" caret="0" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:DataStructureUtil.cs" caret="0" fromTop="0" />
@@ -28,39 +14,53 @@
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:RoslynUtil/f:ServiceArchives.cs" caret="0" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
     <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="0" fromTop="0" />
-    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="0" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="5286" fromTop="34" />
+    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1448" fromTop="16" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="3541" fromTop="48" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ConditionCheckingComponent.cs" caret="4607" fromTop="124" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:FileUtil.cs" caret="0" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ChangeMethodSignature/f:ChangeMethodSignatureConditionsList.cs" caret="974" fromTop="29" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:history/f:RecordMetaData.cs" caret="855" fromTop="29" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:configuration/f:GlobalConfigurations.cs" caret="1617" fromTop="29" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:history/f:CompilationUnitRecord.cs" caret="731" fromTop="22" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:history/f:CodeHistory.cs" caret="227" fromTop="10" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ChangeMethodSignature/f:UnupdatedMethodSignatureChecker.cs" caret="2622" fromTop="69" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:manual/f:IManualRefactoring.cs" caret="3732" fromTop="42" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:ParameterAnalyzer.cs" caret="1650" fromTop="36" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="105" fromTop="4" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="1634" fromTop="44" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="3935" fromTop="68" />
   </RecentFiles>
   <RecentEdits>
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="7576" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="3891" fromTop="13" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="4398" fromTop="24" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="953" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodDeclarationAnalyzer.cs" caret="13421" fromTop="35" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodDeclarationAnalyzer.cs" caret="13054" fromTop="30" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodInvocationAnalyzer.cs" caret="623" fromTop="18" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodInvocationAnalyzer.cs" caret="4701" fromTop="37" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodInvocationAnalyzer.cs" caret="4751" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="10137" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="8431" fromTop="34" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="10895" fromTop="37" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="11067" fromTop="41" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="11258" fromTop="34" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="7640" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="8066" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="7428" fromTop="24" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="6867" fromTop="9" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="13161" fromTop="31" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="14317" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="14711" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="15107" fromTop="46" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="15214" fromTop="23" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="12319" fromTop="15" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="13349" fromTop="35" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="13709" fromTop="40" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="13995" fromTop="20" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:MethodInvocationAnalyzerTests.cs" caret="2965" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodInvocationAnalyzer.cs" caret="4656" fromTop="33" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="5350" fromTop="23" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="1594" fromTop="23" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="3849" fromTop="37" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="525" fromTop="14" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="4885" fromTop="35" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="4885" fromTop="27" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="4886" fromTop="37" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="861" fromTop="16" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="1760" fromTop="42" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="820" fromTop="22" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="906" fromTop="25" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="688" fromTop="19" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="1654" fromTop="19" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="531" fromTop="28" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="398" fromTop="17" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="762" fromTop="26" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="678" fromTop="26" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="1296" fromTop="39" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="1471" fromTop="37" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitRevisionAnalyzer.cs" caret="1634" fromTop="44" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="502" fromTop="12" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="1609" fromTop="33" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:RecordRefactoringDetector.cs" caret="2565" fromTop="39" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="298" fromTop="11" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="1057" fromTop="24" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="1369" fromTop="30" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="1944" fromTop="35" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="3711" fromTop="41" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="4615" fromTop="42" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="3969" fromTop="43" />
+    <File id="9802AC35-3AE5-4908-A25A-FA07D6658912/f:GitProject.cs" caret="2474" fromTop="13" />
   </RecentEdits>
 </RecentFiles>

@@ -153,7 +153,7 @@ namespace warnings.components
             private void AddSearchRefactoringWorkItem()
             {
                 // Get the latest record of the file just editted.    
-                ICodeHistoryRecord record = CodeHistory.getInstance().getLatestRecord(solutionName, namespaceName, fileName);
+                ICodeHistoryRecord record = CodeHistory.getInstance().GetLatestRecord(solutionName, namespaceName, fileName);
 
                 if (GlobalConfigurations.IsSupported(RefactoringType.EXTRACT_METHOD))
                 {

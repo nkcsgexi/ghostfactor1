@@ -46,6 +46,5 @@ namespace warnings.configuration
                     throw new Exception("Unknown Refactoring Type.");
             }
         }
-
     }
 }

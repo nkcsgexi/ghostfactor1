@@ -9,13 +9,11 @@ using warnings.util;
 
 namespace warnings.source.history
 {
-
-
     public interface ICodeHistory
     {
         void addRecord(String solution, String nameSpace, String file, String source);
         bool hasRecord(String solution, String nameSpace, String file);
-        ICodeHistoryRecord getLatestRecord(string solution, string nameSpace, string file);
+        ICodeHistoryRecord GetLatestRecord(string solution, string nameSpace, string file);
     }
 
     public class CodeHistory : ICodeHistory
@@ -56,7 +54,7 @@ namespace warnings.source.history
             String key = combineKey(solution, nameSpace, file);
             if(hasRecord(solution, nameSpace, file))
             {
-                ICodeHistoryRecord record = getLatestRecord(solution, nameSpace, file);
+                ICodeHistoryRecord record = GetLatestRecord(solution, nameSpace, file);
                 ICodeHistoryRecord nextRecord = record.createNextRecord(source);
                 latestRecordDictionary.Remove(key);
                 latestRecordDictionary.Add(key, nextRecord);
@@ -74,7 +72,7 @@ namespace warnings.source.history
             return latestRecordDictionary.ContainsKey(key);
         }
 
-        public ICodeHistoryRecord getLatestRecord(string solution, string nameSpace, string file)
+        public ICodeHistoryRecord GetLatestRecord(string solution, string nameSpace, string file)
         {
             Contract.Requires(hasRecord(solution, nameSpace, file));
             String key = combineKey(solution, nameSpace, file);

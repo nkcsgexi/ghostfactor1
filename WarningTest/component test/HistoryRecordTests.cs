@@ -18,7 +18,7 @@ namespace WarningTest
             string source = TestUtil.generateRandomString(50);
             history.addRecord("test", "test", "test", source);
             Assert.IsTrue(history.hasRecord("test", "test", "test"));
-            ICodeHistoryRecord record = history.getLatestRecord("test", "test", "test");
+            ICodeHistoryRecord record = history.GetLatestRecord("test", "test", "test");
             Assert.IsFalse(record.hasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source));
         }
@@ -34,7 +34,7 @@ namespace WarningTest
             Assert.IsTrue(history.hasRecord("test","test","test"));
             history.addRecord("test", "test", "test", source[1]);
             Assert.IsTrue(history.hasRecord("test", "test", "test"));
-            ICodeHistoryRecord record = history.getLatestRecord("test", "test", "test");
+            ICodeHistoryRecord record = history.GetLatestRecord("test", "test", "test");
             Assert.IsTrue(record.hasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source[1]));
             record = record.getPreviousRecord();
@@ -56,7 +56,7 @@ namespace WarningTest
                 history.addRecord("test", "test", "test", source[i]);
             }
             Assert.IsTrue(history.hasRecord("test", "test", "test"));
-            ICodeHistoryRecord record = history.getLatestRecord("test", "test", "test");
+            ICodeHistoryRecord record = history.GetLatestRecord("test", "test", "test");
             for(int i = count - 1; i > 0 ; i --)
             {
                 Assert.IsNotNull(record);
@@ -82,8 +82,8 @@ namespace WarningTest
             history.addRecord("test","test", "test1", source[1]);
             Assert.IsTrue(history.hasRecord("test", "test", "test"));
             Assert.IsTrue(history.hasRecord("test", "test", "test1"));
-            ICodeHistoryRecord record = history.getLatestRecord("test", "test", "test");
-            ICodeHistoryRecord record1 = history.getLatestRecord("test", "test", "test1");
+            ICodeHistoryRecord record = history.GetLatestRecord("test", "test", "test");
+            ICodeHistoryRecord record1 = history.GetLatestRecord("test", "test", "test1");
             Assert.IsFalse(record.hasPreviousRecord());
             Assert.IsFalse(record1.hasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source[0]));
