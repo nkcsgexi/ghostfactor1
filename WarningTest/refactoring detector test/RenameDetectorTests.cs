@@ -26,8 +26,8 @@ namespace WarningTest
 
         public RenameDetectorTests()
         {
-            var sourceBefore = FileUtil.readAllText(TestUtil.getFakeSourceFolder() + "RenameDetectorExampleBefore.txt");
-            var sourceAfter = FileUtil.readAllText(TestUtil.getFakeSourceFolder() + "RenameDetectorExampleAfter.txt");
+            var sourceBefore = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "RenameDetectorExampleBefore.txt");
+            var sourceAfter = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "RenameDetectorExampleAfter.txt");
             before = ASTUtil.getSyntaxTreeFromSource(sourceBefore).GetRoot();
             after = ASTUtil.getSyntaxTreeFromSource(sourceAfter).GetRoot();
             detector = RefactoringDetectorFactory.CreateRenameDetector();

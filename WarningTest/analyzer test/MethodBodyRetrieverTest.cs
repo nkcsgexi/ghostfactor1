@@ -17,7 +17,7 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod1()
         {
-            string source = FileUtil.readAllText(path);
+            string source = FileUtil.ReadAllText(path);
             IMethodRetriever retriever = new MethodBodyRetriever();
             retriever.setSource(source);
             Assert.IsTrue(retriever.getMethodBodiesCount() == TEST_METHODS_COUNT);
@@ -26,12 +26,12 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod2()
         {
-            string source = FileUtil.readAllText(path);
+            string source = FileUtil.ReadAllText(path);
             IMethodRetriever retriever = new MethodBodyRetriever();
             retriever.setSource(source);
             String[] bodies = retriever.getMethodBodies();
-            Assert.IsTrue(bodies[1].StartsWith("string source = FileUtil.readAllText(path);"));
-            Assert.IsTrue(bodies[0].StartsWith("string source = FileUtil.readAllText(path);"));
+            Assert.IsTrue(bodies[1].StartsWith("string source = FileUtil.ReadAllText(path);"));
+            Assert.IsTrue(bodies[0].StartsWith("string source = FileUtil.ReadAllText(path);"));
             Assert.IsTrue(bodies[0].EndsWith("Assert.IsTrue(retriever.getMethodBodiesCount() == TEST_METHODS_COUNT);\r\n"));
             Assert.IsTrue(bodies[0].Contains("IMethodBodyRetriever retriever = new MethodBodyRetriever();"));
             Assert.IsTrue(bodies[0].Contains("retriever.setSource(source);"));        
@@ -40,7 +40,7 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod3()
         {
-            string source = FileUtil.readAllText(path);
+            string source = FileUtil.ReadAllText(path);
             IMethodRetriever retriever = new MethodBodyRetriever();
             retriever.setSource(source);
             String[] names = retriever.getMethodNames();

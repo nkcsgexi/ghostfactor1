@@ -30,7 +30,7 @@ namespace WarningTest
 
         public CallGraphTest()
         {
-            source = FileUtil.readAllText(path);
+            source = FileUtil.ReadAllText(path);
             tree = ASTUtil.getSyntaxTreeFromSource(source);
             classDeclaration = tree.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>().
                 First(c => c.Identifier.Value.Equals("CallGraphTest"));

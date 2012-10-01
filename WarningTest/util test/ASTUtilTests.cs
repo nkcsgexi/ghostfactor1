@@ -20,7 +20,7 @@ namespace WarningTest
 
         public ASTUtilTests()
         {
-            this.code = FileUtil.readAllText(path);
+            this.code = FileUtil.ReadAllText(path);
             this.tree = ASTUtil.getSyntaxTreeFromSource(code);
         }
 

@@ -35,8 +35,8 @@ namespace WarningTest
             var converter = new String2IDocumentConverter();
 
             // Get before and after document.
-            before = (IDocument) converter.Convert(FileUtil.readAllText(fileBefore), typeof(IDocument), null, null);
-            after = (IDocument)converter.Convert(FileUtil.readAllText(fileAfter), typeof(IDocument), null, null);
+            before = (IDocument) converter.Convert(FileUtil.ReadAllText(fileBefore), typeof(IDocument), null, null);
+            after = (IDocument)converter.Convert(FileUtil.ReadAllText(fileAfter), typeof(IDocument), null, null);
 
             // Get all the methods in before and after.
             beforeMethods = GetAllMethod(before);

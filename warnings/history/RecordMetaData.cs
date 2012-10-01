@@ -45,13 +45,13 @@ namespace warnings.source.history
             sb.AppendLine(solution);
             sb.AppendLine(file);
             sb.AppendLine(Convert.ToString(time));
-            FileUtil.writeToFileStream(FileUtil.createFile(metaDataPath), sb.ToString());
+            FileUtil.WriteToFileStream(FileUtil.CreateFile(metaDataPath), sb.ToString());
             return new RecordMetaData(solution, nameSpace, file, sourcePath, previousMetaPath, time, metaDataPath);
         }
 
         public static RecordMetaData readMetaData(String metaDataPath)
         {
-            String[] lines = FileUtil.readFileLines(metaDataPath, 0, RECORD_COUNT - 1);
+            String[] lines = FileUtil.ReadFileLines(metaDataPath, 0, RECORD_COUNT - 1);
             String sourcePath = lines[0];
             String previousMetaPath = lines[1];
             String nameSpace = lines[2];

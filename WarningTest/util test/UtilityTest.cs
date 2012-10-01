@@ -66,7 +66,7 @@ namespace WarningTest
         public void TestMethod5()
         {
             string path = TestUtil.getTestProjectPath() + "UtilityTest.cs";
-            string code = FileUtil.readAllText(path);
+            string code = FileUtil.ReadAllText(path);
             Assert.IsNotNull(code);
             Assert.IsFalse(code.Equals(""));
             var converter = new String2IDocumentConverter();

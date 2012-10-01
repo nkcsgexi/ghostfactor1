@@ -46,7 +46,7 @@ namespace warnings.source.history
             // record file name
             string recordfilename = file + time + EXTENSION;
             string sourcePath = ROOT + Path.DirectorySeparatorChar + recordfilename;
-            FileUtil.writeToFileStream(FileUtil.createFile(sourcePath), source);
+            FileUtil.WriteToFileStream(FileUtil.CreateFile(sourcePath), source);
             IRecordMetaData metaData =
                 RecordMetaData.createMetaData(solution, package, file, sourcePath, "", time);
             return new CompilationUnitRecord(metaData);
@@ -70,7 +70,7 @@ namespace warnings.source.history
 
         public string getSource()
         {
-            return FileUtil.readAllText(metaData.getSourcePath());
+            return FileUtil.ReadAllText(metaData.getSourcePath());
         }
 
         public string getKey()
@@ -104,8 +104,8 @@ namespace warnings.source.history
             long time = DateTime.Now.Ticks;
             string recordfilename = metaData.getFile() + time + EXTENSION;
             string sourcePath = ROOT + Path.DirectorySeparatorChar + recordfilename;
-            FileStream fs = FileUtil.createFile(sourcePath);
-            FileUtil.writeToFileStream(fs, source);
+            FileStream fs = FileUtil.CreateFile(sourcePath);
+            FileUtil.WriteToFileStream(fs, source);
             IRecordMetaData nextMetaData =
                 RecordMetaData.createMetaData(metaData.getSolution(), metaData.getNameSpace(), metaData.getFile(),
                     sourcePath, metaData.getMetaDataPath(), time);
@@ -121,8 +121,8 @@ namespace warnings.source.history
 
         public void delete()
         {
-            FileUtil.delete(metaData.getSourcePath());
-            FileUtil.delete(metaData.getMetaDataPath());
+            FileUtil.Delete(metaData.getSourcePath());
+            FileUtil.Delete(metaData.getMetaDataPath());
         }
 
         private CompilationUnitRecord(IRecordMetaData metaData)

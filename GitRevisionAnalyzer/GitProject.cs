@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using GitSharp;
+using GitSharp.Commands;
 using warnings.refactoring.detection;
 using warnings.source.history;
+using warnings.util;
 
 namespace GitRevisionAnalyzer
 {
@@ -32,7 +34,8 @@ namespace GitRevisionAnalyzer
         private readonly string sourceFolder;
 
         // All file names encountered when visiting the change history.
-        private readonly List<string> fileNames; 
+        private readonly List<string> fileNames;
+        private Repository repository;
 
 
         public GitProject(string gitHttp)
@@ -41,11 +44,17 @@ namespace GitRevisionAnalyzer
 
             // The string between the last / and the last . is the name of the project.
             // Also we use it as the source folder for cloning repository.
-            int start = gitHttp.LastIndexOf('/');
-            int end = gitHttp.LastIndexOf('.');
-            this.sourceFolder = gitHttp.Substring(start, end - start + 1);
+            this.sourceFolder = ParseProjectName(gitHttp);
             this.fileNames = new List<string>();
         }
+
+
+        private string ParseProjectName(string path)
+        {
+            var parts = path.Split(new [] {'/', '.'}, int.MaxValue);
+            return parts.Last(s => !s.Equals("") && !s.Equals("git"));
+        }
+
 
         public string GetSourceFolder()
         {
@@ -54,13 +63,7 @@ namespace GitRevisionAnalyzer
 
         public Repository GetRepository()
         {
-            if(File.Exists(sourceFolder + @"\.git"))
-            {
-                // The git repository should be the ".git" folder under 
-                // the source folder.
-                return new Repository(sourceFolder + @"\.git");
-            }
-            return null;
+            return repository;
         }
 
         public Commit GetCurrentCommit()
@@ -140,7 +143,12 @@ namespace GitRevisionAnalyzer
 
         public void Clone()
         {
-            GitSharp.Git.Clone(gitHttp, sourceFolder);
+            // If the source folder already exists, delete it.
+            if(Directory.Exists(sourceFolder))
+            {
+                FileUtil.DeleteDirectory(sourceFolder);    
+            }
+            repository = Git.Clone(gitHttp, sourceFolder);
         }
     }
 }

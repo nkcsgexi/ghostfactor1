@@ -23,7 +23,7 @@ namespace WarningTest.analyzer_test
         {
             this.analyzer = AnalyzerFactory.GetMethodInvocationAnalyzer();
             var converter = new String2IDocumentConverter();
-            this.document = (IDocument) converter.Convert(FileUtil.readAllText(
+            this.document = (IDocument) converter.Convert(FileUtil.ReadAllText(
                 TestUtil.getFakeSourceFolder() + "ChangeMethodSignatureAfter.txt"), null, null, null);
             this.invocations = ((SyntaxNode)document.GetSyntaxRoot()).
                 DescendantNodes().Where(i => i.Kind == SyntaxKind.InvocationExpression);

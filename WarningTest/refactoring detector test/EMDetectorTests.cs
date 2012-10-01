@@ -25,8 +25,8 @@ namespace WarningTest
         public void TestMethod1()
         {
             var detector = RefactoringDetectorFactory.CreateExtractMethodDetector();
-            var sourceBefore = FileUtil.readAllText(fileBefore);
-            var sourceAfter = FileUtil.readAllText(fileAfter);
+            var sourceBefore = FileUtil.ReadAllText(fileBefore);
+            var sourceAfter = FileUtil.ReadAllText(fileAfter);
             detector.setSourceBefore(sourceBefore);
             detector.setSourceAfter(sourceAfter);
             Assert.IsTrue(detector.hasRefactoring());

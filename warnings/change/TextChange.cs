@@ -83,7 +83,7 @@ namespace DiffMatchPatch {
    * The data structure representing a diff is a List of Diff objects:
    * {Diff(Operation.DELETE, "Hello"), Diff(Operation.INSERT, "Goodbye"),
    *  Diff(Operation.EQUAL, " world.")}
-   * which means: delete "Hello", add "Goodbye" and keep " world."
+   * which means: Delete "Hello", add "Goodbye" and keep " world."
    */
   public enum Operation {
     DELETE, INSERT, EQUAL
@@ -236,7 +236,7 @@ namespace DiffMatchPatch {
     // When deleting a large block of text (over ~64 characters), how close
     // do the contents have to be to match the expected contents. (0.0 =
     // perfection, 1.0 = very loose).  Note that Match_Threshold controls
-    // how closely the end points of a delete need to match.
+    // how closely the end points of a Delete need to match.
     public float Patch_DeleteThreshold = 0.5f;
     // Chunk size for context length.
     public short Patch_Margin = 4;
@@ -358,7 +358,7 @@ namespace DiffMatchPatch {
       }
 
       if (text2.Length == 0) {
-        // Just delete some text (speedup).
+        // Just Delete some text (speedup).
         diffs.Add(new Diff(Operation.DELETE, text1));
         return diffs;
       }
@@ -1459,7 +1459,7 @@ namespace DiffMatchPatch {
     /**
      * Crush the diff into an encoded string which describes the operations
      * required to transform text1 into text2.
-     * E.g. =3\t-2\t+ing  -> Keep 3 chars, delete 2 chars, insert 'ing'.
+     * E.g. =3\t-2\t+ing  -> Keep 3 chars, Delete 2 chars, insert 'ing'.
      * Operations are tab-separated.  Inserted text is escaped using %xx
      * notation.
      * @param diffs Array of Diff objects.
@@ -1509,7 +1509,7 @@ namespace DiffMatchPatch {
           continue;
         }
         // Each token begins with a one character parameter which specifies the
-        // operation of this token (delete, insert, equality).
+        // operation of this token (Delete, insert, equality).
         string param = token.Substring(1);
         switch (token[0]) {
           case '+':
@@ -1980,7 +1980,7 @@ namespace DiffMatchPatch {
         int end_loc = -1;
         if (text1.Length > this.Match_MaxBits) {
           // patch_splitMax will only provide an oversized pattern
-          // in the case of a monster delete.
+          // in the case of a monster Delete.
           start_loc = match_main(text,
               text1.Substring(0, this.Match_MaxBits), expected_loc);
           if (start_loc != -1) {

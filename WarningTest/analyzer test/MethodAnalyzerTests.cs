@@ -31,7 +31,7 @@ namespace WarningTest
         {
             var code = TestUtil.getFakeSourceFolder() + "MethodAnalyzerExample.cs";
             var converter = new String2IDocumentConverter();
-            document = (IDocument) converter.Convert(FileUtil.readAllText(code), null, null, null);
+            document = (IDocument) converter.Convert(FileUtil.ReadAllText(code), null, null, null);
             logger = NLoggerUtil.GetNLogger(typeof (MethodAnalyzerTests));
 
             documentAnalyzer.SetDocument(document);

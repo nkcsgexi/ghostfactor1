@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using GitSharp;
 using NLog;
+using warnings.refactoring;
 using warnings.refactoring.detection;
 using warnings.source.history;
 using warnings.util;
@@ -16,6 +18,8 @@ namespace GitRevisionAnalyzer
         /* Look back count. */ 
         private static readonly int SEARCH_DEPTH = 20;
 
+        private static readonly string DETECTED_REFACTORINGS_ROOT = "DetectedRefactorings/";
+
         /* Several detectors.*/ 
         private static readonly IExternalRefactoringDetector EMDetector = 
             RefactoringDetectorFactory.CreateExtractMethodDetector();
@@ -24,15 +28,25 @@ namespace GitRevisionAnalyzer
             RefactoringDetectorFactory.CreateChangeMethodSignatureDetector();
 
         private readonly Logger logger;
-       
+
+        private string solutionName;
+        private string fileName;
+
+        // The count of all refactorings detected in this record chain.
+        private int refactoringsCount;
 
         public RecordRefactoringDetector()
         {
             this.logger = NLoggerUtil.GetNLogger(typeof (RecordRefactoringDetector));
+            refactoringsCount = 0;
         }
 
         public void DetectRefactorings(ICodeHistoryRecord record)
         {
+            // Retriever the solution and file names.
+            this.solutionName = record.getSolution();
+            this.fileName = record.getFile();
+
             // Current source is the source code after.
             var sourceAfter = record.getSource();
 
@@ -47,13 +61,11 @@ namespace GitRevisionAnalyzer
                 try
                 {
                     DetectRefactoringByDetector(sourceBefore, sourceAfter, EMDetector);
-                    DetectRefactoringByDetector(sourceBefore, sourceAfter, CMSDetector);
+                    // DetectRefactoringByDetector(sourceBefore, sourceAfter, CMSDetector);
                 }
                 catch (Exception e)
                 {
                     logger.Fatal(e);
-                    logger.Fatal("Source Before:\n" + sourceBefore);
-                    logger.Fatal("Source After:\n" + sourceAfter);
                 }
             }
         }
@@ -71,11 +83,39 @@ namespace GitRevisionAnalyzer
                 var refactorings = detector.getRefactorings();
                 foreach (var refactoring in refactorings)
                 {
-                    logger.Info("Source Before:\n" + before);
-                    logger.Info("Source After:\n" + after);
-                    logger.Info(refactoring.ToString());
+                    var path = HandleDetectedRefactoring(before, after, refactoring);
+                    refactoringsCount ++;
+                    logger.Info("Refactoring detected! Saved at " + path);
                 }
             }
+        }
+
+        /* Handle a detected refactoring by saveing it at an independent file. */
+        private string HandleDetectedRefactoring(string before, string after, IManualRefactoring refactoring)
+        {
+            // Get the folder and the file name for this detected refactoring.
+            string refactoringDirectory = DETECTED_REFACTORINGS_ROOT + solutionName;
+            string refactoringFilePath = refactoringDirectory + "/" + fileName + refactoringsCount + ".txt";
+
+            // If the directory does not exist, create it.
+            if(!Directory.Exists(refactoringDirectory))
+            {
+                Directory.CreateDirectory(refactoringDirectory);
+            }
+
+            // Streaming all the needed information to the file.
+            var stream = File.CreateText(refactoringFilePath);
+            stream.WriteLine("Source Before:");
+            stream.WriteLine(before);
+            stream.WriteLine("Source After:");
+            stream.WriteLine(after);
+            stream.WriteLine("Detected Refactoring:");
+            stream.WriteLine(refactoring.ToString());
+            stream.Flush();
+            stream.Close();
+
+            // Return the saved refactoring file path.
+            return refactoringFilePath;
         }
     }
 }

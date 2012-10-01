@@ -25,7 +25,7 @@ namespace WarningTest.retriever_test
             this.retriever = RetrieverFactory.GetTypablesRetriever();
             var code = TestUtil.getFakeSourceFolder() + "MethodAnalyzerExample.cs";
             var converter = new String2IDocumentConverter();
-            this.document = (IDocument)converter.Convert(FileUtil.readAllText(code), null, null, null);
+            this.document = (IDocument)converter.Convert(FileUtil.ReadAllText(code), null, null, null);
             this.logger = NLoggerUtil.GetNLogger(typeof (TypableRetrieverTests));
             this.analyzer = AnalyzerFactory.GetDocumentAnalyzer();
             retriever.SetDocument(document);

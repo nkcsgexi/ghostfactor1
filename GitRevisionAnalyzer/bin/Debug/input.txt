@@ -1,0 +1,11 @@
+git://github.com/SignalR/SignalR.git
+git://github.com/hbons/SparkleShare.git
+git://github.com/moxiecode/plupload.git
+git://github.com/mono/mono.git
+git://github.com/NancyFx/Nancy.git
+git://github.com/AutoMapper/AutoMapper.git
+git://github.com/ServiceStack/ServiceStack.git
+git://github.com/restsharp/RestSharp.git
+git://github.com/robconery/massive.git
+git://github.com/jagregory/fluent-nhibernate.git
+git://github.com/ravendb/ravendb.git

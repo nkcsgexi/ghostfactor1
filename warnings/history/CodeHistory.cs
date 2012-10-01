@@ -35,12 +35,12 @@ namespace warnings.source.history
             latestRecordDictionary = new Dictionary<String, ICodeHistoryRecord>();
 
             // Delete and recreate the folder for saving the source code record.
-            FileUtil.deleteDirectory(CompilationUnitRecord.ROOT);
-            FileUtil.createDirectory(CompilationUnitRecord.ROOT);
+            FileUtil.DeleteDirectory(CompilationUnitRecord.ROOT);
+            FileUtil.CreateDirectory(CompilationUnitRecord.ROOT);
 
             // Delete and recreate the folder for saving the metadata record.
-            FileUtil.deleteDirectory(RecordMetaData.ROOT);
-            FileUtil.createDirectory(RecordMetaData.ROOT);
+            FileUtil.DeleteDirectory(RecordMetaData.ROOT);
+            FileUtil.CreateDirectory(RecordMetaData.ROOT);
         }
 
         private String combineKey(String solution, String nameSpace, String file)
