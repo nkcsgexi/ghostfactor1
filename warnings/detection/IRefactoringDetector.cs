@@ -10,15 +10,15 @@ namespace warnings.refactoring.detection
 {
     public interface IRefactoringDetector
     {
-        Boolean hasRefactoring();
-        IEnumerable<IManualRefactoring> getRefactorings();
+        Boolean HasRefactoring();
+        IEnumerable<IManualRefactoring> GetRefactorings();
     }
 
     public interface IBeforeAndAfterSourceKeeper
     {
-        void setSourceBefore(String source);
+        void SetSourceBefore(String source);
         string getSourceBefore();
-        void setSourceAfter(String source);
+        void SetSourceAfter(String source);
         string getSourceAfter();
     }
 

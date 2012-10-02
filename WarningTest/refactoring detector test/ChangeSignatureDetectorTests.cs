@@ -24,8 +24,8 @@ namespace WarningTest
             sourceBefore = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "ChangeMethodSignatureBefore.txt");
             sourceAfter = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "ChangeMethodSignatureAfter.txt");
             detector = RefactoringDetectorFactory.CreateChangeMethodSignatureDetector();
-            detector.setSourceBefore(sourceBefore);
-            detector.setSourceAfter(sourceAfter);
+            detector.SetSourceBefore(sourceBefore);
+            detector.SetSourceAfter(sourceAfter);
             logger = NLoggerUtil.GetNLogger(typeof (ChangeSignatureDetectorTests));
         }
 
@@ -35,8 +35,8 @@ namespace WarningTest
         {
             Assert.IsNotNull(sourceAfter);
             Assert.IsNotNull(sourceBefore);
-            Assert.IsTrue(detector.hasRefactoring());
-            var refactorings = detector.getRefactorings();
+            Assert.IsTrue(detector.HasRefactoring());
+            var refactorings = detector.GetRefactorings();
             Assert.IsTrue(refactorings.Count() == 2);
             var refactoring = (IChangeMethodSignatureRefactoring) refactorings.First();
             var map = refactoring.ParametersMap;
@@ -52,8 +52,8 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod2()
         {
-            Assert.IsTrue(detector.hasRefactoring());
-            var refactoring = (IChangeMethodSignatureRefactoring)detector.getRefactorings().ElementAt(1);
+            Assert.IsTrue(detector.HasRefactoring());
+            var refactoring = (IChangeMethodSignatureRefactoring)detector.GetRefactorings().ElementAt(1);
             var map = refactoring.ParametersMap;
 
             logger.Info(map.ElementAt(0).ToString());

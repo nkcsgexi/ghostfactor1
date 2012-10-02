@@ -19,7 +19,7 @@ namespace WarningTest
             history.addRecord("test", "test", "test", source);
             Assert.IsTrue(history.hasRecord("test", "test", "test"));
             ICodeHistoryRecord record = history.GetLatestRecord("test", "test", "test");
-            Assert.IsFalse(record.hasPreviousRecord());
+            Assert.IsFalse(record.HasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source));
         }
 
@@ -35,10 +35,10 @@ namespace WarningTest
             history.addRecord("test", "test", "test", source[1]);
             Assert.IsTrue(history.hasRecord("test", "test", "test"));
             ICodeHistoryRecord record = history.GetLatestRecord("test", "test", "test");
-            Assert.IsTrue(record.hasPreviousRecord());
+            Assert.IsTrue(record.HasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source[1]));
-            record = record.getPreviousRecord();
-            Assert.IsFalse(record.hasPreviousRecord());
+            record = record.GetPreviousRecord();
+            Assert.IsFalse(record.HasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source[0]));
         }
 
@@ -62,12 +62,12 @@ namespace WarningTest
                 Assert.IsNotNull(record);
                 Assert.IsTrue(record.getSolution().Equals("test"));
                 Assert.IsTrue(record.getNameSpace().Equals("test"));
-                Assert.IsTrue(record.getFile().Equals("test"));
+                Assert.IsTrue(record.GetFile().Equals("test"));
                 Assert.IsTrue(record.getSource().Equals(source[i]));
-                Assert.IsTrue(record.hasPreviousRecord());
-                record = record.getPreviousRecord();
+                Assert.IsTrue(record.HasPreviousRecord());
+                record = record.GetPreviousRecord();
             }
-            Assert.IsFalse(record.hasPreviousRecord());
+            Assert.IsFalse(record.HasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source[0]));
         }
 
@@ -84,12 +84,12 @@ namespace WarningTest
             Assert.IsTrue(history.hasRecord("test", "test", "test1"));
             ICodeHistoryRecord record = history.GetLatestRecord("test", "test", "test");
             ICodeHistoryRecord record1 = history.GetLatestRecord("test", "test", "test1");
-            Assert.IsFalse(record.hasPreviousRecord());
-            Assert.IsFalse(record1.hasPreviousRecord());
+            Assert.IsFalse(record.HasPreviousRecord());
+            Assert.IsFalse(record1.HasPreviousRecord());
             Assert.IsTrue(record.getSource().Equals(source[0]));
             Assert.IsTrue(record1.getSource().Equals(source[1]));
-            Assert.IsTrue(record.getFile().Equals("test"));
-            Assert.IsTrue(record1.getFile().Equals("test1"));
+            Assert.IsTrue(record.GetFile().Equals("test"));
+            Assert.IsTrue(record1.GetFile().Equals("test1"));
         }
     }
 }

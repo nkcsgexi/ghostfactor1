@@ -14,13 +14,13 @@ namespace warnings.source.history
     {
         String getSolution();
         String getNameSpace();
-        String getFile();
+        String GetFile();
         String getSource();
         String getKey();
         SyntaxTree getSyntaxTree();
         long getTime();
-        bool hasPreviousRecord();
-        ICodeHistoryRecord getPreviousRecord();
+        bool HasPreviousRecord();
+        ICodeHistoryRecord GetPreviousRecord();
         ICodeHistoryRecord createNextRecord(string source);
         IDocument Convert2Document();
         void delete();
@@ -63,7 +63,7 @@ namespace warnings.source.history
             return metaData.getNameSpace();
         }
 
-        public string getFile()
+        public string GetFile()
         {
             return metaData.getFile();
         }
@@ -75,7 +75,7 @@ namespace warnings.source.history
 
         public string getKey()
         {
-            return getSolution() + getNameSpace() + getFile();
+            return getSolution() + getNameSpace() + GetFile();
         }
 
         public SyntaxTree getSyntaxTree()
@@ -88,12 +88,12 @@ namespace warnings.source.history
             return metaData.getTime();
         }
 
-        public bool hasPreviousRecord()
+        public bool HasPreviousRecord()
         {
             return File.Exists(metaData.getPreviousMetaPath());
         }
 
-        public ICodeHistoryRecord getPreviousRecord()
+        public ICodeHistoryRecord GetPreviousRecord()
         {      
             IRecordMetaData previousMetaData = RecordMetaData.readMetaData(metaData.getPreviousMetaPath());
             return new CompilationUnitRecord(previousMetaData);

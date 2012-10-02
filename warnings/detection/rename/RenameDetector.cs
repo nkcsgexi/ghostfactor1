@@ -35,7 +35,7 @@ namespace warnings.refactoring.detection
         }
 
 
-        public void setSourceBefore(String source)
+        public void SetSourceBefore(String source)
         {
             this.beforeSource = source;
             this.rootBefore = ASTUtil.getSyntaxTreeFromSource(beforeSource).GetRoot();
@@ -46,7 +46,7 @@ namespace warnings.refactoring.detection
             return beforeSource;
         }
 
-        public void setSourceAfter(String source)
+        public void SetSourceAfter(String source)
         {
             this.afterSource = source;
             this.rootAfter = ASTUtil.getSyntaxTreeFromSource(afterSource).GetRoot();
@@ -58,7 +58,7 @@ namespace warnings.refactoring.detection
             return afterSource;
         }
 
-        public bool hasRefactoring()
+        public bool HasRefactoring()
         {
             // Get the renamable retriever and retrieving all the identifiers in the before and after 
             // trees.
@@ -103,7 +103,7 @@ namespace warnings.refactoring.detection
 
         }
 
-        public IEnumerable<IManualRefactoring> getRefactorings()
+        public IEnumerable<IManualRefactoring> GetRefactorings()
         {
             // Return the refactoring if detected. 
             yield return refactoring;

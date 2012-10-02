@@ -27,10 +27,10 @@ namespace WarningTest
             var detector = RefactoringDetectorFactory.CreateExtractMethodDetector();
             var sourceBefore = FileUtil.ReadAllText(fileBefore);
             var sourceAfter = FileUtil.ReadAllText(fileAfter);
-            detector.setSourceBefore(sourceBefore);
-            detector.setSourceAfter(sourceAfter);
-            Assert.IsTrue(detector.hasRefactoring());
-            foreach (var refactoring in detector.getRefactorings())
+            detector.SetSourceBefore(sourceBefore);
+            detector.SetSourceAfter(sourceAfter);
+            Assert.IsTrue(detector.HasRefactoring());
+            foreach (var refactoring in detector.GetRefactorings())
             {
                 logger.Info(refactoring.ToString());
             }

@@ -54,33 +54,33 @@ namespace WarningTest
             Assert.IsNotNull(before);
             Assert.IsNotNull(after);
             Assert.IsNotNull(detector);
-            detector.setSourceBefore(before.GetText());
-            detector.setSourceAfter(after.GetText());
-            Assert.IsFalse(detector.hasRefactoring());
+            detector.SetSourceBefore(before.GetText());
+            detector.SetSourceAfter(after.GetText());
+            Assert.IsFalse(detector.HasRefactoring());
         }
 
         [TestMethod]
         public void TestMethod2()
         {
-            detector.setSourceBefore(before.GetText());
+            detector.SetSourceBefore(before.GetText());
             for (int i = 0; i < 100; i++)
             {
                 // Change one identifier.
                 var changedAfter = ModifyIdentifierInAfterSource(after, i, "newNameInjectedForTest");
-                detector.setSourceAfter(changedAfter.GetText());
-                Assert.IsTrue(detector.hasRefactoring());
+                detector.SetSourceAfter(changedAfter.GetText());
+                Assert.IsTrue(detector.HasRefactoring());
             }
         }
         [TestMethod]
         public void TestMethod3()
         {
-            detector.setSourceBefore(before.GetText());
+            detector.SetSourceBefore(before.GetText());
 
             // Change two identifiers.
             var changedAfter = ModifyIdentifierInAfterSource
                 (ModifyIdentifierInAfterSource(after, 50, "newNameInjectedForTest"), 60, "newNameInjectedForTest");
-            detector.setSourceAfter(changedAfter.GetText());
-            Assert.IsFalse (detector.hasRefactoring());
+            detector.SetSourceAfter(changedAfter.GetText());
+            Assert.IsFalse (detector.HasRefactoring());
 
         }
 

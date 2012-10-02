@@ -24,7 +24,7 @@ namespace warnings.refactoring.detection
 
         private IEnumerable<IManualRefactoring> refactorings; 
 
-        public bool hasRefactoring()
+        public bool HasRefactoring()
         {
             // Hosting all the detected refactorings.
             var detectedRefactorings = new List<IManualRefactoring>();
@@ -65,10 +65,10 @@ namespace warnings.refactoring.detection
                         {
                             // Get an in-method detector.
                             var detector = new InMethodChangeSignatureDetector(methodbefore, methodAfter);
-                            if(detector.hasRefactoring())
+                            if(detector.HasRefactoring())
                             {
                                 // Add the detected refactorings
-                                detectedRefactorings.AddRange(detector.getRefactorings());
+                                detectedRefactorings.AddRange(detector.GetRefactorings());
                             }
                         }
                     }
@@ -85,12 +85,12 @@ namespace warnings.refactoring.detection
 
        
 
-        public IEnumerable<IManualRefactoring> getRefactorings()
+        public IEnumerable<IManualRefactoring> GetRefactorings()
         {
             return refactorings;
         }
 
-        public void setSourceBefore(string source)
+        public void SetSourceBefore(string source)
         {
             this.beforeSource = source;
             this.beforeRoot = ASTUtil.getSyntaxTreeFromSource(beforeSource).GetRoot();
@@ -101,7 +101,7 @@ namespace warnings.refactoring.detection
             return beforeSource;
         }
 
-        public void setSourceAfter(string source)
+        public void SetSourceAfter(string source)
         {
             this.afterSource = source;
             this.afterRoot = ASTUtil.getSyntaxTreeFromSource(afterSource).GetRoot();
@@ -160,7 +160,7 @@ namespace warnings.refactoring.detection
                 this.paraAnalzyer = AnalyzerFactory.GetParameterAnalyzer();
             }
 
-            public bool hasRefactoring()
+            public bool HasRefactoring()
             {
                 // Mapping parameters in before and after version, for example, f(int a, int b) and f(int b, int a)
                 // 's mapper shall be <0,1><1,0>>
@@ -221,7 +221,7 @@ namespace warnings.refactoring.detection
                 return false;
             }
 
-            public IEnumerable<IManualRefactoring> getRefactorings()
+            public IEnumerable<IManualRefactoring> GetRefactorings()
             {
                 yield return refactoring;
             }

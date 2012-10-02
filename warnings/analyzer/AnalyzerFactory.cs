@@ -79,6 +79,11 @@ namespace warnings.analyzer
             return new SymbolAnalyzer();
         }
 
+        public static ITypeHierarchyAnalyzer GetTypeHierarchyAnalyzer()
+        {
+            return new TypeHierarchyAnalyzer();
+        }
+
         public static String GetAnalyzersCountInfo()
         {
             var sb = new StringBuilder(Environment.NewLine);

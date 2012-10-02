@@ -80,7 +80,7 @@ namespace warnings.components
                 IExternalRefactoringDetector detector = getRefactoringDetector();
 
                 // The detector shall always have latestRecord as the source after.
-                detector.setSourceAfter(latestRecord.getSource());
+                detector.SetSourceAfter(latestRecord.getSource());
 
                 // The current record shall be latestRecord initially.
                 ICodeHistoryRecord currentRecord = latestRecord;
@@ -89,19 +89,19 @@ namespace warnings.components
                 for (int i = 0; i < getSearchDepth(); i++)
                 {
                     // No record before current, then break.s
-                    if (!currentRecord.hasPreviousRecord())
+                    if (!currentRecord.HasPreviousRecord())
                         break;
 
                     // get the record before current record
-                    currentRecord = currentRecord.getPreviousRecord();
+                    currentRecord = currentRecord.GetPreviousRecord();
 
                     // Set the source before
-                    detector.setSourceBefore(currentRecord.getSource());
+                    detector.SetSourceBefore(currentRecord.getSource());
 
                     // Detect manual refactoring.
-                    if (detector.hasRefactoring())
+                    if (detector.HasRefactoring())
                     {
-                        onRefactoringDetected(currentRecord, latestRecord, detector.getRefactorings());
+                        onRefactoringDetected(currentRecord, latestRecord, detector.GetRefactorings());
 
                         // If refactoring detected, return directly.
                         return;

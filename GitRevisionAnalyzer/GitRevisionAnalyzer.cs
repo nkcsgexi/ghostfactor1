@@ -53,6 +53,7 @@ namespace GitRevisionAnalyzer
                 try
                 {
                     logger.Info("start handling " + gitHttp);
+
                     // Create a project with the given url.
                     var project = new GitProject(gitHttp);
 
@@ -69,19 +70,29 @@ namespace GitRevisionAnalyzer
                     var detector = new RecordRefactoringDetector();
                     foreach (var record in records)
                     {
-                        logger.Info("start refactoring detection for " + record.getFile() +" in " + gitHttp);
-                        detector.DetectRefactorings(record);
+                        if (!ExcludeFile(record.GetFile()))
+                        {
+                            logger.Info("start refactoring detection for " + record.GetFile() + " in " + gitHttp);
+                            detector.DetectRefactorings(record);
+                        }
                     }
                 }catch(Exception e)
                 {
                     logger.Fatal(e);
                 }
             }
+
+            private bool ExcludeFile(string file)
+            {
+                var excludedFiles = new[] {"AssemblyInfo.cs"};
+                return excludedFiles.Contains(file);
+            }
         }
 
         private void AddNewGitHttp(string gitHttp)
         {
-            queue.Add(new RefactoringDetectionWorkItem(gitHttp));
+            // Add job with the highest priority.
+            queue.Add(new RefactoringDetectionWorkItem(gitHttp){Priority = ThreadPriority.Highest});
         }
 
         //git://github.com/nkcsgexi/ghostfactor1.git
@@ -95,7 +106,7 @@ namespace GitRevisionAnalyzer
             }
 
             while(false == analyzer.finished)
-                Thread.Sleep(5000);
+                Thread.Sleep(10000);
         }
     }
 }

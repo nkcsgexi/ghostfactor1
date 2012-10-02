@@ -41,20 +41,29 @@ namespace GitRevisionAnalyzer
             refactoringsCount = 0;
         }
 
-        public void DetectRefactorings(ICodeHistoryRecord record)
+         public void DetectRefactorings(ICodeHistoryRecord head)
+         {
+             // For every record in the record chain, look back to detect refactorings.
+             for (var current = head; current.HasPreviousRecord(); current = current.GetPreviousRecord())
+             {
+                 LookBackToDetectRefactorings(current);
+             }
+         }
+
+        private void LookBackToDetectRefactorings(ICodeHistoryRecord record)
         {
             // Retriever the solution and file names.
             this.solutionName = record.getSolution();
-            this.fileName = record.getFile();
+            this.fileName = record.GetFile();
 
             // Current source is the source code after.
             var sourceAfter = record.getSource();
 
             // Look back until no parent or reach the search depth.
-            for (int i = 0; i < SEARCH_DEPTH && record.hasPreviousRecord(); i++)
+            for (int i = 0; i < SEARCH_DEPTH && record.HasPreviousRecord(); i++)
             {
                 // Get the previous record and its source code.
-                record = record.getPreviousRecord();
+                record = record.GetPreviousRecord();
                 var sourceBefore = record.getSource();
 
                 // Detect refactorings by using detectors.
@@ -73,14 +82,14 @@ namespace GitRevisionAnalyzer
         private void DetectRefactoringByDetector(string before, string after, IExternalRefactoringDetector detector)
         {
             // Set source before and after. 
-            detector.setSourceBefore(before);
-            detector.setSourceAfter(after);
+            detector.SetSourceBefore(before);
+            detector.SetSourceAfter(after);
 
             // If a refactoring is detected.
-            if (detector.hasRefactoring())
+            if (detector.HasRefactoring())
             {
                 // Get the detected refactorings, and log them.
-                var refactorings = detector.getRefactorings();
+                var refactorings = detector.GetRefactorings();
                 foreach (var refactoring in refactorings)
                 {
                     var path = HandleDetectedRefactoring(before, after, refactoring);

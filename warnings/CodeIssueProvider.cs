@@ -40,7 +40,7 @@ namespace warnings
             if (!initialized)
             {              
                 // Start all the components.
-                GhostFactorComponents.StartAllComponents();
+                GhostFactorComponents.StartAllComponents(document.Project.Solution);
                 initialized = true;
             }
         }

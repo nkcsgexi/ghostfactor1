@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using BlackHen.Threading;
+using Roslyn.Services;
 using warnings.components.search;
 
 namespace warnings.components
@@ -40,9 +41,9 @@ namespace warnings.components
         public static readonly IRefactoringCodeIssueComputersComponent RefactoringCodeIssueComputerComponent =
             RefactoringCodeIssueComputersComponent.GetInstance();
 
+        public static ISearchRealDocumentComponent searchRealDocumentComponent;
 
-
-        public static void StartAllComponents()
+        public static void StartAllComponents(ISolution solution)
         {
 
             // Start the history keeping component.
@@ -58,6 +59,10 @@ namespace warnings.components
 
             // Start refactoring issues.
             RefactoringCodeIssueComputerComponent.Start();
+
+            // Initiate and start search real document component.
+            searchRealDocumentComponent = SearchRealDocumentComponent.GetInstance(solution);
+            searchRealDocumentComponent.Start();
         }
     }
 }

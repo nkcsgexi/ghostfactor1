@@ -11,8 +11,8 @@ namespace warnings.refactoring.detection
 {
 
     /* 
-     * This is a detector for extract method refactoring. After setting the code before and after some time interval, the detector should be able to 
-     * tell whether there is a reafactoring performed. 
+     * This is a detector for extract method refactoring. After setting the code before and after some time interval, 
+     * the detector should be able to tell whether there is a reafactoring performed. 
      */
     internal class ExtractMethodDetector : IExternalRefactoringDetector
     {
@@ -25,7 +25,7 @@ namespace warnings.refactoring.detection
         /* Detected manual refactorings.*/
         private IEnumerable<IManualRefactoring> refactorings = Enumerable.Empty<IManualRefactoring>();
 
-        public void setSourceBefore(String before)
+        public void SetSourceBefore(String before)
         {
             this.before = before;
         }
@@ -35,7 +35,7 @@ namespace warnings.refactoring.detection
             return before;
         }
 
-        public void setSourceAfter(String after)
+        public void SetSourceAfter(String after)
         {
             this.after = after;
         }
@@ -45,7 +45,7 @@ namespace warnings.refactoring.detection
             return after;
         }
 
-        public bool hasRefactoring()
+        public bool HasRefactoring()
         {
             SyntaxTree treeBefore = SyntaxTree.ParseCompilationUnit(before);
             SyntaxTree treeAfter = SyntaxTree.ParseCompilationUnit(after);
@@ -55,22 +55,23 @@ namespace warnings.refactoring.detection
             var classesAfter = treeAfter.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
             
             // Get the pairs of class declaration in the code before and after
-            var paris = getClassDeclarationPairs(classesBefore, classesAfter);
+            var paris = GetClassDeclarationPairs(classesBefore, classesAfter);
             foreach (var pair in paris)
             {
                 var detector = new InClassExtractMethodDetector(pair.Key, pair.Value);
                 detector.setSyntaxTreeBefore(treeBefore);
                 detector.setSyntaxTreeAfter(treeAfter);
-                if(detector.hasRefactoring())
+                if(detector.HasRefactoring())
                 {
-                    refactorings = refactorings.Union(detector.getRefactorings());
+                    refactorings = refactorings.Union(detector.GetRefactorings());
+                    return true;
                 }
             }
-            return refactorings.Any();
+            return false;
         }
 
         /* Get the definition of same classes before and after. */
-        private IList<KeyValuePair<ClassDeclarationSyntax, ClassDeclarationSyntax>> getClassDeclarationPairs
+        private IEnumerable<KeyValuePair<ClassDeclarationSyntax, ClassDeclarationSyntax>> GetClassDeclarationPairs
             (IEnumerable<ClassDeclarationSyntax> classesBefore, IEnumerable<ClassDeclarationSyntax> classesAfter)
         {
             var pairs = new List<KeyValuePair<ClassDeclarationSyntax, ClassDeclarationSyntax>>();
@@ -88,7 +89,7 @@ namespace warnings.refactoring.detection
             return pairs;
         }
 
-        public IEnumerable<IManualRefactoring> getRefactorings()
+        public IEnumerable<IManualRefactoring> GetRefactorings()
         {
             return this.refactorings;
         }
@@ -120,7 +121,7 @@ namespace warnings.refactoring.detection
             logger = NLoggerUtil.GetNLogger(typeof (InClassExtractMethodDetector));
         }
 
-        public Boolean hasRefactoring()
+        public Boolean HasRefactoring()
         {
             // Build the call graphs of classes before and after.
             CallGraph callGraphBefore = new CallGraphBuilder(classBefore, treeBefore).buildCallGraph();
@@ -150,17 +151,18 @@ namespace warnings.refactoring.detection
                         detector.setSyntaxTreeAfter(treeAfter);
 
                         // Start to detect.
-                        if (detector.hasRefactoring())
+                        if (detector.HasRefactoring())
                         {
-                            refactorings = refactorings.Union(detector.getRefactorings());
+                            refactorings = refactorings.Union(detector.GetRefactorings());
+                            return true;
                         }
                     }
                 }
             }
-            return refactorings.Any();
+            return false;
         }
 
-        public IEnumerable<IManualRefactoring> getRefactorings()
+        public IEnumerable<IManualRefactoring> GetRefactorings()
         {
             return this.refactorings;
         }
@@ -205,7 +207,7 @@ namespace warnings.refactoring.detection
             logger = NLoggerUtil.GetNLogger(typeof (InMethodExtractMethodDectector));
         }
 
-        public bool hasRefactoring()
+        public bool HasRefactoring()
         {
             // Get the first invocation of callee in the caller method body.
             var invocation = ASTUtil.getAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter)[0];
@@ -240,11 +242,10 @@ namespace warnings.refactoring.detection
                 refactoring = analyzer.GetRefactoring();
                 return true;
             }
-            else
-                return false;
+            return false;
         }
 
-        public IEnumerable<IManualRefactoring> getRefactorings()
+        public IEnumerable<IManualRefactoring> GetRefactorings()
         {
             yield return refactoring;
         }
