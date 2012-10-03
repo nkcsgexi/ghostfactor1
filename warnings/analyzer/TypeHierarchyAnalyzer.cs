@@ -12,6 +12,7 @@ namespace warnings.analyzer
     {
         void SetSemanticModel(ISemanticModel model);
         void SetDeclaration(SyntaxNode declaration);
+        INamedTypeSymbol GetDeclarationType();
         IEnumerable<INamedTypeSymbol> GetBaseTypes();
         IEnumerable<INamedTypeSymbol> GetImplementedInterfaces();
         IEnumerable<INamedTypeSymbol> GetContainingTypes();
@@ -38,7 +39,7 @@ namespace warnings.analyzer
         /* Get all the base type hierarchy. */
         public IEnumerable<INamedTypeSymbol> GetBaseTypes()
         {
-            var type = model.GetTypeInfo(declaration).Type;
+            var type = GetDeclarationType();
             var baseTypes = new List<INamedTypeSymbol>();
 
             // Iteratively get all the base types hierarchy.
@@ -52,14 +53,42 @@ namespace warnings.analyzer
         /* Get all the interfaces implemented by this type. */
         public IEnumerable<INamedTypeSymbol> GetImplementedInterfaces()
         {
-            var type = model.GetTypeInfo(declaration).Type;
-            return type.Interfaces.AsEnumerable();
+            var interfaces = new List<INamedTypeSymbol>();
+
+            // Iteratively get all the implemented interface for this type and all
+            // of its super types.
+            for (var currentType = GetDeclarationType(); currentType != null; 
+                currentType = currentType.BaseType)
+            {
+                interfaces.AddRange(currentType.Interfaces.AsEnumerable());
+            }
+
+            // For all the handled interfaces. 
+            var handledInterfaces = new List<INamedTypeSymbol>();
+
+            // If still some unhandled interfaces.
+            for (; interfaces.Any(); )
+            {
+                // Get the first of unhandled interface.
+                var first = interfaces.First();  
+
+                // Add its implemented interfaces to the unhandled list.
+                interfaces.AddRange(first.Interfaces.AsEnumerable());
+
+                // Add itself to the handled list.
+                handledInterfaces.Add(first);
+
+                // Remove itself from the unhandled list.
+                interfaces.RemoveAt(0);
+            }
+
+            return handledInterfaces.AsEnumerable();
         }
 
         /* Get all the types that are containing this type declaration. */
         public IEnumerable<INamedTypeSymbol> GetContainingTypes()
         {
-            var type = model.GetTypeInfo(declaration).Type;
+            var type = GetDeclarationType();
             var containingTypeList = new List<INamedTypeSymbol>();
 
             // Iteratively get all the containing types.
@@ -73,8 +102,15 @@ namespace warnings.analyzer
         /* Get all the type declarations that are in this type declaration. */
         public IEnumerable<INamedTypeSymbol> GetContainedTypes()
         {
-            var type = model.GetTypeInfo(declaration).Type;
+            var type = GetDeclarationType();
             return type.GetTypeMembers().AsEnumerable();
         }
+
+        /* Get the type symbol for the declaration node. */
+        public INamedTypeSymbol GetDeclarationType()
+        {
+            return (INamedTypeSymbol) model.GetDeclaredSymbol(declaration);
+        }
+
     }
 }
