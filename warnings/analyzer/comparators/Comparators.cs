@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roslyn.Compilers.CSharp;
+using warnings.util;
 
 namespace warnings.analyzer.comparators
 {

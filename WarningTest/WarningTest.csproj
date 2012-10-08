@@ -57,6 +57,7 @@
     <Compile Include="analyzer test\MethodInvocationAnalyzerTests.cs" />
     <Compile Include="analyzer test\SolutionAnalyzerTests.cs" />
     <Compile Include="analyzer test\TypeHierarchyAnalyzerTests.cs" />
+    <Compile Include="component test\RefactoringFormComponentTests.cs" />
     <Compile Include="fakesource\TypeHierarchyFakeSource.cs" />
     <Compile Include="retriever test\MethodInvocationRetrieverTests.cs" />
     <Compile Include="retriever test\TypableRetrieverTests.cs" />

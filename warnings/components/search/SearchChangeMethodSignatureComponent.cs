@@ -58,8 +58,8 @@ namespace warnings.components.search
             IEnumerable<IManualRefactoring> refactorings)
         {
             logger.Info("Change Method Signature Detected.");
-            logger.Info("Before:\n" + before.getSource());
-            logger.Info("After:\n" + after.getSource());
+            logger.Info("Before:\n" + before.GetSource());
+            logger.Info("After:\n" + after.GetSource());
 
             // Enqueue the condition checking process for this detected refactoring.
             GhostFactorComponents.conditionCheckingComponent.Enqueue(

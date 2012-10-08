@@ -20,7 +20,7 @@ namespace warnings.source.history
     {
         /* Singleton the code history instance. */
         private static CodeHistory instance = new CodeHistory();
-        public static ICodeHistory getInstance()
+        public static ICodeHistory GetInstance()
         {
             return instance;
         }
@@ -55,13 +55,13 @@ namespace warnings.source.history
             if(hasRecord(solution, nameSpace, file))
             {
                 ICodeHistoryRecord record = GetLatestRecord(solution, nameSpace, file);
-                ICodeHistoryRecord nextRecord = record.createNextRecord(source);
+                ICodeHistoryRecord nextRecord = record.CreateNextRecord(source);
                 latestRecordDictionary.Remove(key);
                 latestRecordDictionary.Add(key, nextRecord);
             }
             else
             {
-                ICodeHistoryRecord record = CompilationUnitRecord.createNewCodeRecord(solution, nameSpace, file, source);
+                ICodeHistoryRecord record = CompilationUnitRecord.CreateNewCodeRecord(solution, nameSpace, file, source);
                 latestRecordDictionary.Add(key, record);
             }
         }

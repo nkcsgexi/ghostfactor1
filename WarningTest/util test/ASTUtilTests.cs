@@ -26,7 +26,7 @@ namespace WarningTest
 
 
 
-        /* Tests the correct use of isInvoking, it seems not very good at recursive calls.*/
+        /* Tests the correct use of IsInvoking, it seems not very good at recursive calls.*/
         [TestMethod]
         public void TestMethod1()
         {
@@ -37,10 +37,10 @@ namespace WarningTest
             var caller = methodDecs.Where(dec => dec.Identifier.Value.Equals("TestMethod1")).First();
             var callee1 = methodDecs.Where(dec => dec.Identifier.Value.Equals("foo")).First();
             var callee2 = methodDecs.Where(dec => dec.Identifier.Value.Equals("bar")).First();
-            Assert.IsTrue(ASTUtil.isInvoking(caller, callee1, tree));
-            Assert.IsTrue(ASTUtil.isInvoking(callee1, callee2, tree));
-            Assert.IsFalse(ASTUtil.isInvoking(caller, callee2, tree));
-            Assert.IsFalse(ASTUtil.isInvoking(callee2, callee1, tree));
+            Assert.IsTrue(ASTUtil.IsInvoking(caller, callee1, tree));
+            Assert.IsTrue(ASTUtil.IsInvoking(callee1, callee2, tree));
+            Assert.IsFalse(ASTUtil.IsInvoking(caller, callee2, tree));
+            Assert.IsFalse(ASTUtil.IsInvoking(callee2, callee1, tree));
         }
 
         private void foo()

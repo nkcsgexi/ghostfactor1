@@ -13,26 +13,33 @@ using warnings.util;
 namespace GitRevisionAnalyzer
 {
     /* Detect refactoring by a given ICodeHistoryRecord instance to look back.*/
+
     public class RecordRefactoringDetector
     {
-        /* Look back count. */ 
-        private static readonly int SEARCH_DEPTH = 20;
+        /* Look back count. */
+        private static readonly int LOOK_BACK_LIMIT = 30;
+
+        /* 
+         * Search depth, for how many records from the head that we start searching. 
+         * The complexity of algorithm is basically LOOK_BACK_LIMIT * SEARCH_DEPTH.
+         */
+        private static readonly int SEARCH_DEPTH = 1;
+
 
         private static readonly string DETECTED_REFACTORINGS_ROOT = "DetectedRefactorings/";
 
-        /* Several detectors.*/ 
-        private static readonly IExternalRefactoringDetector EMDetector = 
-            RefactoringDetectorFactory.CreateExtractMethodDetector();
-
-        private static readonly IExternalRefactoringDetector CMSDetector =
-            RefactoringDetectorFactory.CreateChangeMethodSignatureDetector();
+        /* Several detectors.*/
+        private static readonly IExternalRefactoringDetector[] externalRefactoringDetectors = new IExternalRefactoringDetector[] 
+        { 
+            RefactoringDetectorFactory.CreateExtractMethodDetector() 
+        };
 
         private readonly Logger logger;
 
         private string solutionName;
         private string fileName;
 
-        // The count of all refactorings detected in this record chain.
+        // The count of all refactorings detected in this head chain.
         private int refactoringsCount;
 
         public RecordRefactoringDetector()
@@ -43,34 +50,39 @@ namespace GitRevisionAnalyzer
 
          public void DetectRefactorings(ICodeHistoryRecord head)
          {
-             // For every record in the record chain, look back to detect refactorings.
-             for (var current = head; current.HasPreviousRecord(); current = current.GetPreviousRecord())
+             int depth = 0;
+
+             // For every head in the head chain, look back to detect refactorings.
+             // We do not search records that are older than SEARCH_DEPTH away from the head.
+             for (var current = head; current.HasPreviousRecord() && depth < SEARCH_DEPTH; 
+                 current = current.GetPreviousRecord(), depth ++)
              {
+                 logger.Info("Detect refactorings with depth of head: " + depth);
                  LookBackToDetectRefactorings(current);
              }
          }
 
-        private void LookBackToDetectRefactorings(ICodeHistoryRecord record)
+        private void LookBackToDetectRefactorings(ICodeHistoryRecord head)
         {
             // Retriever the solution and file names.
-            this.solutionName = record.getSolution();
-            this.fileName = record.GetFile();
+            this.solutionName = head.GetSolution();
+            this.fileName = head.GetFile();
 
-            // Current source is the source code after.
-            var sourceAfter = record.getSource();
+            var currentRecord = head;
 
             // Look back until no parent or reach the search depth.
-            for (int i = 0; i < SEARCH_DEPTH && record.HasPreviousRecord(); i++)
+            for (int i = 0; i < LOOK_BACK_LIMIT && currentRecord.HasPreviousRecord(); 
+                i++, currentRecord = currentRecord.GetPreviousRecord())
             {
-                // Get the previous record and its source code.
-                record = record.GetPreviousRecord();
-                var sourceBefore = record.getSource();
-
-                // Detect refactorings by using detectors.
                 try
                 {
-                    DetectRefactoringByDetector(sourceBefore, sourceAfter, EMDetector);
-                    // DetectRefactoringByDetector(sourceBefore, sourceAfter, CMSDetector);
+                    logger.Info("Looking back " + i + " revisions.");
+
+                    // Handle current record.
+                    if(HandlePreviousRecordWithDetectors(currentRecord.GetPreviousRecord(), head))
+                    {
+                        break;
+                    }
                 }
                 catch (Exception e)
                 {
@@ -79,7 +91,60 @@ namespace GitRevisionAnalyzer
             }
         }
 
-        private void DetectRefactoringByDetector(string before, string after, IExternalRefactoringDetector detector)
+        /* Use all the refactoring detectors to detect refactoring, return whether a refactoring is detected. */
+        private bool HandlePreviousRecordWithDetectors(ICodeHistoryRecord before, ICodeHistoryRecord head)
+        {
+            // If a refactoring is found, initially false.
+            bool hasRefactorings = false;
+
+            // For each detectors.
+            foreach (var detector in externalRefactoringDetectors)
+            {
+                // If found by the detector hasRefactoring is set to be true.
+                if(HandlePreviousRecord(before, head, detector))
+                {
+                    hasRefactorings = true;
+                }
+            }
+            return hasRefactorings;
+        }
+
+
+        /* Handle a previous record with the head of the record chain. */
+        private bool HandlePreviousRecord(ICodeHistoryRecord previous, ICodeHistoryRecord head, 
+            IExternalRefactoringDetector detector)
+        {
+            var after = head.GetSource();
+            var before = previous.GetSource();
+
+            // Detect if a refactoring happens before head and the previous record.
+            if (DetectRefactoringByDetector(before, after, detector))
+            {
+                // If there is a refactoring detected, search intermediate refactorings.
+                DetectIntermediateRefactorings(previous, head.GetPreviousRecord(), detector);
+                return true;
+            }
+            return false;
+        }
+
+        /* Detect intermediate refactorings the determined before record. */ 
+        private void DetectIntermediateRefactorings(ICodeHistoryRecord baseBefore, ICodeHistoryRecord head, 
+            IExternalRefactoringDetector detector)
+        {
+            // Get the source code for base before.
+            var before = baseBefore.GetSource();
+
+            // From the head, iteratively get previous record (until reach base before record) 
+            // and detect if refactorings exist.
+            for (var currentRecord = head; !currentRecord.Equals(baseBefore); 
+                currentRecord = currentRecord.GetPreviousRecord())
+            {
+                var after = currentRecord.GetSource();
+                DetectRefactoringByDetector(before, after, detector);
+            }
+        }
+
+        private bool DetectRefactoringByDetector(string before, string after, IExternalRefactoringDetector detector)
         {
             // Set source before and after. 
             detector.SetSourceBefore(before);
@@ -96,7 +161,9 @@ namespace GitRevisionAnalyzer
                     refactoringsCount ++;
                     logger.Info("Refactoring detected! Saved at " + path);
                 }
+                return true;
             }
+            return false;
         }
 
         /* Handle a detected refactoring by saveing it at an independent file. */

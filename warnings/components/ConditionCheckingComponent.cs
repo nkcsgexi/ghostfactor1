@@ -85,7 +85,7 @@ namespace warnings.components
         {
             this.before = before.Convert2Document();
             this.after = after.Convert2Document();
-            this.DocumentKey = before.getKey();
+            this.DocumentKey = before.GetKey();
             this.refactoring = refactoring;
             logger = NLoggerUtil.GetNLogger(typeof (ConditionCheckWorkItem));
         }

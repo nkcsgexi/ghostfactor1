@@ -10,20 +10,20 @@ using warnings.util;
 namespace warnings.source.history
 {
 
-    public interface ICodeHistoryRecord
+    public interface ICodeHistoryRecord : IEquatable<ICodeHistoryRecord>
     {
-        String getSolution();
-        String getNameSpace();
+        String GetSolution();
+        String GetNameSpace();
         String GetFile();
-        String getSource();
-        String getKey();
-        SyntaxTree getSyntaxTree();
-        long getTime();
+        String GetSource();
+        String GetKey();
+        SyntaxTree GetSyntaxTree();
+        long GetTime();
         bool HasPreviousRecord();
         ICodeHistoryRecord GetPreviousRecord();
-        ICodeHistoryRecord createNextRecord(string source);
+        ICodeHistoryRecord CreateNextRecord(string source);
         IDocument Convert2Document();
-        void delete();
+        void Delete();
     }
 
     class CompilationUnitRecord : ICodeHistoryRecord
@@ -37,7 +37,7 @@ namespace warnings.source.history
         /* File extension for the source record. */
         private static readonly String EXTENSION = ".rec";
 
-        public static ICodeHistoryRecord createNewCodeRecord(String solution, String package, String file,
+        public static ICodeHistoryRecord CreateNewCodeRecord(String solution, String package, String file,
                 String source){
 
             // current time in ticks
@@ -53,12 +53,12 @@ namespace warnings.source.history
         }
 
 
-        public string getSolution()
+        public string GetSolution()
         {
             return metaData.getSolution();
         }
 
-        public string getNameSpace()
+        public string GetNameSpace()
         {
             return metaData.getNameSpace();
         }
@@ -68,22 +68,22 @@ namespace warnings.source.history
             return metaData.getFile();
         }
 
-        public string getSource()
+        public string GetSource()
         {
             return FileUtil.ReadAllText(metaData.getSourcePath());
         }
 
-        public string getKey()
+        public string GetKey()
         {
-            return getSolution() + getNameSpace() + GetFile();
+            return GetSolution() + GetNameSpace() + GetFile();
         }
 
-        public SyntaxTree getSyntaxTree()
+        public SyntaxTree GetSyntaxTree()
         {
             throw new NotImplementedException();
         }
 
-        public long getTime()
+        public long GetTime()
         {
             return metaData.getTime();
         }
@@ -99,7 +99,7 @@ namespace warnings.source.history
             return new CompilationUnitRecord(previousMetaData);
         }
 
-        public ICodeHistoryRecord createNextRecord(string source)
+        public ICodeHistoryRecord CreateNextRecord(string source)
         {
             long time = DateTime.Now.Ticks;
             string recordfilename = metaData.getFile() + time + EXTENSION;
@@ -116,10 +116,10 @@ namespace warnings.source.history
         public IDocument Convert2Document()
         {
             var converter = new String2IDocumentConverter();
-            return (IDocument)converter.Convert(getSource(), null, null, null);
+            return (IDocument)converter.Convert(GetSource(), null, null, null);
         }
 
-        public void delete()
+        public void Delete()
         {
             FileUtil.Delete(metaData.getSourcePath());
             FileUtil.Delete(metaData.getMetaDataPath());
@@ -131,5 +131,9 @@ namespace warnings.source.history
         }
 
 
+        public bool Equals(ICodeHistoryRecord other)
+        {
+            return GetTime() == other.GetTime();
+        }
     }
 }

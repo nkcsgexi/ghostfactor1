@@ -34,8 +34,13 @@ D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\GitRevisionAnaly
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\GitRevisionAnalyzer.exe
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\GitRevisionAnalyzer.pdb
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\BlackHen.Threading.dll
+D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\GitSharp.dll
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\NLog.dll
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\warnings.dll
+D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\GitSharp.Core.dll
+D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\Tamir.SharpSSH.dll
+D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\ICSharpCode.SharpZipLib.dll
+D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\Winterdom.IO.FileMap.dll
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\BlackHen.Threading.pdb
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\BlackHen.Threading.xml
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\warnings.pdb
@@ -43,8 +48,3 @@ D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\NLog.xml
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\obj\x86\Debug\ResolveAssemblyReference.cache
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\obj\x86\Debug\GitRevisionAnalyzer.exe
 D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\obj\x86\Debug\GitRevisionAnalyzer.pdb
-D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\GitSharp.dll
-D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\GitSharp.Core.dll
-D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\Tamir.SharpSSH.dll
-D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\ICSharpCode.SharpZipLib.dll
-D:\VS workspaces\BeneWar\warnings\GitRevisionAnalyzer\bin\Debug\Winterdom.IO.FileMap.dll

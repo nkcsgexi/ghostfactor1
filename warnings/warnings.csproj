@@ -63,6 +63,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
     <Reference Include="System.Xml" />
     <Reference Include="WindowsBase" />
@@ -125,6 +126,7 @@
     <Compile Include="components\search\SearchRefactoringComponent.cs" />
     <Compile Include="components\search\SearchRenameComponent.cs" />
     <Compile Include="components\RefactoringIssueComponent.cs" />
+    <Compile Include="components\ui\RefactoringFormComponent.cs" />
     <Compile Include="conditions\ChangeMethodSignature\ChangeMethodSignatureConditionsList.cs" />
     <Compile Include="conditions\ChangeMethodSignature\UnupdatedMethodSignatureChecker.cs" />
     <Compile Include="conditions\ConditionCheckingFactory.cs" />
@@ -153,6 +155,12 @@
     <Compile Include="resources\ResourcePool.cs" />
     <Compile Include="history\CodeHistory.cs" />
     <Compile Include="history\CompilationUnitRecord.cs" />
+    <Compile Include="ui\RefactoringWariningsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ui\RefactoringWariningsForm.Designer.cs">
+      <DependentUpon>RefactoringWariningsForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="util\ASTUtil\ASTUtil.cs" />
     <Compile Include="util\ASTUtil\MethodBodyRetriever.cs" />
     <Compile Include="util\Converters.cs" />
@@ -198,6 +206,9 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ui\RefactoringWariningsForm.resx">
+      <DependentUpon>RefactoringWariningsForm.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -62,8 +62,8 @@ namespace warnings.components
             IEnumerable<IManualRefactoring> refactorings)
         {
             logger.Info("\n Extract Method dectected.");
-            logger.Info("\n Before: \n" + before.getSource());
-            logger.Info("\n After: \n" + after.getSource());
+            logger.Info("\n Before: \n" + before.GetSource());
+            logger.Info("\n After: \n" + after.GetSource());
 
             // Get the first refactoring detected.
             IManualRefactoring refactoring = refactorings.First();

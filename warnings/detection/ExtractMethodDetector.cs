@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace warnings.refactoring.detection
         private String after;
         
         /* Detected manual refactorings.*/
-        private IEnumerable<IManualRefactoring> refactorings = Enumerable.Empty<IManualRefactoring>();
+        private IEnumerable<IManualRefactoring> refactorings;
 
         public void SetSourceBefore(String before)
         {
@@ -47,6 +48,8 @@ namespace warnings.refactoring.detection
 
         public bool HasRefactoring()
         {
+            refactorings = Enumerable.Empty<IManualRefactoring>();
+
             SyntaxTree treeBefore = SyntaxTree.ParseCompilationUnit(before);
             SyntaxTree treeAfter = SyntaxTree.ParseCompilationUnit(after);
 
@@ -117,12 +120,13 @@ namespace warnings.refactoring.detection
         {
             this.classBefore = classBefore;
             this.classAfter = classAfter;
-            this.refactorings = Enumerable.Empty<IManualRefactoring>();
             logger = NLoggerUtil.GetNLogger(typeof (InClassExtractMethodDetector));
         }
 
         public Boolean HasRefactoring()
         {
+            refactorings = Enumerable.Empty<IManualRefactoring>();
+
             // Build the call graphs of classes before and after.
             CallGraph callGraphBefore = new CallGraphBuilder(classBefore, treeBefore).buildCallGraph();
             CallGraph callGraphAfter = new CallGraphBuilder(classAfter, treeAfter).buildCallGraph();
@@ -138,7 +142,7 @@ namespace warnings.refactoring.detection
             {
                 foreach (var callee in addedMethods)
                 {
-                    if(ASTUtil.isInvoking(caller, callee, treeAfter))
+                    if(ASTUtil.IsInvoking(caller, callee, treeAfter))
                     {
                         // Get what does the caller look like before. 
                         var callerBefore = callGraphBefore.getVertice((String)caller.Identifier.Value);
@@ -192,7 +196,7 @@ namespace warnings.refactoring.detection
         /* The entire trees before and after. */
         private SyntaxTree treeAfter;
         private SyntaxTree treeBefore;
-
+      
         /* The detected refactoring if any. */
         private IManualRefactoring refactoring;
        
@@ -210,7 +214,7 @@ namespace warnings.refactoring.detection
         public bool HasRefactoring()
         {
             // Get the first invocation of callee in the caller method body.
-            var invocation = ASTUtil.getAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter)[0];
+            var invocation = ASTUtil.GetAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter)[0];
             // Precondition  
             Contract.Requires(invocation!= null);
             
@@ -234,13 +238,19 @@ namespace warnings.refactoring.detection
             // Check whether the distance is shortened by flatten. 
             if (dis2 > dis1)
             {
-                // If similar enough, a manual refactoring instance is detected and created.
+                // If similar enough, a manual refactoring instance is likely to be detected and created.
                 var analyzer = RefactoringAnalyzerFactory.CreateManualExtractMethodAnalyzer();
                 analyzer.SetMethodDeclarationBeforeExtracting(callerBefore);
                 analyzer.SetExtractedMethodDeclaration(calleeAfter);
                 analyzer.SetInvocationExpression(invocation);
-                refactoring = analyzer.GetRefactoring();
-                return true;
+
+                // If the analyzer can get a refactoring from the given information, get the refactoring 
+                // and return true.
+                if(analyzer.CanGetRefactoring())
+                {
+                    refactoring = analyzer.GetRefactoring();
+                    return true;
+                }
             }
             return false;
         }
@@ -260,6 +270,4 @@ namespace warnings.refactoring.detection
             this.treeAfter = after;
         }
     }
-
-
 }

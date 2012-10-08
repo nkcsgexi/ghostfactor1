@@ -61,8 +61,8 @@ namespace warnings.components
             IEnumerable<IManualRefactoring> refactorings)
         {
             logger.Info("Rename dectected.");
-            logger.Info("\nBefore: \n" + before.getSource());
-            logger.Info("\nAfter: \n" + after.getSource());
+            logger.Info("\nBefore: \n" + before.GetSource());
+            logger.Info("\nAfter: \n" + after.GetSource());
         }
 
         protected override void onNoRefactoringDetected(ICodeHistoryRecord record)

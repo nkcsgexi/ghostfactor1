@@ -18,3 +18,4 @@ D:\VS workspaces\BeneWar\warnings\warnings\obj\Debug\GenerateResource.write.1.tl
 D:\VS workspaces\BeneWar\warnings\warnings\obj\Debug\warnings.dll
 D:\VS workspaces\BeneWar\warnings\warnings\obj\Debug\warnings.pdb
 D:\VS workspaces\BeneWar\warnings\warnings\obj\Debug\extension.vsixmanifest
+D:\VS workspaces\BeneWar\warnings\warnings\obj\Debug\warnings.ui.RefactoringWariningsForm.resources

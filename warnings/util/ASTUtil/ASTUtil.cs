@@ -68,17 +68,17 @@ namespace warnings.util
         }
 
         /* Return true if caller is actually calling the callee, otherwise return false. */
-        public static bool isInvoking(MethodDeclarationSyntax caller, MethodDeclarationSyntax callee, SyntaxTree tree)
+        public static bool IsInvoking(MethodDeclarationSyntax caller, MethodDeclarationSyntax callee, SyntaxTree tree)
         {
-            return getAllInvocationsInMethod(caller, callee, tree).Count() > 0;
+            return GetAllInvocationsInMethod(caller, callee, tree).Any();
         }
 
         /* Get all the invocations of callee in the body of caller method. */
-        public static IList<InvocationExpressionSyntax> getAllInvocationsInMethod
+        public static IList<InvocationExpressionSyntax> GetAllInvocationsInMethod
             (MethodDeclarationSyntax caller, MethodDeclarationSyntax callee, SyntaxTree tree)
         {
             // Where the results are stored.
-            IList<InvocationExpressionSyntax> results = new List<InvocationExpressionSyntax>();
+            var results = new List<InvocationExpressionSyntax>();
             
             // Create semantic model of the given tree.
             SemanticModel model = createSemanticModel(tree);

@@ -6,13 +6,13 @@ using System.Text;
 using BlackHen.Threading;
 using Roslyn.Services;
 using warnings.components.search;
+using warnings.components.ui;
 
 namespace warnings.components
 {
     /* All the components in GhostFactor shall be implementing this interface.*/
     public interface IFactorComponent
     {
-        [MethodImpl(MethodImplOptions.Synchronized)]
         void Enqueue(IWorkItem item);
         string GetName();
         int GetWorkQueueLength();
@@ -43,9 +43,10 @@ namespace warnings.components
 
         public static ISearchRealDocumentComponent searchRealDocumentComponent;
 
+        public static IRefactoringFormComponent refactoringFormComponent = RefactoringFormComponent.GetInstance(); 
+
         public static void StartAllComponents(ISolution solution)
         {
-
             // Start the history keeping component.
             historyComponent.Start();
             
@@ -63,6 +64,9 @@ namespace warnings.components
             // Initiate and start search real document component.
             searchRealDocumentComponent = SearchRealDocumentComponent.GetInstance(solution);
             searchRealDocumentComponent.Start();
+
+            // Start the refactoring form component, a new window will be displayed.
+            refactoringFormComponent.Start();
         }
     }
 }

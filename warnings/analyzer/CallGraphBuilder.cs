@@ -41,7 +41,7 @@ namespace warnings.analyzer
             {
                 foreach (var m2 in methodDeclarations)
                 {
-                    if (ASTUtil.isInvoking(m1, m2, tree)) 
+                    if (ASTUtil.IsInvoking(m1, m2, tree)) 
                         callGraph.addEdge(m1, m2);
                 }
             }

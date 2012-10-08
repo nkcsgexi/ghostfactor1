@@ -27,6 +27,9 @@ namespace warnings.refactoring
         /* Get the method declaration after extracting some part. */
         SyntaxNode GetInvokingMethod();
 
+        /* Whether a refactoring can be retrieved from the given information. */
+        bool CanGetRefactoring();
+
         /* Create instance of IManualRefactoring by the given informations. */
         IManualExtractMethodRefactoring GetRefactoring();
     }
@@ -35,11 +38,11 @@ namespace warnings.refactoring
     {
         private SyntaxNode parentMethodDeclarationBefore;
 
-        private SyntaxNode parentMethodDeclarationAfter;
-
         private SyntaxNode extractedMethodDeclaration;
 
         private SyntaxNode invocation;
+
+        private IManualExtractMethodRefactoring refactoring;
 
 
         public void SetMethodDeclarationBeforeExtracting(SyntaxNode parentMethodDeclarationBefore)
@@ -55,7 +58,6 @@ namespace warnings.refactoring
         public void SetInvocationExpression(SyntaxNode invocation)
         {
             this.invocation = invocation;
-            parentMethodDeclarationAfter = GetInvokingMethod();
         }
 
         public SyntaxNode GetInvokingMethod()
@@ -63,7 +65,7 @@ namespace warnings.refactoring
             return invocation.Ancestors().First(n => n.Kind == SyntaxKind.MethodDeclaration);
         }
 
-        public IManualExtractMethodRefactoring GetRefactoring()
+        public bool CanGetRefactoring()
         {
             var commonStatements = new List<SyntaxNode>();
             var commonExpressions = new List<SyntaxNode>();
@@ -73,18 +75,18 @@ namespace warnings.refactoring
 
             // Get the block of the extracted method declaration.
             var extractedMethodBlock = ASTUtil.GetBlockOfMethod(extractedMethodDeclaration);
-            
+
             // For each decendent node in the block of original method.
-            foreach(var node in parentBlockBefore.DescendantNodes())
+            foreach (var node in parentBlockBefore.DescendantNodes())
             {
                 // Care about statements.
-                if(node is StatementSyntax)
+                if (node is StatementSyntax)
                 {
                     // For each statement in the body of the extracted method
                     foreach (var statement in extractedMethodBlock.DescendantNodes().Where(n => n is StatementSyntax))
                     {
                         // If we some how think they are same, memorized that.
-                        if(AreStatementsEqual(statement, node))
+                        if (AreNodesEqual(statement, node))
                         {
                             commonStatements.Add(node);
                         }
@@ -92,13 +94,13 @@ namespace warnings.refactoring
                 }
 
                 // Care about expressions.
-                if(node is ExpressionSyntax)
+                if (node is ExpressionSyntax)
                 {
                     // For each expression in the block of the extracted method.
                     foreach (var expression in extractedMethodBlock.DescendantNodes().Where(n => n is ExpressionSyntax))
                     {
                         // If we somehow think they are same, memorize that.
-                        if(AreExpressionsEqual(expression, node))
+                        if (AreNodesEqual(expression, node))
                         {
                             commonExpressions.Add(node);
                         }
@@ -109,16 +111,17 @@ namespace warnings.refactoring
             var analyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
 
             // First-class customer: has statements in common.
-            if(commonStatements.Any())
+            if (commonStatements.Any())
             {
                 analyzer.SetSyntaxNodes(commonStatements);
 
                 // Get the longest group of statements that are neighbors.
                 var extractedStatements = analyzer.GetLongestNeighborredNodesGroup();
-                return ManualRefactoringFactory.CreateManualExtractMethodRefactoring
+                refactoring = ManualRefactoringFactory.CreateManualExtractMethodRefactoring
                     (extractedMethodDeclaration, invocation, extractedStatements);
-            }  
-            
+                return true;
+            }
+
             // Second class customer: has expressions in common.
             if (commonExpressions.Any())
             {
@@ -127,20 +130,28 @@ namespace warnings.refactoring
                 // Get the longest node among all the expressions; It is not possible to extract
                 // several expressions at the same time. 
                 var extractedExpression = analyzer.GetLongestNode();
-                return ManualRefactoringFactory.CreateManualExtractMethodRefactoring
+                refactoring = ManualRefactoringFactory.CreateManualExtractMethodRefactoring
                     (extractedMethodDeclaration, invocation, extractedExpression);
+                return true;
             }
-            return null;
+            return false;
         }
 
-        private bool AreStatementsEqual(SyntaxNode one, SyntaxNode two)
+        public IManualExtractMethodRefactoring GetRefactoring()
         {
-            return one.GetText().Replace(" ", "").Equals(two.GetText().Replace(" ", ""));
+            return refactoring;
         }
 
-        private bool AreExpressionsEqual(SyntaxNode one, SyntaxNode two)
+        private bool AreNodesEqual(SyntaxNode one, SyntaxNode two)
         {
-            return one.GetText().Replace(" ", "").Equals(two.GetText().Replace(" ", ""));
+            // Get the code without trivia. 
+            var codeOne = one.GetText().Replace(" ", "");
+            var codeTwo = two.GetText().Replace(" ", "");
+
+            // Get the scaled distance of two code, if the distance is less than 0.2,
+            // returns true.
+            var distance = StringUtil.GetScaledDistance(codeOne, codeTwo);
+            return distance <= 0.2;
         }
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using GitSharp;
 using GitSharp.Commands;
+using NLog;
 using warnings.refactoring.detection;
 using warnings.source.history;
 using warnings.util;
@@ -35,7 +36,11 @@ namespace GitRevisionAnalyzer
 
         // All file names encountered when visiting the change history.
         private readonly List<string> fileNames;
+
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (IGitProject));
+        
         private Repository repository;
+
 
 
         public GitProject(string gitHttp)
@@ -109,8 +114,9 @@ namespace GitRevisionAnalyzer
                         {
                             fileNames.Add(fileName);
                         }
-                    }
+                    }     
                 }
+                logger.Info("Finish saving " + i + " out of " + commits.Count() + " commits.");
             }
         }
 
@@ -143,7 +149,7 @@ namespace GitRevisionAnalyzer
 
         public void Clone()
         {
-            // If the source folder already exists, delete it.
+            // If the source folder already exists, Delete it.
             if(Directory.Exists(sourceFolder))
             {
                 FileUtil.DeleteDirectory(sourceFolder);    

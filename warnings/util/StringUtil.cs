@@ -39,11 +39,22 @@ namespace warnings.util
             return sb.ToString();
         }
 
+        private static Levenshtein distance = new Levenshtein();
+
         /* Get the distance between two strings. */
         public static int GetStringDistance(String a, String b)
         {
-            return new Levenshtein().LD(a, b);
+            return distance.LD(a, b);
         }
+
+        /* Get the distance concerning the original length of two strings, scale to [0..1]. */
+        public static double GetScaledDistance(string a, string b)
+        {
+            var distance = (double) GetStringDistance(a, b);
+            var length = (double) Math.Max(a.Length, b.Length);
+            return distance/length;
+        }
+
 
         /* Convert an array of bytes to a string. */
         public static String Bytes2String(byte[] bytes)

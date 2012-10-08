@@ -89,13 +89,14 @@ namespace warnings.components
         /* handler when time up event is triggered. */
         private void TimeUpHandler(object o, EventArgs args)
         {
-            logger.Info("Time up handler.");
-            lock(activeDocument)
+            // If no active document is not null, continue with saving.
+            if (activeDocument != null)
             {
-                logger.Info("enqueue");
-
-                // When timer is triggered, save current active file to the versions. 
-                queue.Add(new HistorySavingWorkItem(activeDocument));
+                lock (activeDocument)
+                {
+                    // When timer is triggered, save current active file to the versions. 
+                    queue.Add(new HistorySavingWorkItem(activeDocument));
+                }
             }
         }
 
@@ -138,7 +139,7 @@ namespace warnings.components
                     // logger.Info(Environment.NewLine + code);
 
                     // Add the new IDocuemnt to the code history.
-                    CodeHistory.getInstance().addRecord(solutionName, namespaceName, fileName, code);
+                    CodeHistory.GetInstance().addRecord(solutionName, namespaceName, fileName, code);
                     
                     // Add work item to search component.
                     AddSearchRefactoringWorkItem();
@@ -153,7 +154,7 @@ namespace warnings.components
             private void AddSearchRefactoringWorkItem()
             {
                 // Get the latest record of the file just editted.    
-                ICodeHistoryRecord record = CodeHistory.getInstance().GetLatestRecord(solutionName, namespaceName, fileName);
+                ICodeHistoryRecord record = CodeHistory.GetInstance().GetLatestRecord(solutionName, namespaceName, fileName);
 
                 if (GlobalConfigurations.IsSupported(RefactoringType.EXTRACT_METHOD))
                 {

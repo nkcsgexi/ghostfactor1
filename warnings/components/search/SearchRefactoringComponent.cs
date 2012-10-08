@@ -80,7 +80,7 @@ namespace warnings.components
                 IExternalRefactoringDetector detector = getRefactoringDetector();
 
                 // The detector shall always have latestRecord as the source after.
-                detector.SetSourceAfter(latestRecord.getSource());
+                detector.SetSourceAfter(latestRecord.GetSource());
 
                 // The current record shall be latestRecord initially.
                 ICodeHistoryRecord currentRecord = latestRecord;
@@ -96,7 +96,7 @@ namespace warnings.components
                     currentRecord = currentRecord.GetPreviousRecord();
 
                     // Set the source before
-                    detector.SetSourceBefore(currentRecord.getSource());
+                    detector.SetSourceBefore(currentRecord.GetSource());
 
                     // Detect manual refactoring.
                     if (detector.HasRefactoring())

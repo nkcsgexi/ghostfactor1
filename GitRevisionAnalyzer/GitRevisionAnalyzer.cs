@@ -26,8 +26,7 @@ namespace GitRevisionAnalyzer
 
         private GitRevisionAnalyzer()
         {
-            queue = new WorkQueue();
-            queue.ConcurrentLimit = 1; 
+            queue = new WorkQueue {ConcurrentLimit = 1};
             queue.AllWorkCompleted += AllWorkCompleted;
             finished = false;
         }
@@ -62,19 +61,25 @@ namespace GitRevisionAnalyzer
                     logger.Info("clone finished.");
 
                     // Add commits to the code history, and get all the heads of this project history.
-                    project.AddCommitsToCodeHistory(CodeHistory.getInstance());
-                    var records = project.GetHeadHitoryRecords(CodeHistory.getInstance());
-
+                    project.AddCommitsToCodeHistory(CodeHistory.GetInstance());
+                    var records = project.GetHeadHitoryRecords(CodeHistory.GetInstance());
+                    logger.Info("save history record finished. ");
 
                     // Create a detector, and start detecting from each head.
                     var detector = new RecordRefactoringDetector();
+
+                    // To track the progress.
+                    int totalRecordCount = records.Count();
+                    int finishedCount = 0;
                     foreach (var record in records)
                     {
                         if (!ExcludeFile(record.GetFile()))
                         {
-                            logger.Info("start refactoring detection for " + record.GetFile() + " in " + gitHttp);
+                            logger.Info("Start refactoring detection for " + record.GetFile() + " in " + gitHttp);
+                            logger.Info("Finished count: " + finishedCount +"; Total count: "+ totalRecordCount);
                             detector.DetectRefactorings(record);
                         }
+                        finishedCount ++;
                     }
                 }catch(Exception e)
                 {
@@ -92,7 +97,7 @@ namespace GitRevisionAnalyzer
         private void AddNewGitHttp(string gitHttp)
         {
             // Add job with the highest priority.
-            queue.Add(new RefactoringDetectionWorkItem(gitHttp){Priority = ThreadPriority.Highest});
+            queue.Add(new RefactoringDetectionWorkItem(gitHttp){Priority = ThreadPriority.Normal});
         }
 
         //git://github.com/nkcsgexi/ghostfactor1.git
