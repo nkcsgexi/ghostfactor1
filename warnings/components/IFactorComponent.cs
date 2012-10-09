@@ -38,10 +38,10 @@ namespace warnings.components
         public static readonly IFactorComponent conditionCheckingComponent = ConditionCheckingComponent.GetInstance();
 
         /* Component for keeping track of all the refactoring issues and posting them to the editor.*/
-        public static readonly IRefactoringCodeIssueComputersComponent RefactoringCodeIssueComputerComponent =
+        public static readonly ICodeIssueComputersRepository RefactoringCodeIssueComputerComponent =
             RefactoringCodeIssueComputersComponent.GetInstance();
 
-        public static ISearchRealDocumentComponent searchRealDocumentComponent;
+        public static IDocumentSearcher searchRealDocumentComponent;
 
         public static IRefactoringFormComponent refactoringFormComponent = RefactoringFormComponent.GetInstance(); 
 
@@ -58,12 +58,8 @@ namespace warnings.components
             // Start condition checker.
             conditionCheckingComponent.Start();
 
-            // Start refactoring issues.
-            RefactoringCodeIssueComputerComponent.Start();
-
             // Initiate and start search real document component.
             searchRealDocumentComponent = SearchRealDocumentComponent.GetInstance(solution);
-            searchRealDocumentComponent.Start();
 
             // Start the refactoring form component, a new window will be displayed.
             refactoringFormComponent.Start();

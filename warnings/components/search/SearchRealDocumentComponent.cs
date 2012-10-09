@@ -19,19 +19,15 @@ namespace warnings.components
     public interface IDocumentSearcher
     {
         IDocument SearchForDocument(IDocumentSearchCondition condition);
+        ISolution GetSolution();
     }
 
-    public interface ISearchRealDocumentComponent : IDocumentSearcher, IFactorComponent
-    {
-        
-    }
-
-    internal class SearchRealDocumentComponent : ISearchRealDocumentComponent
+    internal class SearchRealDocumentComponent : IDocumentSearcher, IFactorComponent
     {
         /* Singleton this component. */
-        private static ISearchRealDocumentComponent instance;
-        
-        public static ISearchRealDocumentComponent GetInstance(ISolution solution)
+        private static IDocumentSearcher instance;
+
+        public static IDocumentSearcher GetInstance(ISolution solution)
         {
             if(instance == null)
                 instance =  new SearchRealDocumentComponent(solution);
@@ -73,17 +69,20 @@ namespace warnings.components
         {
             // Get an item for searching document, by the given condition. 
             var item = new SearchDocumentWorkItem(solution, condition);
-            Enqueue(item);
+            queue.Add(item);
             
             // Waiting to the finishing of the workitem.
-            for (; item.State != WorkItemState.Completed; )
-            {
-                Thread.Sleep(100);
-            };
-
+            while (item.State != WorkItemState.Completed && item.State != WorkItemState.Failing) ;
+            
             // Return the result.
             return item.GetSearchedDocument();
         }
+
+        public ISolution GetSolution()
+        {
+            return solution;
+        }
+
 
         /* The workitem to be pushed to the search document work queue. */
         private class SearchDocumentWorkItem : WorkItem

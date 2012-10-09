@@ -31,6 +31,16 @@ namespace warnings.configuration
             return 2000;
         }
 
+        /* 
+         * Get the time interval between two queries of all the refactoring warnings in the solution, used by
+         * the refactoring form. 
+         */
+        public static int GetRefactoringWarningListUpdateInterval()
+        {
+            return 6000;
+        }
+
+
         /* Get the search depth for different refactoring types, how many snapshots to look back. */
         public static int GetSearchDepth(RefactoringType type)
         {

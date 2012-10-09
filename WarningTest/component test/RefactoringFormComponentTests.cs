@@ -23,7 +23,16 @@ namespace WarningTest.component_test
         [TestMethod]
         public void TestMethod1()
         {
-            Thread.Sleep(10000);
+            component.AddWarning(new string[] { "test0", "test1", "test2", "test3" });
+            Thread.Sleep(30000);
+        }
+
+        [TestMethod]
+        public void TestMethod2()
+        {
+            component.AddWarning(new string[] { "test0", "test1", "test2", "test3" });
+            component.RemoveWarning(new string[] { "test0", "test1", "test2", "test3" });
+            Thread.Sleep(3000);
         }
     }
 }

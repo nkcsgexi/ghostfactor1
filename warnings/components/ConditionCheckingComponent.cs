@@ -127,8 +127,7 @@ namespace warnings.components
                 }
 
                 // Add issue computers to the issue component.
-                GhostFactorComponents.RefactoringCodeIssueComputerComponent.Enqueue(new AddCodeIssueComputersWorkItem(computers,
-                    GhostFactorComponents.RefactoringCodeIssueComputerComponent));
+                GhostFactorComponents.RefactoringCodeIssueComputerComponent.AddCodeIssueComputers(computers);
             }catch(Exception e)
             {
                 // All exception shall go to the fatal log.

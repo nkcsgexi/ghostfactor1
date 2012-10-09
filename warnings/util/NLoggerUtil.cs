@@ -11,7 +11,7 @@ namespace warnings.util
     public class NLoggerUtil
     {
         /* The path to the desktop. */
-        private static string desktopPath = "";
+        private static string desktopPath = @"C:\Users\Xi Ge\Desktop\";
 
         private static bool toDesktop = true;
 
