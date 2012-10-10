@@ -10,6 +10,7 @@ using warnings.util;
 
 namespace warnings.components.ui
 {
+    /* The interface that describes the warnings shown in the list of refactoring warnings. */
     public interface IRefactoringWarningMessage : IHasRefactoringType
     {
         string File { get; }

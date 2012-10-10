@@ -1,65 +1,66 @@
 ﻿<RecentFiles>
   <RecentFiles>
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:TryToUpdate.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:DataStructureUtil.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:RoslynUtilTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:CallGraphTest.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:resources/f:ResourcePool.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:component test/f:ComponentTimerTests.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:RoslynUtil/f:RoslynUtil.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:component test/f:ResourcesTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:component test/f:WorkqueueTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:RoslynRefactoringUtilTest.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:RoslynUtil/f:ServiceArchives.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:ExtractMethodDetector.cs" caret="10420" fromTop="156" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:NLoggerUtil.cs" caret="320" fromTop="7" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchExtractMethodComponent.cs" caret="1740" fromTop="14" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/f:ConditionCheckingFactory.cs" caret="641" fromTop="21" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringQuickFix.cs" caret="1685" fromTop="37" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.Designer.cs" caret="3129" fromTop="25" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ConditionCheckingComponent.cs" caret="4855" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ComponentTimer.cs" caret="1285" fromTop="42" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ConditionCheckingComponent.cs" caret="4877" fromTop="39" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:HistorySavingComponent.cs" caret="1849" fromTop="25" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:configuration/f:GlobalConfigurations.cs" caret="1216" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:configuration/f:GlobalConfigurations.cs" caret="1227" fromTop="26" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchRealDocumentComponent.cs" caret="2511" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="3297" fromTop="26" />
-    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1475" fromTop="7" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:IFactorComponent.cs" caret="2154" fromTop="45" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3406" fromTop="99" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="2125" fromTop="3" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:Converters.cs" caret="2453" fromTop="22" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringWarningMessage.cs" caret="1599" fromTop="27" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.Designer.cs" caret="5528" fromTop="108" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringQuickFix.cs" caret="1685" fromTop="31" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1405" fromTop="25" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:resources/f:ResourcePool.cs" caret="775" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:IFactorComponent.cs" caret="2232" fromTop="20" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:MethodInvocationAnalyzer.cs" caret="4756" fromTop="92" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:Cache/f:Cachables.cs" caret="372" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/d:retriever/f:MethodInvocationsRetriever.cs" caret="677" fromTop="12" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:Cache/f:Cache.cs" caret="1336" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:NLoggerUtil.cs" caret="1451" fromTop="45" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ChangeMethodSignature/f:UnupdatedMethodSignatureChecker.cs" caret="12544" fromTop="32" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ChangeMethodSignature/f:ChangeMethodSignatureConditionsList.cs" caret="985" fromTop="29" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/f:ConditionInterfaces.cs" caret="396" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:refactoring/d:manual/f:IManualRefactoring.cs" caret="380" fromTop="4" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ReturnTypeChecker.cs" caret="1015" fromTop="0" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/d:ExtractMethod/f:ParametersChecker.cs" caret="15413" fromTop="38" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="5623" fromTop="30" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/f:ConditionCheckingFactory.cs" caret="641" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="986" fromTop="3" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ComponentTimer.cs" caret="1285" fromTop="9" />
+    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1305" fromTop="15" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="11787" fromTop="48" />
   </RecentFiles>
   <RecentEdits>
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="1042" fromTop="20" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="2903" fromTop="26" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="7088" fromTop="28" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="6678" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="5827" fromTop="24" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="5289" fromTop="16" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="2824" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3509" fromTop="30" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3185" fromTop="23" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="5591" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="1651" fromTop="28" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="406" fromTop="16" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="7423" fromTop="36" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="6310" fromTop="17" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="2366" fromTop="7" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="371" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="3474" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="2366" fromTop="28" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="821" fromTop="10" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="371" fromTop="13" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:IFactorComponent.cs" caret="2129" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="624" fromTop="12" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="1801" fromTop="35" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="1787" fromTop="35" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="2495" fromTop="15" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="2694" fromTop="21" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="2997" fromTop="24" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="936" fromTop="11" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="1466" fromTop="23" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="1738" fromTop="25" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="4139" fromTop="22" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="2337" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="2337" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="11415" fromTop="9" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="11625" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="9876" fromTop="4" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="11004" fromTop="34" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="9876" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="5392" fromTop="23" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="1044" fromTop="20" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="4139" fromTop="28" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="588" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="12067" fromTop="12" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="11670" fromTop="3" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="14026" fromTop="38" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3525" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="1983" fromTop="31" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="1967" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="1716" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="3186" fromTop="23" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="3363" fromTop="29" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="2738" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="464" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="3484" fromTop="15" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="3737" fromTop="23" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="3930" fromTop="28" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="797" fromTop="7" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3086" fromTop="32" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="2259" fromTop="26" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="11861" fromTop="14" />
   </RecentEdits>
 </RecentFiles>

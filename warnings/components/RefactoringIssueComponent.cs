@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using BlackHen.Threading;
 using NLog;
 using Roslyn.Compilers.CSharp;
@@ -15,16 +16,16 @@ using warnings.util;
 
 namespace warnings.components
 {
-    public delegate void CodeIssueComputersChanged();
-    
+    /* Used for any listens to get the warning messages of the entire solution. */
+    public delegate void GlobalRefactoringWarningsReady(IEnumerable<IRefactoringWarningMessage> messages, bool isAdded);
+
     /* A repository for issue computers to be queried, added, and deleted. */
     public interface ICodeIssueComputersRepository
     {
-        event CodeIssueComputersChanged changeEvent;    
+        event GlobalRefactoringWarningsReady globalWarningsReady;
         void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
         void RemoveCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
         IEnumerable<CodeIssue> GetCodeIssues(IDocument document, SyntaxNode node);
-        IEnumerable<IRefactoringWarningMessage> GetRefactoringWarningMessages(ISolution solution);
     }
   
     internal class RefactoringCodeIssueComputersComponent : IFactorComponent, ICodeIssueComputersRepository
@@ -40,6 +41,23 @@ namespace warnings.components
 
         /* Saving all of the code issue computers. */
         private readonly List<ICodeIssueComputer> codeIssueComputers;
+
+        /* Used for any listener to the event of code issue computers added or removed. */
+        private delegate void CodeIssueComputersChanged(ICodeIssueComputersChangedArg arg);
+        
+        /* Used as the parameter for any listeners to the code issue computers changed. */
+        private interface ICodeIssueComputersChangedArg
+        {
+            bool IsAdding();
+            IEnumerable<ICodeIssueComputer> GetChangedCodeIssueComputers();
+        }
+
+
+        /* Event when the code issues are changed. */
+        private event CodeIssueComputersChanged changeEvent;
+
+        /* Event when a new global refactoring warnings are ready. */
+        public event GlobalRefactoringWarningsReady globalWarningsReady;
 
         /* A single thread workqueue. */
         private WorkQueue queue;
@@ -59,6 +77,18 @@ namespace warnings.components
             // Add a null computer to avoid adding more null computers.
             codeIssueComputers.Add(new NullCodeIssueComputer());
             logger = NLoggerUtil.GetNLogger(typeof (RefactoringCodeIssueComputersComponent));
+
+            changeEvent += OnCodeIssueComputersChanged;
+        }
+
+        /* When code issue computers are changed, this method will be called. */
+        private void OnCodeIssueComputersChanged(ICodeIssueComputersChangedArg codeIssueComputersChangedArg)
+        {
+            var solution = GhostFactorComponents.searchRealDocumentComponent.GetSolution();
+
+            // Create a work item for this task.
+            var item = new GetSolutionRefactoringWarningsWorkItem(solution, codeIssueComputersChangedArg, globalWarningsReady);
+            queue.Add(item);
         }
 
         private void OnItemFailed(object sender, WorkItemEventArgs workItemEventArgs)
@@ -85,9 +115,8 @@ namespace warnings.components
         {
         }
 
-        public event CodeIssueComputersChanged changeEvent;
 
-        /* Add a list of code issue computers to the current list. */     
+        /* Add a list of code issue computers to the current list. */
         public void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
             // Create a code issue adding work item and push it to the work queue.
@@ -105,24 +134,29 @@ namespace warnings.components
         {
             // Create a work item for this task.
             var item = new GetDocumentNodeCodeIssueWorkItem(document, node, codeIssueComputers);
-            queue.Add(item);
-            logger.Info("Computers count: "+codeIssueComputers.Count);
-            
-            // Busy waiting for the completion of this work item.
-            while (item.IsResultReady() == false);
-            logger.Info("Finish waiting.");
+            new WorkItemSynchronizedExecutor(item, queue).Execute();
             return item.GetCodeIssues();
         }
 
-        public IEnumerable<IRefactoringWarningMessage> GetRefactoringWarningMessages(ISolution solution)
+        /* 
+         * An abstract implementation of ICodeIssueComputersChangedArg that leaves only whether adding or removint
+         * to be implemented.
+         */
+        internal abstract class CodeIssueComputersChangedArg : ICodeIssueComputersChangedArg
         {
-            // Create a work item for this task.
-            var item = new GetSolutionRefactoringWarningsWorkItem(solution, codeIssueComputers);
-            queue.Add(item);
+            private readonly IEnumerable<ICodeIssueComputer> computers;
 
-            // Busy waiting for the completion of this work item.
-            while (item.IsResultReady() == false);
-            return item.GetRefactoringWarningMessages();
+            protected CodeIssueComputersChangedArg(IEnumerable<ICodeIssueComputer> computers)
+            {
+                this.computers = computers;
+            }
+
+            public abstract bool IsAdding();
+
+            public IEnumerable<ICodeIssueComputer> GetChangedCodeIssueComputers()
+            {
+                return computers;
+            }
         }
 
         /* Work item to add new issue computers to the repository. */
@@ -144,14 +178,32 @@ namespace warnings.components
 
             public override void Perform()
             {
+                var addedComputers = new List<ICodeIssueComputer>();
+
                 // For every computer in the new computers list. 
                 foreach (var computer in newComputers)
                 {
                     // If a computer is not already in the list, add it.
                     if (!currentComputers.Contains(computer))
+                    {
                         currentComputers.Add(computer);
+                        addedComputers.Add(computer);
+                    }
                 }
-                changeEvent();
+                changeEvent(new CodeIssueComputersAddedArg(addedComputers.AsEnumerable()));
+            }
+
+            /* Used as the argument to inform listeners that there are added computers. */
+            private class CodeIssueComputersAddedArg : CodeIssueComputersChangedArg
+            {
+                public CodeIssueComputersAddedArg(IEnumerable<ICodeIssueComputer> computers) : base(computers)
+                {
+                }
+
+                public override bool IsAdding()
+                {
+                    return true;
+                }
             }
         }
 
@@ -176,21 +228,26 @@ namespace warnings.components
             {
                 foreach (ICodeIssueComputer computer in toRemoveComputers)
                 {
-                    currentComputers.Remove(currentComputers.First(c => c.Equals(computer)));
+                    currentComputers.Remove(computer);
                 }
-                changeEvent();
+                changeEvent(new CodeIssueComputersRemovedArg(toRemoveComputers));
+            }
+
+            private class CodeIssueComputersRemovedArg : CodeIssueComputersChangedArg
+            {
+                internal CodeIssueComputersRemovedArg(IEnumerable<ICodeIssueComputer> computers) : base(computers)
+                {
+                }
+
+                public override bool IsAdding()
+                {
+                    return false;
+                }
             }
         }
 
-        
-        private abstract class HasResultWorkItem : WorkItem
-        {
-            public abstract bool IsResultReady();
-        }
-
-
         /* Work item for getting code issues in a given syntax node. */
-        private class GetDocumentNodeCodeIssueWorkItem : HasResultWorkItem
+        private class GetDocumentNodeCodeIssueWorkItem : WorkItem
         {
             private readonly IDocument document;
             private readonly SyntaxNode node;
@@ -216,7 +273,7 @@ namespace warnings.components
                 this.IsReady = true;
             }
 
-            public override bool IsResultReady()
+            public bool IsResultReady()
             {
                 return IsReady;
             }
@@ -229,20 +286,23 @@ namespace warnings.components
 
      
         /* Work item for getting all the refactoring warnings in a given solution and a set of computers. */
-        private class GetSolutionRefactoringWarningsWorkItem : HasResultWorkItem
+        private class GetSolutionRefactoringWarningsWorkItem : WorkItem
         {
             private readonly IEnumerable<ICodeIssueComputer> computers;
             private readonly ISolution solution;
             private readonly Logger logger;
-            private IEnumerable<IRefactoringWarningMessage> results;
-            private bool isReady;
+            private readonly GlobalRefactoringWarningsReady warningsReady;
+            private readonly bool isAdding;
 
-            internal GetSolutionRefactoringWarningsWorkItem(ISolution solution, IEnumerable<ICodeIssueComputer> computers)
+
+            internal GetSolutionRefactoringWarningsWorkItem(ISolution solution, ICodeIssueComputersChangedArg changedArg, 
+                GlobalRefactoringWarningsReady warningsReady)
             {
                 this.solution = solution;
-                this.computers = computers;
+                this.computers = changedArg.GetChangedCodeIssueComputers();
+                this.isAdding = changedArg.IsAdding();
                 this.logger = NLoggerUtil.GetNLogger(typeof (GetSolutionRefactoringWarningsWorkItem));
-                this.isReady = false;
+                this.warningsReady = warningsReady;
             }
 
             public override void Perform()
@@ -276,20 +336,10 @@ namespace warnings.components
                         }
                     }
                 }
-                results = messagesList.AsEnumerable();
-                this.isReady = true;
-            }
-
-            public override bool IsResultReady()
-            {
-                return isReady;
-            }
-
-            public IEnumerable<IRefactoringWarningMessage> GetRefactoringWarningMessages()
-            {
-                return results;
+               
+                // Inform all the listeners that new messages are available.
+                warningsReady(messagesList.AsEnumerable(), isAdding);
             }
         }
-
     }
 }

@@ -169,5 +169,9 @@ namespace warnings.ui
             }
         }
 
+        public void RemoveRefactoringWarnings(IEnumerable<IRefactoringWarningMessage> messages)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

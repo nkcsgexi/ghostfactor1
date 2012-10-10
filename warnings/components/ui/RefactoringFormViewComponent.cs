@@ -16,10 +16,10 @@ using warnings.util;
 namespace warnings.components.ui
 {
     /* delegate for update a control component. */
-    public delegate void ControlUpdate(Object o);
+    public delegate void ControlUpdate();
 
     /*
-     * This the view in the MVC pattern. It registers to the event of code issue changes. When code issues change, this component
+     * This the view part in the MVC pattern. It registers to the event of code issue changes. When code issues change, this component
      * will ask the latest issues and update the form.
      */
     internal class RefactoringFormViewComponent : IFactorComponent
@@ -46,13 +46,14 @@ namespace warnings.components.ui
             form = new RefactoringWariningsForm();
             longRunningQueue = new WorkQueue() {ConcurrentLimit = 1};
             shortTaskQueue = new WorkQueue(){ConcurrentLimit = 1};
-            GhostFactorComponents.RefactoringCodeIssueComputerComponent.changeEvent += RefactoringIssuesChanged;
+            GhostFactorComponents.RefactoringCodeIssueComputerComponent.globalWarningsReady += OnGlobalWarningsReady;
          }
 
-        private void RefactoringIssuesChanged()
+        private void OnGlobalWarningsReady(IEnumerable<IRefactoringWarningMessage> messages, bool isAdded)
         {
-            shortTaskQueue.Add(new UpdateWarningWorkItem(form));
+            shortTaskQueue.Add(new UpdateWarningWorkItem(form, messages, isAdded));
         }
+
 
         public void Enqueue(IWorkItem item)
         {
@@ -81,28 +82,36 @@ namespace warnings.components.ui
         {
             private readonly RefactoringWariningsForm form;
             private readonly Logger logger;
-            
-            internal UpdateWarningWorkItem(RefactoringWariningsForm form)
+            private readonly IEnumerable<IRefactoringWarningMessage> messages;
+            private readonly bool isAdded;
+
+            internal UpdateWarningWorkItem(RefactoringWariningsForm form, 
+                IEnumerable<IRefactoringWarningMessage> messages, bool isAdded)
             {
                 this.form = form;
+                this.messages = messages;
+                this.isAdded = isAdded;
                 this.logger = NLoggerUtil.GetNLogger(typeof (UpdateWarningWorkItem));
             }
 
             public override void Perform()
             {
-                // Get the messages in the entire solution. 
-                var solution = GhostFactorComponents.searchRealDocumentComponent.GetSolution();
-                var messages = GhostFactorComponents.RefactoringCodeIssueComputerComponent.
-                    GetRefactoringWarningMessages(solution);
-
                 // Add messages to the form. 
-                form.Invoke(new ControlUpdate(AddRefactoringWarnings), messages);
+                form.Invoke(new ControlUpdate(UpdateRefactoringWarnings));
             }
 
-            private void AddRefactoringWarnings(object messages)
+            private void UpdateRefactoringWarnings()
             {
-                logger.Info("Add warnings to the warning form.");
-                form.AddRefactoringWarnings((IEnumerable<IRefactoringWarningMessage>)messages);    
+                if (isAdded)
+                {
+                    logger.Info("Adding messages to the form.");
+                    form.AddRefactoringWarnings(messages);
+                }
+                else
+                {
+                    logger.Info("Removing messages from the form.");
+                    form.RemoveRefactoringWarnings(messages);
+                }
             }
         }
 

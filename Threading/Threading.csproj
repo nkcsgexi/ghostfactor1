@@ -110,6 +110,7 @@
     <Compile Include="ResourceExceptionEvent.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="SynchronizedWorkItem.cs" />
     <Compile Include="WorkItem.cs">
       <SubType>Code</SubType>
     </Compile>
