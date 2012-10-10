@@ -34,8 +34,8 @@ namespace warnings.retriever
         }
 
         /* 
-         * Get tuples of node and type. Nodes shall be identifier names. 
-         * ATTENTION: the declarations cannot get type info, only identifiers(references) can.
+         * Get tuples of node and RefactoringType. Nodes shall be identifier names. 
+         * ATTENTION: the declarations cannot get RefactoringType info, only identifiers(references) can.
          */
         public IEnumerable<Tuple<SyntaxNode, ITypeSymbol>> GetTypableIdentifierTypeTuples()
         {
@@ -45,10 +45,10 @@ namespace warnings.retriever
             var identifiers = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName);
             foreach (SyntaxNode id in identifiers)
             {
-                // Query type information of an identifier.
+                // Query RefactoringType information of an identifier.
                 var info = model.GetTypeInfo(id);
 
-                // If type is retrieved, add to the result.
+                // If RefactoringType is retrieved, add to the result.
                 if (info.Type != null)
                     typedIdentifiers.Add(Tuple.Create(id, info.Type));
             }
@@ -56,14 +56,14 @@ namespace warnings.retriever
         }
 
         /* 
-         * Get the member access in the document, returning a tuple of member access node and the type it is accessing.
+         * Get the member access in the document, returning a tuple of member access node and the RefactoringType it is accessing.
          */
         public IEnumerable<Tuple<SyntaxNode, ITypeSymbol>> GetMemberAccessAndAccessedTypes()
         {
             // For all the classes whose memeber is accessed and their types. 
             var typedAccesses = new List<Tuple<SyntaxNode, ITypeSymbol>>();
 
-            // Get all nodes whose type is member access.
+            // Get all nodes whose RefactoringType is member access.
             var accesses = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.MemberAccessExpression);
 
             // For all the access in the list.
@@ -74,8 +74,8 @@ namespace warnings.retriever
                 analyzer.SetMemberAccess(access);
                 var left = analyzer.GetLeftPart();
               
-                // Query about the type of the left side of the access, if it is not null, add to the results.
-                // ATTENTION: mode.GetTypeInfo() cannot get primitive type such as int.
+                // Query about the RefactoringType of the left side of the access, if it is not null, add to the results.
+                // ATTENTION: mode.GetTypeInfo() cannot get primitive RefactoringType such as int.
                 var infor = model.GetTypeInfo(left);
                 if(infor.Type != null)
                     typedAccesses.Add(Tuple.Create(access, infor.Type));
@@ -83,7 +83,7 @@ namespace warnings.retriever
             return typedAccesses.AsEnumerable();
         }
 
-        /* Given a node of the left side of a member access, e.g. A for A.B, as an input, return the type symbol. */
+        /* Given a node of the left side of a member access, e.g. A for A.B, as an input, return the RefactoringType symbol. */
         public ITypeSymbol GetMemberAccessType(SyntaxNode node)
         {
             return model.GetTypeInfo(node).Type;

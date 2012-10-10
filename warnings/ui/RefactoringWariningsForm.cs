@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using NLog;
+using warnings.components.ui;
 using warnings.util;
 
 namespace warnings.ui
@@ -67,10 +68,38 @@ namespace warnings.ui
             {
                 listView1.Items.Add(item);
                 listView1.Invalidate();
+                logger.Info("Item added.");
                 return true;
             }
             return false;
         }
+
+
+        public void AddRefactoringWarnings(IEnumerable<IRefactoringWarningMessage> messages)
+        {
+            foreach (var message in messages)
+            {
+                logger.Info(message.ToString());
+                AddRefactoringWarning(message);
+            }
+        }
+
+        public bool AddRefactoringWarning(IRefactoringWarningMessage message)
+        {
+            var messageElements = new List<string>();
+            messageElements.Add(message.File);
+            messageElements.Add(message.Line.ToString());
+
+            // Convert the refactoring type to the name that describes it.
+            var converter = new RefactoringType2StringConverter();
+            var typeName = (string)converter.Convert(message.RefactoringType, null, null, null);
+
+            messageElements.Add(typeName);
+            messageElements.Add(message.Description);
+            return AddRefactoringWarning(messageElements);
+        }
+
+
 
         /* If two list view item contains exactly same information. */
         private bool AreListViewItemsSame(ListViewItem item1, ListViewItem item2)
@@ -139,5 +168,6 @@ namespace warnings.ui
                 
             }
         }
+
     }
 }

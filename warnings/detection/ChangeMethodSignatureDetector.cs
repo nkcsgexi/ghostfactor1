@@ -166,7 +166,7 @@ namespace warnings.refactoring.detection
                 // 's mapper shall be <0,1><1,0>>
                 var parametersMap = new List<Tuple<int, int>>();
 
-                // Combine the type of parameters in before and after method declaration as a string.
+                // Combine the RefactoringType of parameters in before and after method declaration as a string.
                 var typeStringBefore = GetParameterTypeCombined(beforeMethod);
                 var typeStringAfter = GetParameterTypeCombined(afterMethod);
 
@@ -260,7 +260,7 @@ namespace warnings.refactoring.detection
 
 
             /* 
-             * Combine the type of parameters in a method declaration as a string, deleting all the white 
+             * Combine the RefactoringType of parameters in a method declaration as a string, deleting all the white 
              * space among the combined string.
              */
             private string GetParameterTypeCombined(SyntaxNode method)
@@ -271,7 +271,7 @@ namespace warnings.refactoring.detection
                 _methodDeclarationAnalyzer.SetMethodDeclaration(method);
                 var paras = _methodDeclarationAnalyzer.GetParameters();
 
-                // For each parameter, get its type and combined to the string builder
+                // For each parameter, get its RefactoringType and combined to the string builder
                 foreach (SyntaxNode para in paras)
                 {
                     paraAnalzyer.SetParameter(para);

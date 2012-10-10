@@ -37,11 +37,17 @@ namespace warnings
         /* Code runs only once when getIssues is called. */
         private void initialize(IDocument document)
         {
-            if (!initialized)
-            {              
-                // Start all the components.
-                GhostFactorComponents.StartAllComponents(document.Project.Solution);
-                initialized = true;
+            try
+            {
+                if (initialized == false)
+                {
+                    // Start all the components.
+                    GhostFactorComponents.StartAllComponents(document.Project.Solution);
+                    initialized = true;
+                }
+            }catch(Exception e)
+            {
+                logger.Fatal(e);
             }
         }
 

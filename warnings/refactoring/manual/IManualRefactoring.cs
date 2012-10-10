@@ -77,7 +77,7 @@ namespace warnings.refactoring
         /* Expression to extract in the original code. */
         public SyntaxNode ExtractedExpression { private set; get; }
 
-        public RefactoringType type
+        public RefactoringType RefactoringType
         {
             get { return RefactoringType.EXTRACT_METHOD; }
         }
@@ -160,7 +160,7 @@ namespace warnings.refactoring
             this.newName = newName;
         }
 
-        public RefactoringType type
+        public RefactoringType RefactoringType
         {
             get { return RefactoringType.RENAME; }
         }
@@ -187,7 +187,7 @@ namespace warnings.refactoring
             this.ParametersMap = ParametersMap;
         }
 
-        public RefactoringType type
+        public RefactoringType RefactoringType
         {
             get { return RefactoringType.CHANGE_METHOD_SIGNATURE;}
         }

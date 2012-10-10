@@ -12,7 +12,7 @@ namespace warnings.conditions
     /* All the condition checkers for extract method should implement this. */
     abstract class ExtractMethodConditionChecker : IRefactoringConditionChecker
     {
-        public RefactoringType type
+        public RefactoringType RefactoringType
         {
             get { return RefactoringType.EXTRACT_METHOD; }
         }
@@ -43,7 +43,7 @@ namespace warnings.conditions
             return original.Where(s => !s.Name.Equals("this"));
         }
 
-        /* Get the type name tuples by a given symbol list. */
+        /* Get the RefactoringType name tuples by a given symbol list. */
         protected IEnumerable<Tuple<string, string>> GetTypeNameTuples(IEnumerable<ISymbol> symbols)
         {
             var typeNameTuples = new List<Tuple<string, string>>();
@@ -87,7 +87,7 @@ namespace warnings.conditions
             return checkers.AsEnumerable();
         }
 
-        public override RefactoringType type
+        public override RefactoringType RefactoringType
         {
             get { return RefactoringType.EXTRACT_METHOD; }
         }

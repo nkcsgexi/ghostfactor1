@@ -63,7 +63,7 @@ namespace warnings.ui
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
-            this.listView1.DoubleClick += new EventHandler(this.listView1_DoubleClicked);
+            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClicked);
             // 
             // File
             // 
@@ -92,7 +92,7 @@ namespace warnings.ui
             // 
             this.imageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList.ImageStream")));
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList.Images.SetKeyName(0, "Status-dialog-warning-icon.png");
+            this.imageList.Images.SetKeyName(0, "warning-sign.jpg");
             // 
             // button1
             // 

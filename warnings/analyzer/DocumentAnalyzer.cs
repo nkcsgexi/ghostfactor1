@@ -37,7 +37,7 @@ namespace warnings.analyzer
         ISymbol GetFirstMethod();
         String DumpSyntaxTree();
 
-        /* Whether this document contains the definition of the type of the given qualified name.*/
+        /* Whether this document contains the definition of the RefactoringType of the given qualified name.*/
         bool ContainsQualifiedName(string qualifiedName);
     }
 

@@ -43,7 +43,7 @@ namespace warnings.components
 
         public static IDocumentSearcher searchRealDocumentComponent;
 
-        public static IRefactoringFormComponent refactoringFormComponent = RefactoringFormComponent.GetInstance(); 
+        public static IFactorComponent refactoringFormComponent = RefactoringFormViewComponent.GetInstance(); 
 
         public static void StartAllComponents(ISolution solution)
         {

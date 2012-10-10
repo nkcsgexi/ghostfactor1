@@ -10,7 +10,7 @@ namespace warnings.conditions
     /* all the condition checkers for rename refactoring shall derive from this. */
     abstract class RenameConditionChecker : IRefactoringConditionChecker
     {
-        public RefactoringType type
+        public RefactoringType RefactoringType
         {
             get { return RefactoringType.RENAME; }
         }
@@ -42,7 +42,7 @@ namespace warnings.conditions
             return list.AsEnumerable();
         }
 
-        public override RefactoringType type
+        public override RefactoringType RefactoringType
         {
             get { return RefactoringType.RENAME; }
         }

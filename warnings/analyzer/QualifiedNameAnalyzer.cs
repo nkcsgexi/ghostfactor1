@@ -27,7 +27,7 @@ namespace warnings.analyzer
         }
 
         /*
-         * For a given node, get the qualified name of the type that contains in this node. For example,
+         * For a given node, get the qualified name of the RefactoringType that contains in this node. For example,
          * if given this method as input, the output shall be warnings.analyzer.QualifiedNameAnalyzer.
          */
         public string GetOutsideTypeQualifiedName()

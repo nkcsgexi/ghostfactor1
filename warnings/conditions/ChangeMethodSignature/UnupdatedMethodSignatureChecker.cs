@@ -16,6 +16,7 @@ using warnings.refactoring;
 using warnings.resources;
 using warnings.retriever;
 using warnings.util;
+using warnings.util.Cache;
 
 namespace warnings.conditions
 {
@@ -33,7 +34,7 @@ namespace warnings.conditions
             return instance;
         }
 
-        public RefactoringType type
+        public RefactoringType RefactoringType
         {
             get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
         }
@@ -49,6 +50,7 @@ namespace warnings.conditions
         /* The computer for calculating the unchanged method invocations. */
         private class UnchangedMethodInvocationComputer : ICodeIssueComputer
         {
+            private readonly Cache<DocumentId, SyntaxNodesCachable> InvocationsCache; 
             private readonly SyntaxNode declaration;
             private readonly IEnumerable<Tuple<int, int>> mappings;
 
@@ -56,22 +58,17 @@ namespace warnings.conditions
             {
                 this.declaration = declaration;
                 this.mappings = mappings;
+                this.InvocationsCache = new Cache<DocumentId, SyntaxNodesCachable>();
             }
 
             public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
             {
                 if(node.Kind == SyntaxKind.InvocationExpression)
                 {
-                    // Retrievers for method invocations.
-                    var retriever = RetrieverFactory.GetMethodInvocationRetriever();
-                    retriever.SetDocument(document);
-
-                    // Get all the invocations in the current solution.
-                    retriever.SetMethodDeclaration(declaration);
-                    var invocations = retriever.GetInvocations();
+                    var invocations = GetInvocations(document);
 
                     // If the given node is in the invocations, return a corresponding code issue.
-                    if (invocations.Any(n => n.Span.Equals(node.Span)))
+                    if (invocations.Any(n => HasSameMethodName(n, node)))
                     {
                         yield return new CodeIssue(CodeIssue.Severity.Error, node.Span,
                             "Method invocation needs update.", 
@@ -83,6 +80,41 @@ namespace warnings.conditions
                 }
             }
 
+            private bool HasSameMethodName(SyntaxNode invocation1, SyntaxNode invocation2)
+            {
+                var analyzer = AnalyzerFactory.GetMethodInvocationAnalyzer();
+                analyzer.SetMethodInvocation(invocation1);
+                var name1 = analyzer.GetMethodName().GetText();
+                analyzer.SetMethodInvocation(invocation2);
+                var name2 = analyzer.GetMethodName().GetText();
+                return name1.Equals(name2);
+            }
+
+            /* Get all the invocations in a document. */
+            private IEnumerable<SyntaxNode> GetInvocations(IDocument document)
+            {
+                // See if the result is in the cache.
+                if(InvocationsCache.ContainsKey(document.Id))
+                {
+                    return InvocationsCache.GetValue(document.Id).GetNodes();
+                }
+                var invocations = GetInvocationsByHardForce(document);
+                InvocationsCache.Add(document.Id, new SyntaxNodesCachable(invocations));
+                return invocations;
+            }
+
+            /* Get all the invocations in a document by brutal force. */
+            private IEnumerable<SyntaxNode> GetInvocationsByHardForce(IDocument document)
+            {
+                // Retrievers for method invocations.
+                var retriever = RetrieverFactory.GetMethodInvocationRetriever();
+                retriever.SetDocument(document);
+
+                // Get all the invocations in the current solution.
+                retriever.SetMethodDeclaration(declaration);
+                return retriever.GetInvocations();
+            }
+
             public bool Equals(ICodeIssueComputer o)
             {
                 var other = o as UnchangedMethodInvocationComputer;
@@ -92,6 +124,11 @@ namespace warnings.conditions
                     return comparator.Compare(declaration, other.declaration) == 0;
                 }
                 return false;
+            }
+
+            public RefactoringType RefactoringType
+            {
+                get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
             }
         }
 
@@ -243,8 +280,6 @@ namespace warnings.conditions
                     }
                     return visitedInvocation;
                 }
-
-
             }
         }
     }

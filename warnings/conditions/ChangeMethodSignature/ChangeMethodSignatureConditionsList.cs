@@ -17,7 +17,7 @@ namespace warnings.conditions
             return list;
         }
     
-        public RefactoringType type
+        public RefactoringType RefactoringType
         {
             get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
         }

@@ -37,7 +37,7 @@ namespace warnings.analyzer
 
         public SyntaxNode GetParameterType()
         {
-            // Get the leftmost limiter of the type.
+            // Get the leftmost limiter of the RefactoringType.
             int leftmost;
             var modifiers = GetModifiers();
             if(modifiers.Any())
@@ -52,10 +52,10 @@ namespace warnings.analyzer
                 leftmost = parameter.Span.Start;
             }
 
-            // Right limiter of the parameter type shall be the identifer's start point.
+            // Right limiter of the parameter RefactoringType shall be the identifer's start point.
             int rightmost = GetIdentifier().Span.Start;
 
-            // Get all the nodes in bwtween and the longest one is the parameter type.
+            // Get all the nodes in bwtween and the longest one is the parameter RefactoringType.
             var nodes = parameter.DescendantNodes().Where
                 (n => n.Span.Start >= leftmost && n.Span.End <= rightmost);
             return nodes.OrderBy(n => n.Span.Length).Last();

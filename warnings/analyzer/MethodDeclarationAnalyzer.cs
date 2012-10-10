@@ -77,11 +77,11 @@ namespace warnings.analyzer
         /* Get fully qualified name of this method. */
         public string GetQualifiedName()
         {
-            // Get the qualified name of the type containing this method.
+            // Get the qualified name of the RefactoringType containing this method.
             var qualifiedAnalyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
             qualifiedAnalyzer.SetSyntaxNode(method);
 
-            // Combine the type's qualified name and the method's identifier.
+            // Combine the RefactoringType's qualified name and the method's identifier.
             return qualifiedAnalyzer.GetOutsideTypeQualifiedName() + "." + method.Identifier.ValueText;
         }
 
@@ -160,7 +160,7 @@ namespace warnings.analyzer
 
         public IEnumerable<SyntaxNode> GetParameters()
         {
-            // Any node that in the parameter type, different from argument type
+            // Any node that in the parameter RefactoringType, different from argument RefactoringType
             var paras = method.DescendantNodes().Where(n => n.Kind == SyntaxKind.Parameter);
             return paras.Any() ? paras : Enumerable.Empty<SyntaxNode>();
         }
@@ -203,7 +203,7 @@ namespace warnings.analyzer
 
         public SyntaxNode GetReturnType()
         {
-            // The return type's span start shall before the limit.
+            // The return RefactoringType's span start shall before the limit.
             int limit = 0;
 
             // Get the para list of this method.
@@ -242,7 +242,7 @@ namespace warnings.analyzer
             int leftMost = int.MaxValue;
             SyntaxNode leftMostIdentifier = null;
 
-            // For all the identifiers, the leftmost one should be the return type.
+            // For all the identifiers, the leftmost one should be the return RefactoringType.
             foreach (SyntaxNode node in identifiers)
             {
                 if (node.Span.Start < leftMost)
@@ -310,17 +310,17 @@ namespace warnings.analyzer
 
         public SyntaxNode ChangeReturnType(string typeName)
         {
-            // Get the trivias of the existing return type.
+            // Get the trivias of the existing return RefactoringType.
             var trailing = method.ReturnType.GetTrailingTrivia();
             var leading = method.ReturnType.GetLeadingTrivia();
 
-            // Replace the existing return type with a new one by the given type name.
+            // Replace the existing return RefactoringType with a new one by the given RefactoringType name.
             return method.ReplaceNodes(new[] { method.ReturnType}, 
                 (n1, n2) => Syntax.ParseTypeName(typeName).WithTrailingTrivia(trailing).WithLeadingTrivia(leading));
         }
 
 
-        /* Add parameters to the method declaration acccroding to the given type-name tuples. <int, a>. */
+        /* Add parameters to the method declaration acccroding to the given RefactoringType-name tuples. <int, a>. */
         public SyntaxNode AddParameters(IEnumerable<Tuple<string, string>> parameters)
         {
             foreach (var tuple in parameters)

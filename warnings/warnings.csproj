@@ -62,6 +62,7 @@
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Web" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -126,7 +127,8 @@
     <Compile Include="components\search\SearchRefactoringComponent.cs" />
     <Compile Include="components\search\SearchRenameComponent.cs" />
     <Compile Include="components\RefactoringIssueComponent.cs" />
-    <Compile Include="components\ui\RefactoringFormComponent.cs" />
+    <Compile Include="components\ui\RefactoringFormViewComponent.cs" />
+    <Compile Include="components\ui\RefactoringWarningMessage.cs" />
     <Compile Include="conditions\ChangeMethodSignature\ChangeMethodSignatureConditionsList.cs" />
     <Compile Include="conditions\ChangeMethodSignature\UnupdatedMethodSignatureChecker.cs" />
     <Compile Include="conditions\ConditionCheckingFactory.cs" />
@@ -163,6 +165,8 @@
     </Compile>
     <Compile Include="util\ASTUtil\ASTUtil.cs" />
     <Compile Include="util\ASTUtil\MethodBodyRetriever.cs" />
+    <Compile Include="util\Cache\Cachables.cs" />
+    <Compile Include="util\Cache\Cache.cs" />
     <Compile Include="util\Converters.cs" />
     <Compile Include="util\DataStructureUtil.cs" />
     <Compile Include="util\NLoggerUtil.cs" />

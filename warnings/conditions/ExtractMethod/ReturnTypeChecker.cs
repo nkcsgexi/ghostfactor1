@@ -76,23 +76,6 @@ namespace warnings.conditions
         }
 
 
-        private void foo ()
-        {
-            
-
-            for(;;)
-            {
-                
-            }
-
-            for(;;)
-            {
-                break;
-         
-            }
-        }
-
-
         private IEnumerable<ISymbol> GetMethodReturningData(IMethodDeclarationAnalyzer methodDeclarationAnalyzer, 
             IDocument document)
         {
@@ -132,10 +115,10 @@ namespace warnings.conditions
             return returningData;
         }
 
-        /* Code issue computers for the checking results of retrun type.*/
+        /* Code issue computers for the checking results of retrun RefactoringType.*/
         private class ReturnTypeCheckingResult : ICodeIssueComputer
         {
-            /* The type/name tuples for missing return values. */
+            /* The RefactoringType/name tuples for missing return values. */
             IEnumerable<Tuple<string, string>> typeNameTuples;
 
             /* Declaration of the extracted method. */
@@ -175,7 +158,7 @@ namespace warnings.conditions
 
             public bool Equals(ICodeIssueComputer o)
             {
-                // If the other is not in the same type, return false
+                // If the other is not in the same RefactoringType, return false
                 if (o is ReturnTypeCheckingResult)
                 {
                     var other = (ReturnTypeCheckingResult)o;
@@ -189,6 +172,11 @@ namespace warnings.conditions
                             other.typeNameTuples.Select(t => t.Item2)) == 0;
                 }
                 return false;
+            }
+
+            public RefactoringType RefactoringType
+            {
+                get { return RefactoringType.EXTRACT_METHOD; }
             }
         }
 
@@ -230,7 +218,7 @@ namespace warnings.conditions
 
             private IDocument FindContainingDocument()
             {
-                // Get the type encloses the given method declaration.
+                // Get the RefactoringType encloses the given method declaration.
                 var nameAnalyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
                 nameAnalyzer.SetSyntaxNode(declaration);
                 var methodInType = nameAnalyzer.GetOutsideTypeQualifiedName();
@@ -285,7 +273,7 @@ namespace warnings.conditions
                 {
                     if(node.Span.Equals(declaration.Span))
                     {
-                        // Use method analyzer to add the return value and change the return type.
+                        // Use method analyzer to add the return value and change the return RefactoringType.
                         var methodAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
                         methodAnalyzer.SetMethodDeclaration(node);
                         methodAnalyzer.ChangeReturnValue(returnSymbolName);

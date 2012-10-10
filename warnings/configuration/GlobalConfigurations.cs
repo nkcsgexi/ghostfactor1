@@ -9,7 +9,7 @@ namespace warnings.configuration
     /* Global configurations for GhostFactor.*/
     public class GlobalConfigurations
     {
-        /* Whether a given refactoring type is supported by GhostFactor. */
+        /* Whether a given refactoring RefactoringType is supported by GhostFactor. */
         public static bool IsSupported(RefactoringType type)
         {
             switch (type)

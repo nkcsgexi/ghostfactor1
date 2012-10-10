@@ -98,7 +98,7 @@ namespace warnings.components
                 // docuement to facilitate semantic analyze.
                 refactoring.MapToDocuments(before, after);
                 IEnumerable<ICodeIssueComputer> computers = Enumerable.Empty<ICodeIssueComputer>();
-                switch (refactoring.type)
+                switch (refactoring.RefactoringType)
                 {
                     // Checking all conditions for extract method.
                     case RefactoringType.EXTRACT_METHOD:
@@ -122,7 +122,7 @@ namespace warnings.components
                         break;
 
                     default:
-                        logger.Fatal("Unknown refactoring type for conditions checking.");
+                        logger.Fatal("Unknown refactoring RefactoringType for conditions checking.");
                         break;
                 }
 

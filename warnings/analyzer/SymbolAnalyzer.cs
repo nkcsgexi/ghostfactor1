@@ -10,7 +10,7 @@ using warnings.util;
 
 namespace warnings.analyzer
 {
-    /* Symbol analyzer for a given symbol to get the decalaration of symbol and its type. */
+    /* Symbol analyzer for a given symbol to get the decalaration of symbol and its RefactoringType. */
     public interface ISymbolAnalyzer
     {
         void SetSymbol(ISymbol symbol);
@@ -58,7 +58,7 @@ namespace warnings.analyzer
             return GetTypeName(GetDeclarationSyntaxNode());
         }
 
-        /* Get the type name of a declaration. */
+        /* Get the RefactoringType name of a declaration. */
         private string GetTypeName(SyntaxNode node)
         {
             // If this declaration is an instance declarator.
@@ -75,7 +75,7 @@ namespace warnings.analyzer
                             // Get the shortest.
                             First();
 
-                // If the type declared is var, get the real type string.
+                // If the RefactoringType declared is var, get the real RefactoringType string.
                 if(declaration.Type.IsVar)
                 {
                     return HandleVarDeclaration(declarator);
@@ -89,16 +89,16 @@ namespace warnings.analyzer
             return OBJECT;
         }
 
-        /* Get the real type name when the declaration is using var keyword. */
+        /* Get the real RefactoringType name when the declaration is using var keyword. */
         private string HandleVarDeclaration(VariableDeclaratorSyntax declarator)
         {
-            // For var declaration, type is implied in the value of the initializer.
+            // For var declaration, RefactoringType is implied in the value of the initializer.
             var value = declarator.Initializer.Value;
 
             // Get the semantic model.
             var model = document.GetSemanticModel();
 
-            // If can successfully get the type of the value, return the name of the value,
+            // If can successfully get the RefactoringType of the value, return the name of the value,
             // otherwise return object.
             if (model.GetTypeInfo(value).Type != null)
             {

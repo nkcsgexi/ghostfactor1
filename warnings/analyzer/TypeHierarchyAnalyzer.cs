@@ -7,7 +7,7 @@ using Roslyn.Compilers.Common;
 
 namespace warnings.analyzer
 {
-    /* Analyzer to get the entire type hierarchy of a given type. */
+    /* Analyzer to get the entire RefactoringType hierarchy of a given RefactoringType. */
     public interface ITypeHierarchyAnalyzer
     {
         void SetSemanticModel(ISemanticModel model);
@@ -30,13 +30,13 @@ namespace warnings.analyzer
             this.model = model;
         }
 
-        /* Set the type declaration. */
+        /* Set the RefactoringType declaration. */
         public void SetDeclaration(SyntaxNode declaration)
         {
             this.declaration = declaration;
         }
 
-        /* Get all the base type hierarchy. */
+        /* Get all the base RefactoringType hierarchy. */
         public IEnumerable<INamedTypeSymbol> GetBaseTypes()
         {
             var type = GetDeclarationType();
@@ -50,12 +50,12 @@ namespace warnings.analyzer
             return baseTypes.AsEnumerable();
         }
 
-        /* Get all the interfaces implemented by this type. */
+        /* Get all the interfaces implemented by this RefactoringType. */
         public IEnumerable<INamedTypeSymbol> GetImplementedInterfaces()
         {
             var interfaces = new List<INamedTypeSymbol>();
 
-            // Iteratively get all the implemented interface for this type and all
+            // Iteratively get all the implemented interface for this RefactoringType and all
             // of its super types.
             for (var currentType = GetDeclarationType(); currentType != null; 
                 currentType = currentType.BaseType)
@@ -85,7 +85,7 @@ namespace warnings.analyzer
             return handledInterfaces.AsEnumerable();
         }
 
-        /* Get all the types that are containing this type declaration. */
+        /* Get all the types that are containing this RefactoringType declaration. */
         public IEnumerable<INamedTypeSymbol> GetContainingTypes()
         {
             var type = GetDeclarationType();
@@ -99,14 +99,14 @@ namespace warnings.analyzer
             return containingTypeList.AsEnumerable();
         }
 
-        /* Get all the type declarations that are in this type declaration. */
+        /* Get all the RefactoringType declarations that are in this RefactoringType declaration. */
         public IEnumerable<INamedTypeSymbol> GetContainedTypes()
         {
             var type = GetDeclarationType();
             return type.GetTypeMembers().AsEnumerable();
         }
 
-        /* Get the type symbol for the declaration node. */
+        /* Get the RefactoringType symbol for the declaration node. */
         public INamedTypeSymbol GetDeclarationType()
         {
             return (INamedTypeSymbol) model.GetDeclaredSymbol(declaration);

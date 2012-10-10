@@ -22,7 +22,7 @@ namespace warnings.retriever
 
 
     internal class MethodInvocationsRetriever : IMethodInvocationsRetriever
-    {
+    { 
         private readonly Logger logger = NLoggerUtil.
             GetNLogger(typeof(IMethodInvocationsRetriever));
 
@@ -30,6 +30,7 @@ namespace warnings.retriever
         private SyntaxNode root;
         private MethodDeclarationSyntax declaration;
         private IDocument document;
+
 
 
         public void SetDocument(IDocument document)
@@ -53,7 +54,7 @@ namespace warnings.retriever
                 Where(n => n.Kind == SyntaxKind.InvocationExpression).
                 Select(n => (InvocationExpressionSyntax)n);
 
-            // Get the qualified name of the type that contains the method declaration.
+            // Get the qualified name of the RefactoringType that contains the method declaration.
             var qualifiedNameAnalyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
             qualifiedNameAnalyzer.SetSyntaxNode(declaration);
             var declarationScopeName = qualifiedNameAnalyzer.GetOutsideTypeQualifiedName();
@@ -93,7 +94,7 @@ namespace warnings.retriever
                     memberAccessAnalyzer.SetMemberAccess(invokedName);
                     if(memberAccessAnalyzer.GetRightPart().GetText().Equals(declaration.Identifier.ValueText))
                     {
-                        // For the left side of the member access expression, query whether it is the type 
+                        // For the left side of the member access expression, query whether it is the RefactoringType 
                         // that contains the method declaration. 
                         typableRetriever.SetDocument(document);
                         var type = typableRetriever.GetMemberAccessType(memberAccessAnalyzer.GetLeftPart());

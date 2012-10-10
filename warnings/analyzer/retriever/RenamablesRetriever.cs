@@ -50,7 +50,7 @@ namespace warnings.retriever
             // All declarations of namespace
             var declarations = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.NamespaceDeclaration);
             
-            // Select their names, their type is NameSyntax.
+            // Select their names, their RefactoringType is NameSyntax.
             var list = (from NamespaceDeclarationSyntax dec in declarations select dec.Name);
             logger.Info("Get all identifiers in namespace declarations.");
             return list.AsEnumerable();
@@ -141,7 +141,7 @@ namespace warnings.retriever
         /* Identifier nodes are in referring, not declaring. */
         public IEnumerable<SyntaxNode> GetIdentifierNodes()
         {
-            // Get all nodes whose type is identifier name.
+            // Get all nodes whose RefactoringType is identifier name.
             var names = root.DescendantNodes().Where(n => n.Kind == SyntaxKind.IdentifierName);
             logger.Info("Get all indetifier names.");
             return names.OrderBy(n => n.Span.Start).AsEnumerable();

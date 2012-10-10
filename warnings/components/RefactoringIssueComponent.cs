@@ -8,22 +8,25 @@ using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
 using Roslyn.Services.Editor;
 using warnings.analyzer;
+using warnings.components.ui;
 using warnings.conditions;
 using warnings.quickfix;
 using warnings.util;
 
 namespace warnings.components
 {
+    public delegate void CodeIssueComputersChanged();
+    
     /* A repository for issue computers to be queried, added, and deleted. */
     public interface ICodeIssueComputersRepository
     {
+        event CodeIssueComputersChanged changeEvent;    
         void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
         void RemoveCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
         IEnumerable<CodeIssue> GetCodeIssues(IDocument document, SyntaxNode node);
-        IEnumerable<CodeIssue> GetCodeIssues(IDocument document);
-        IEnumerable<CodeIssue> GetCodeIssues(ISolution solution);
+        IEnumerable<IRefactoringWarningMessage> GetRefactoringWarningMessages(ISolution solution);
     }
-
+  
     internal class RefactoringCodeIssueComputersComponent : IFactorComponent, ICodeIssueComputersRepository
     {
         /* Singleton this component. */
@@ -82,19 +85,19 @@ namespace warnings.components
         {
         }
 
+        public event CodeIssueComputersChanged changeEvent;
 
-        /* Add a list of code issue computers to the current list. */
+        /* Add a list of code issue computers to the current list. */     
         public void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
             // Create a code issue adding work item and push it to the work queue.
-            var item = new AddCodeIssueComputersWorkItem(codeIssueComputers, computers);
-            queue.Add(item);
+            queue.Add(new AddCodeIssueComputersWorkItem(codeIssueComputers, computers, changeEvent));
         }
 
         /* Remove a list of code issue computers from the current list. */
         public void RemoveCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
-            queue.Add(new RemoveCodeIssueComputersWorkItem(codeIssueComputers, computers));
+            queue.Add(new RemoveCodeIssueComputersWorkItem(codeIssueComputers, computers, changeEvent));
         }
 
         /* Get the code issues in the given node of the given document. */
@@ -103,45 +106,40 @@ namespace warnings.components
             // Create a work item for this task.
             var item = new GetDocumentNodeCodeIssueWorkItem(document, node, codeIssueComputers);
             queue.Add(item);
+            logger.Info("Computers count: "+codeIssueComputers.Count);
+            
+            // Busy waiting for the completion of this work item.
+            while (item.IsResultReady() == false);
+            logger.Info("Finish waiting.");
+            return item.GetCodeIssues();
+        }
+
+        public IEnumerable<IRefactoringWarningMessage> GetRefactoringWarningMessages(ISolution solution)
+        {
+            // Create a work item for this task.
+            var item = new GetSolutionRefactoringWarningsWorkItem(solution, codeIssueComputers);
+            queue.Add(item);
 
             // Busy waiting for the completion of this work item.
-            while (item.State != WorkItemState.Completed && item.State == WorkItemState.Failing);
-            return item.GetCodeIssues();
+            while (item.IsResultReady() == false);
+            return item.GetRefactoringWarningMessages();
         }
-
-        /* Get all the code issues in a given document. */
-        public IEnumerable<CodeIssue> GetCodeIssues(IDocument document)
-        {
-            // Create a work item for this task and add this item to the work queue.
-            var item = new GetDocumentCodeIssuesWorkItem(document, codeIssueComputers);
-            queue.Add(item);
-
-            // Busy waiting for the completion of this task.
-            while (item.State != WorkItemState.Completed && item.State != WorkItemState.Failing);
-            return item.GetCodeIssues();
-        }
-
-        /* Get all the code issues in a given solution. */
-        public IEnumerable<CodeIssue> GetCodeIssues(ISolution solution)
-        {
-            var item =  new GetSolutionCodeIssueWorkItem(solution, codeIssueComputers.AsEnumerable());
-            queue.Add(item);
-            while (item.State != WorkItemState.Completed && item.State != WorkItemState.Failing);
-            return item.GetCodeIssues();
-        }
-        
 
         /* Work item to add new issue computers to the repository. */
         private class AddCodeIssueComputersWorkItem : WorkItem
         {
-            private IList<ICodeIssueComputer> currentComputers;
-            private IEnumerable<ICodeIssueComputer> newComputers;
+            private readonly IList<ICodeIssueComputer> currentComputers;
+            private readonly IEnumerable<ICodeIssueComputer> newComputers;
+            private readonly CodeIssueComputersChanged changeEvent;
+            private readonly Logger logger;
 
             public AddCodeIssueComputersWorkItem(IList<ICodeIssueComputer> currentComputers,
-                                                 IEnumerable<ICodeIssueComputer> newComputers)
+                IEnumerable<ICodeIssueComputer> newComputers, CodeIssueComputersChanged changeEvent)
             {
                 this.currentComputers = currentComputers;
                 this.newComputers = newComputers;
+                this.changeEvent = changeEvent;
+                this.logger = NLoggerUtil.GetNLogger(typeof (AddCodeIssueComputersWorkItem));
             }
 
             public override void Perform()
@@ -153,6 +151,7 @@ namespace warnings.components
                     if (!currentComputers.Contains(computer))
                         currentComputers.Add(computer);
                 }
+                changeEvent();
             }
         }
 
@@ -161,12 +160,16 @@ namespace warnings.components
         {
             private readonly IList<ICodeIssueComputer> currentComputers;
             private readonly IEnumerable<ICodeIssueComputer> toRemoveComputers;
+            private readonly CodeIssueComputersChanged changeEvent;
+            private readonly Logger logger; 
 
-            internal RemoveCodeIssueComputersWorkItem(IList<ICodeIssueComputer> currentComputers, 
-                IEnumerable<ICodeIssueComputer> toRemoveComputers )
+            internal RemoveCodeIssueComputersWorkItem(IList<ICodeIssueComputer> currentComputers,
+                IEnumerable<ICodeIssueComputer> toRemoveComputers, CodeIssueComputersChanged changeEvent)
             {
                 this.currentComputers = currentComputers;
                 this.toRemoveComputers = toRemoveComputers;
+                this.changeEvent = changeEvent;
+                this.logger = NLoggerUtil.GetNLogger(typeof (RemoveCodeIssueComputersWorkItem));
             }
 
             public override void Perform()
@@ -175,47 +178,27 @@ namespace warnings.components
                 {
                     currentComputers.Remove(currentComputers.First(c => c.Equals(computer)));
                 }
+                changeEvent();
             }
         }
 
-        /* Abstract class for all the work item whose aim is to retrieve code issues.*/
-        private abstract class GetCodeIssueWorkItem : WorkItem
+        
+        private abstract class HasResultWorkItem : WorkItem
         {
-            public abstract IEnumerable<CodeIssue> GetCodeIssues();
-
-            /* Get code issues by the given document, node and a list of computers. */
-            protected IEnumerable<CodeIssue> GetSyntaxNodeIssues(IDocument document, SyntaxNode node, 
-                IEnumerable<ICodeIssueComputer> computers)
-            {
-                return computers.SelectMany(c => c.ComputeCodeIssues(document, node));
-            }
-
-            /* Get code issues in the given document by the given list of computers. */
-            protected IEnumerable<CodeIssue> GetDocumentIssues(IDocument document, IEnumerable<ICodeIssueComputer> computers)
-            {
-
-                // Where to store all the issues. 
-                var issues = new List<CodeIssue>();
-
-                // Get all the decendant nodes. 
-                var nodes = ((SyntaxNode)document.GetSyntaxRoot()).DescendantNodes();
-
-                // For each of the decendent node, get its issues and add them to the list. 
-                foreach (var node in nodes)
-                {
-                    issues.AddRange(GetSyntaxNodeIssues(document, node, computers));
-                }
-                return issues;
-            }
+            public abstract bool IsResultReady();
         }
+
 
         /* Work item for getting code issues in a given syntax node. */
-        private class GetDocumentNodeCodeIssueWorkItem : GetCodeIssueWorkItem
+        private class GetDocumentNodeCodeIssueWorkItem : HasResultWorkItem
         {
             private readonly IDocument document;
             private readonly SyntaxNode node;
             private readonly IEnumerable<ICodeIssueComputer> computers;
-            private IEnumerable<CodeIssue> results; 
+            private readonly Logger logger;
+            private IEnumerable<CodeIssue> results;
+            private bool IsReady;
+
 
             internal GetDocumentNodeCodeIssueWorkItem(IDocument document, SyntaxNode node, 
                 IEnumerable<ICodeIssueComputer> computers)
@@ -223,80 +206,90 @@ namespace warnings.components
                 this.document = document;
                 this.node = node;
                 this.computers = computers;
+                this.logger = NLoggerUtil.GetNLogger(typeof (GetDocumentNodeCodeIssueWorkItem));
+                this.IsReady = false;
             }
 
             public override void Perform()
             {
-                results = GetSyntaxNodeIssues(document, node, computers);
+                results = computers.SelectMany(c => c.ComputeCodeIssues(document, node));
+                this.IsReady = true;
             }
 
-            public override IEnumerable<CodeIssue> GetCodeIssues()
+            public override bool IsResultReady()
+            {
+                return IsReady;
+            }
+
+            public IEnumerable<CodeIssue> GetCodeIssues()
             {
                 return results;
             }
         }
 
-        /* Work item for getting all the code issues in a given document. */
-        private class GetDocumentCodeIssuesWorkItem : GetCodeIssueWorkItem
-        {
-            private readonly IDocument document;
-            private readonly IEnumerable<ICodeIssueComputer> computers;
-            private IEnumerable<CodeIssue> results; 
-
-            internal GetDocumentCodeIssuesWorkItem(IDocument document, IEnumerable<ICodeIssueComputer> computers)
-            {
-                this.document = document;
-                this.computers = computers;
-            }
-
-            public override void Perform()
-            {
-                results = GetDocumentIssues(document, computers);
-            }
-
-            public override IEnumerable<CodeIssue> GetCodeIssues()
-            {
-                return results;
-            }
-        }
-
-        /* Work item for getting all the code issues in a given solution. */
-        private class GetSolutionCodeIssueWorkItem : GetCodeIssueWorkItem
+     
+        /* Work item for getting all the refactoring warnings in a given solution and a set of computers. */
+        private class GetSolutionRefactoringWarningsWorkItem : HasResultWorkItem
         {
             private readonly IEnumerable<ICodeIssueComputer> computers;
             private readonly ISolution solution;
-            private IEnumerable<CodeIssue> results; 
+            private readonly Logger logger;
+            private IEnumerable<IRefactoringWarningMessage> results;
+            private bool isReady;
 
-            internal GetSolutionCodeIssueWorkItem(ISolution solution, IEnumerable<ICodeIssueComputer> computers)
+            internal GetSolutionRefactoringWarningsWorkItem(ISolution solution, IEnumerable<ICodeIssueComputer> computers)
             {
                 this.solution = solution;
                 this.computers = computers;
+                this.logger = NLoggerUtil.GetNLogger(typeof (GetSolutionRefactoringWarningsWorkItem));
+                this.isReady = false;
             }
 
             public override void Perform()
             {
-                // Where to store all the code issues. 
-                var issues = new List<CodeIssue>();
+                var messagesList = new List<IRefactoringWarningMessage>();
 
-                // Get all the documents in the solution. 
-                var solutionAnalyzer = AnalyzerFactory.GetSolutionAnalyzer();
-                solutionAnalyzer.SetSolution(solution);
-                var documents = solutionAnalyzer.GetAllDocuments();
+                // Get all the documents.
+                var analyzer = AnalyzerFactory.GetSolutionAnalyzer();
+                analyzer.SetSolution(solution);
+                var documents = analyzer.GetAllDocuments();
 
-                // For each document, get its 
+                // For each of the document.
                 foreach (IDocument document in documents)
                 {
-                    issues.AddRange(GetDocumentIssues(document, computers));
+                    // Get all the decendant nodes. 
+                    var nodes = ((SyntaxNode) document.GetSyntaxRoot()).DescendantNodes();
+                    
+                    // For each computer in the given list.
+                    foreach (ICodeIssueComputer computer in computers)
+                    {
+                        // Find all the issues in the document. 
+                        var issues = nodes.SelectMany(n => computer.ComputeCodeIssues(document, n));
+                        
+                        // For each code issue in the document, create a warning message and add it to the list.
+                        foreach (CodeIssue issue in issues)
+                        {
+                            var warningMessage = RefactoringWarningMessageFactory.
+                                CreateRefactoringWarningMessage(document, issue, computer);
+                            messagesList.Add(warningMessage);
+                            logger.Info("Create a refactoring warning.");
+                        }
+                    }
                 }
-                results = issues.AsEnumerable();
+                results = messagesList.AsEnumerable();
+                this.isReady = true;
             }
 
-            public override IEnumerable<CodeIssue> GetCodeIssues()
+            public override bool IsResultReady()
+            {
+                return isReady;
+            }
+
+            public IEnumerable<IRefactoringWarningMessage> GetRefactoringWarningMessages()
             {
                 return results;
             }
         }
 
     }
-
 }

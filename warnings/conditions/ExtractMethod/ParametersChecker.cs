@@ -87,7 +87,7 @@ namespace warnings.conditions
             /* Declaration of the extracted method. */
             private SyntaxNode declaration;
 
-            /* The missing typeNameTuples' type and name tuples. */
+            /* The missing typeNameTuples' RefactoringType and name tuples. */
             private IEnumerable<Tuple<string, string>> typeNameTuples;
 
             public ParameterCheckingCodeIssueComputer(SyntaxNode declaration, IEnumerable<Tuple<string, string>> typeNameTuples)
@@ -119,7 +119,7 @@ namespace warnings.conditions
 
             public bool Equals(ICodeIssueComputer o)
             {
-                // If the other is not in the same type, return false
+                // If the other is not in the same RefactoringType, return false
                 if(o is ParameterCheckingCodeIssueComputer)
                 {
                     var other = (ParameterCheckingCodeIssueComputer) o;
@@ -168,7 +168,7 @@ namespace warnings.conditions
 
                 private ISolution updateMethodDeclaration(ISolution solution)
                 {
-                    // Get the qualified name of the type containing the declaration.
+                    // Get the qualified name of the RefactoringType containing the declaration.
                     var qualifidedNameAnalyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
                     qualifidedNameAnalyzer.SetSyntaxNode(declaration);
                     var typeName = qualifidedNameAnalyzer.GetOutsideTypeQualifiedName();
@@ -187,7 +187,7 @@ namespace warnings.conditions
                         var documentAnalyzer = AnalyzerFactory.GetDocumentAnalyzer();
                         documentAnalyzer.SetDocument(document);
 
-                        // If the document contains the type in which the method is declared.
+                        // If the document contains the RefactoringType in which the method is declared.
                         if (documentAnalyzer.ContainsQualifiedName(typeName))
                         {
                             // Get the root of the current document.
@@ -197,7 +197,7 @@ namespace warnings.conditions
                             SyntaxNode method = root.DescendantNodes().Where(
                                 // Find all the method declarations.
                                 n => n.Kind == SyntaxKind.MethodDeclaration).
-                                // Convert all of them to the type MethodDeclarationSyntax.
+                                // Convert all of them to the RefactoringType MethodDeclarationSyntax.
                                     Select(n => (MethodDeclarationSyntax)n).
                                 // Get the one whose name is same with the given method declaration.
                                         First(m => m.Identifier.ValueText.Equals(methodName));
@@ -300,6 +300,11 @@ namespace warnings.conditions
                         return node;
                     }
                 }
+            }
+
+            public RefactoringType RefactoringType
+            {
+                get { return RefactoringType.EXTRACT_METHOD; }
             }
         }
     }  

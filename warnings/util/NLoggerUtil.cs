@@ -49,7 +49,7 @@ namespace warnings.util
             LogManager.Configuration = config;
         }
 
-        /* get a logger using the specified type. */
+        /* get a logger using the specified RefactoringType. */
         static public Logger GetNLogger(Type t)
         {
             return LogManager.GetLogger(t.FullName);

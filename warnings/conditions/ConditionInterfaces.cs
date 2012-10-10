@@ -11,10 +11,10 @@ using warnings.refactoring;
 
 namespace warnings.conditions
 {
-    /* The interface that can be queried about refactoring type. */
+    /* The interface that can be queried about refactoring RefactoringType. */
     public interface IHasRefactoringType
     {
-        RefactoringType type { get; }
+        RefactoringType RefactoringType { get; }
     }
 
     /* All refactoring conditions should be derived from this interface. */
@@ -23,13 +23,13 @@ namespace warnings.conditions
         ICodeIssueComputer CheckCondition(IDocument before, IDocument after, IManualRefactoring input);  
     }
 
-    /* interface that containing checkings for all the conditions of a refactoring type. */
+    /* interface that containing checkings for all the conditions of a refactoring RefactoringType. */
     public interface IRefactoringConditionsList : IHasRefactoringType
     {
         IEnumerable<ICodeIssueComputer> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input);
     }
 
-    /* Refactoring conditions for a specific refactoring type is stored in.*/
+    /* Refactoring conditions for a specific refactoring RefactoringType is stored in.*/
     public abstract class RefactoringConditionsList : IRefactoringConditionsList
     {
         /* suppose to return all the condition checkers for this specific refactoring. */
@@ -43,11 +43,11 @@ namespace warnings.conditions
         }
 
         protected abstract IEnumerable<IRefactoringConditionChecker> GetAllConditionCheckers();
-        public abstract RefactoringType type { get; }
+        public abstract RefactoringType RefactoringType { get; }
     }
 
     /* This interface is used returning values for condition checkers. It is a convenient way of computing code issues. */
-    public interface ICodeIssueComputer : IEquatable<ICodeIssueComputer>
+    public interface ICodeIssueComputer : IEquatable<ICodeIssueComputer>, IHasRefactoringType
     {
         IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node);
     }
@@ -63,6 +63,11 @@ namespace warnings.conditions
         public bool Equals(ICodeIssueComputer other)
         {
             return other is NullCodeIssueComputer;
+        }
+
+        public RefactoringType RefactoringType
+        {
+            get { return RefactoringType.UNKOWN; }
         }
     }
 }
