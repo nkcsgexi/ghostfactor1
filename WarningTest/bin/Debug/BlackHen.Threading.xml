@@ -71,166 +71,6 @@
             </summary>
             <returns>The smallest object</returns>
         </member>
-        <member name="T:BlackHen.Threading.ChangedWorkItemStateEventHandler">
-            <summary>
-              Represents the method that will handle the <see cref="E:BlackHen.Threading.WorkQueue.ChangedWorkItemState"/> event.
-            </summary>
-            <param name="sender">
-              The source of the event.
-            </param>
-            <param name="e">
-              A <see cref="T:BlackHen.Threading.ChangedWorkItemStateEventArgs"/> than contains the event data.
-            </param>
-        </member>
-        <member name="T:BlackHen.Threading.ChangedWorkItemStateEventArgs">
-            <summary>
-              Provides data for the the <see cref="E:BlackHen.Threading.WorkQueue.ChangedWorkItemState"/> event.
-            </summary>
-        </member>
-        <member name="T:BlackHen.Threading.WorkItemEventArgs">
-            <summary>
-              Provides data for the events asscociated with an <see cref="T:BlackHen.Threading.IWorkItem"/>.
-            </summary>
-        </member>
-        <member name="M:BlackHen.Threading.WorkItemEventArgs.#ctor(BlackHen.Threading.IWorkItem)">
-            <summary>
-              Initialise a new instance of the <see cref="T:BlackHen.Threading.WorkItemEventArgs"/> class with the
-              specified <see cref="T:BlackHen.Threading.IWorkItem"/>.
-            </summary>
-            <param name="workItem">
-              The <see cref="T:BlackHen.Threading.IWorkItem"/> associated with the event.
-            </param>
-            <remarks>
-              Use this constructor to create and initialize a new instance of the <see cref="T:BlackHen.Threading.WorkItemEventArgs"/>
-              with the specified <paramref name="workItem"/>.
-            </remarks>
-        </member>
-        <member name="P:BlackHen.Threading.WorkItemEventArgs.WorkItem">
-            <summary>
-              Gets the <see cref="T:BlackHen.Threading.WorkItem"/> associated with the event.
-            </summary>
-            <value>
-              The <see cref="T:BlackHen.Threading.WorkItem"/> that caused the event.
-            </value>
-        </member>
-        <member name="M:BlackHen.Threading.ChangedWorkItemStateEventArgs.#ctor(BlackHen.Threading.IWorkItem,BlackHen.Threading.WorkItemState)">
-            <summary>
-              Initialise a new instance of the <see cref="T:BlackHen.Threading.ChangedWorkItemStateEventArgs"/> class with the
-              specified <see cref="T:BlackHen.Threading.IWorkItem"/> and <see cref="T:BlackHen.Threading.WorkItemState">previous state</see>.
-            </summary>
-            <param name="workItem">
-              The <see cref="T:BlackHen.Threading.IWorkItem"/> associated with the event.
-            </param>
-            <param name="previousState">
-               One of the <see cref="T:BlackHen.Threading.WorkItemState"/> values indicating the previous state of the
-               <paramref name="workItem"/>.
-            </param>
-            <remarks>
-              Use this constructor to create and initialize a new instance of the <see cref="T:BlackHen.Threading.ChangedWorkItemStateEventArgs"/>
-              with the specified <paramref name="workItem"/> and <paramref name="previousState"/>.
-            </remarks>
-        </member>
-        <member name="P:BlackHen.Threading.ChangedWorkItemStateEventArgs.PreviousState">
-            <summary>
-              Gets the previous <see cref="T:BlackHen.Threading.WorkItemState"/> associated with the event.
-            </summary>
-            <value>
-               One of the <see cref="T:BlackHen.Threading.WorkItemState"/> values indicating the previous state of the
-               <see cref="T:BlackHen.Threading.WorkItem"/>.
-            </value>
-        </member>
-        <member name="T:BlackHen.Threading.IWork">
-            <summary>
-              Defines an interface that allows some work to be performed.
-            </summary>
-            <remarks>
-              <b>IWorkItem</b> specifies the <see cref="M:BlackHen.Threading.IWork.Perform"/> method, that does the actual processing
-              of work.
-            </remarks>
-            <seeaslo cref="T:BlackHen.Threading.IWorkItem"/>
-        </member>
-        <member name="M:BlackHen.Threading.IWork.Perform">
-            <summary>
-              Perform the work.
-            </summary>
-            <remarks>
-              <b>Perform</b> does the processing of work. 
-            </remarks>
-        </member>
-        <member name="T:BlackHen.Threading.InvalidTransitionException">
-            <summary>
-              The exception that is thrown when a state transition is invalid.
-            </summary>
-            <remarks>
-              The <b>InvalidTransitionException</b> class is thrown when a state transition
-              is invalid.
-            </remarks>
-        </member>
-        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor">
-            <summary>
-              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class.
-            </summary>
-            <remarks>
-              This constructor initializes the <see cref="P:System.Exception.Message"/> property of the new 
-              instance to a system-supplied message that describes the error and takes into 
-              account the current system culture.
-            </remarks>
-        </member>
-        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor(System.Object,System.Object,System.Object)">
-            <summary>
-              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class with a specified error message.
-            </summary>
-            <param name="obj">
-              The object whose state can not be changed.
-            </param>
-            <param name="currentState">
-              Its current state.
-            </param>
-            <param name="nextState">
-              The invalid state.
-            </param>
-            <remarks>
-              This constructor initializes the <see cref="P:System.Exception.Message"/> property of the new 
-              instance to the string "Can not transition '<i>obj</i> from state <i>curr</i> to <i>next</i>.".
-            </remarks>
-        </member>
-        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor(System.Object,System.Object,System.Object,System.Exception)">
-            <summary>
-              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class with a specified error message and
-              inner <see cref="T:System.Exception"/>.
-            </summary>
-            <param name="obj">
-              The object whose state can not be changed.
-            </param>
-            <param name="currentState">
-              Its current state.
-            </param>
-            <param name="nextState">
-              The invalid state.
-            </param>
-            <param name="innerException">
-              The <see cref="T:System.Exception"/> that is the cause of the current exception.
-            </param>
-            <remarks>
-              This constructor initializes the <see cref="P:System.Exception.Message"/> property of the new 
-              instance to the string "Can not transition '<i>obj</i> from state <i>prev</i> to <i>next</i>.".
-            </remarks>
-        </member>
-        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
-            <summary>
-              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class with serialized data.
-            </summary>
-            <param name="info">
-              The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.
-            </param>
-            <param name="context">
-              The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.
-            </param>
-            <remarks>
-              This constructor is called during deserialization to reconstitute the 
-              exception object transmitted over a stream. 
-            </remarks>
-        </member>
         <member name="T:BlackHen.Threading.WorkItem">
             <summary>
               Represents some work that must be performed.
@@ -252,6 +92,24 @@
             <remarks>
               <b>IWorkItem</b> extends the <see cref="T:BlackHen.Threading.IWork"/> interface, allowing work to be managed by 
               a <see cref="T:BlackHen.Threading.IWorkQueue">work queue</see>.
+            </remarks>
+        </member>
+        <member name="T:BlackHen.Threading.IWork">
+            <summary>
+              Defines an interface that allows some work to be performed.
+            </summary>
+            <remarks>
+              <b>IWorkItem</b> specifies the <see cref="M:BlackHen.Threading.IWork.Perform"/> method, that does the actual processing
+              of work.
+            </remarks>
+            <seeaslo cref="T:BlackHen.Threading.IWorkItem"/>
+        </member>
+        <member name="M:BlackHen.Threading.IWork.Perform">
+            <summary>
+              Perform the work.
+            </summary>
+            <remarks>
+              <b>Perform</b> does the processing of work. 
             </remarks>
         </member>
         <member name="P:BlackHen.Threading.IWorkItem.WorkQueue">
@@ -472,6 +330,148 @@
             <summary>
               Creates  a <see cref="T:BlackHen.Threading.WorkItem"/> that does nothing.
             </summary>
+        </member>
+        <member name="T:BlackHen.Threading.ChangedWorkItemStateEventHandler">
+            <summary>
+              Represents the method that will handle the <see cref="E:BlackHen.Threading.WorkQueue.ChangedWorkItemState"/> event.
+            </summary>
+            <param name="sender">
+              The source of the event.
+            </param>
+            <param name="e">
+              A <see cref="T:BlackHen.Threading.ChangedWorkItemStateEventArgs"/> than contains the event data.
+            </param>
+        </member>
+        <member name="T:BlackHen.Threading.ChangedWorkItemStateEventArgs">
+            <summary>
+              Provides data for the the <see cref="E:BlackHen.Threading.WorkQueue.ChangedWorkItemState"/> event.
+            </summary>
+        </member>
+        <member name="T:BlackHen.Threading.WorkItemEventArgs">
+            <summary>
+              Provides data for the events asscociated with an <see cref="T:BlackHen.Threading.IWorkItem"/>.
+            </summary>
+        </member>
+        <member name="M:BlackHen.Threading.WorkItemEventArgs.#ctor(BlackHen.Threading.IWorkItem)">
+            <summary>
+              Initialise a new instance of the <see cref="T:BlackHen.Threading.WorkItemEventArgs"/> class with the
+              specified <see cref="T:BlackHen.Threading.IWorkItem"/>.
+            </summary>
+            <param name="workItem">
+              The <see cref="T:BlackHen.Threading.IWorkItem"/> associated with the event.
+            </param>
+            <remarks>
+              Use this constructor to create and initialize a new instance of the <see cref="T:BlackHen.Threading.WorkItemEventArgs"/>
+              with the specified <paramref name="workItem"/>.
+            </remarks>
+        </member>
+        <member name="P:BlackHen.Threading.WorkItemEventArgs.WorkItem">
+            <summary>
+              Gets the <see cref="T:BlackHen.Threading.WorkItem"/> associated with the event.
+            </summary>
+            <value>
+              The <see cref="T:BlackHen.Threading.WorkItem"/> that caused the event.
+            </value>
+        </member>
+        <member name="M:BlackHen.Threading.ChangedWorkItemStateEventArgs.#ctor(BlackHen.Threading.IWorkItem,BlackHen.Threading.WorkItemState)">
+            <summary>
+              Initialise a new instance of the <see cref="T:BlackHen.Threading.ChangedWorkItemStateEventArgs"/> class with the
+              specified <see cref="T:BlackHen.Threading.IWorkItem"/> and <see cref="T:BlackHen.Threading.WorkItemState">previous state</see>.
+            </summary>
+            <param name="workItem">
+              The <see cref="T:BlackHen.Threading.IWorkItem"/> associated with the event.
+            </param>
+            <param name="previousState">
+               One of the <see cref="T:BlackHen.Threading.WorkItemState"/> values indicating the previous state of the
+               <paramref name="workItem"/>.
+            </param>
+            <remarks>
+              Use this constructor to create and initialize a new instance of the <see cref="T:BlackHen.Threading.ChangedWorkItemStateEventArgs"/>
+              with the specified <paramref name="workItem"/> and <paramref name="previousState"/>.
+            </remarks>
+        </member>
+        <member name="P:BlackHen.Threading.ChangedWorkItemStateEventArgs.PreviousState">
+            <summary>
+              Gets the previous <see cref="T:BlackHen.Threading.WorkItemState"/> associated with the event.
+            </summary>
+            <value>
+               One of the <see cref="T:BlackHen.Threading.WorkItemState"/> values indicating the previous state of the
+               <see cref="T:BlackHen.Threading.WorkItem"/>.
+            </value>
+        </member>
+        <member name="T:BlackHen.Threading.InvalidTransitionException">
+            <summary>
+              The exception that is thrown when a state transition is invalid.
+            </summary>
+            <remarks>
+              The <b>InvalidTransitionException</b> class is thrown when a state transition
+              is invalid.
+            </remarks>
+        </member>
+        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor">
+            <summary>
+              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class.
+            </summary>
+            <remarks>
+              This constructor initializes the <see cref="P:System.Exception.Message"/> property of the new 
+              instance to a system-supplied message that describes the error and takes into 
+              account the current system culture.
+            </remarks>
+        </member>
+        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor(System.Object,System.Object,System.Object)">
+            <summary>
+              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class with a specified error message.
+            </summary>
+            <param name="obj">
+              The object whose state can not be changed.
+            </param>
+            <param name="currentState">
+              Its current state.
+            </param>
+            <param name="nextState">
+              The invalid state.
+            </param>
+            <remarks>
+              This constructor initializes the <see cref="P:System.Exception.Message"/> property of the new 
+              instance to the string "Can not transition '<i>obj</i> from state <i>curr</i> to <i>next</i>.".
+            </remarks>
+        </member>
+        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor(System.Object,System.Object,System.Object,System.Exception)">
+            <summary>
+              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class with a specified error message and
+              inner <see cref="T:System.Exception"/>.
+            </summary>
+            <param name="obj">
+              The object whose state can not be changed.
+            </param>
+            <param name="currentState">
+              Its current state.
+            </param>
+            <param name="nextState">
+              The invalid state.
+            </param>
+            <param name="innerException">
+              The <see cref="T:System.Exception"/> that is the cause of the current exception.
+            </param>
+            <remarks>
+              This constructor initializes the <see cref="P:System.Exception.Message"/> property of the new 
+              instance to the string "Can not transition '<i>obj</i> from state <i>prev</i> to <i>next</i>.".
+            </remarks>
+        </member>
+        <member name="M:BlackHen.Threading.InvalidTransitionException.#ctor(System.Runtime.Serialization.SerializationInfo,System.Runtime.Serialization.StreamingContext)">
+            <summary>
+              Initializes a new instance of the <see cref="T:BlackHen.Threading.InvalidTransitionException"/> class with serialized data.
+            </summary>
+            <param name="info">
+              The <see cref="T:System.Runtime.Serialization.SerializationInfo"/> that holds the serialized object data about the exception being thrown.
+            </param>
+            <param name="context">
+              The <see cref="T:System.Runtime.Serialization.StreamingContext"/> that contains contextual information about the source or destination.
+            </param>
+            <remarks>
+              This constructor is called during deserialization to reconstitute the 
+              exception object transmitted over a stream. 
+            </remarks>
         </member>
         <member name="T:BlackHen.Threading.IWorkQueue">
             <summary>

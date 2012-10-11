@@ -7,18 +7,26 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using NLog;
+using warnings.components;
 using warnings.components.ui;
+using warnings.conditions;
 using warnings.util;
 
 namespace warnings.ui
 {
     public partial class RefactoringWariningsForm : Form
     {
+        /* Saving all the message and listview item pairs currently showing on the form. */
+        private readonly List<IRefactoringWarningMessage> messagesInListView;
+
         private readonly Logger logger = NLoggerUtil.GetNLogger(typeof(RefactoringWariningsForm));
+
+
 
         public RefactoringWariningsForm()
         {
             InitializeComponent();
+            messagesInListView = new List<IRefactoringWarningMessage>();
         }
      
         private void button1_Click_1(object sender, EventArgs e)
@@ -40,7 +48,7 @@ namespace warnings.ui
             // Get the enumerator.
             var enumerator = messages.GetEnumerator();
 
-            // If messages have the first item
+            // If messagesInListView have the first item
             if (enumerator.MoveNext())
             {
                 // Create an item leaded by the first element.
@@ -58,23 +66,6 @@ namespace warnings.ui
         }
 
 
-        public bool AddRefactoringWarning(IEnumerable<string> messages)
-        {
-            // Create a list view item by the given messages.
-            var item = CreateListViewItem(messages, 0);
-           
-            // If the item is created, add to the list view.
-            if (item != null)
-            {
-                listView1.Items.Add(item);
-                listView1.Invalidate();
-                logger.Info("Item added.");
-                return true;
-            }
-            return false;
-        }
-
-
         public void AddRefactoringWarnings(IEnumerable<IRefactoringWarningMessage> messages)
         {
             foreach (var message in messages)
@@ -84,7 +75,9 @@ namespace warnings.ui
             }
         }
 
-        public bool AddRefactoringWarning(IRefactoringWarningMessage message)
+
+        /* Split a IRefactoringWarningMessage to string elements. */
+        private IEnumerable<string> Split2MessageElements(IRefactoringWarningMessage message)
         {
             var messageElements = new List<string>();
             messageElements.Add(message.File);
@@ -96,64 +89,23 @@ namespace warnings.ui
 
             messageElements.Add(typeName);
             messageElements.Add(message.Description);
-            return AddRefactoringWarning(messageElements);
+            return messageElements;
         }
 
-
-
-        /* If two list view item contains exactly same information. */
-        private bool AreListViewItemsSame(ListViewItem item1, ListViewItem item2)
+        public bool AddRefactoringWarning(IRefactoringWarningMessage message)
         {
-            if (item1.Text.Equals(item2.Text))
+            // Create a list view item by the given messagesInListView.
+            var item = CreateListViewItem(Split2MessageElements(message), 0);
+
+            // If the item is created, add to the list view.
+            if (item != null)
             {
-                if (item1.SubItems.Count == item2.SubItems.Count)
-                {
-                    for (int i = 0; i < item1.SubItems.Count; i++)
-                    {
-                        var s1 = item1.SubItems[i].Text;
-                        var s2 = item2.SubItems[i].Text;
-                        if (s1.Equals(s2))
-                        {
-                            if (i == item1.SubItems.Count - 1)
-                            {
-                                return true;
-                            }
-                            continue;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-            return false;
-        }
-
-
-        public bool RemoveRefactoringWarning(IEnumerable<string> messages)
-        {
-            // Set the item to remove as null;
-            ListViewItem removedItem = null;
-
-            // Create an item by the given messages.
-            var item = CreateListViewItem(messages, 0);
-
-            // Search for the item that is equal to the created item.
-            foreach (ListViewItem current in listView1.Items)
-            {
-                if (AreListViewItemsSame(current, item))
-                {
-                    removedItem = current;
-                }
-            }
-
-            // If the removed item is found, remove it from the list and
-            // return true, otherwise return false.
-            if (removedItem != null)
-            {
-                listView1.Items.Remove(removedItem);
-                logger.Info("removed");
+                listView1.Items.Add(item);
+                
+                // Save message.
+                messagesInListView.Add(message);
+                listView1.Invalidate();
+                logger.Info("Item added.");
                 return true;
             }
             return false;
@@ -165,13 +117,40 @@ namespace warnings.ui
             var selectedItems = listView1.SelectedItems;
             if(selectedItems.Count > 0)
             {
-                
+                var removedCodeIssueComputers = new List<ICodeIssueComputer>();
+                foreach (ListViewItem item in selectedItems)
+                {
+                    int index = listView1.Items.IndexOf(item);
+                    var message = messagesInListView.ElementAt(index);
+                    removedCodeIssueComputers.Add(message.CodeIssueComputer);
+                }
+                GhostFactorComponents.RefactoringCodeIssueComputerComponent.
+                    RemoveCodeIssueComputers(removedCodeIssueComputers.Distinct());
             }
         }
 
-        public void RemoveRefactoringWarnings(IEnumerable<IRefactoringWarningMessage> messages)
+        public void RemoveRefactoringWarnings(Predicate<IRefactoringWarningMessage> removingMessagesConditions)
         {
-            throw new NotImplementedException();
+            var indexes = new List<int>();
+          
+            // For all the messages currently in the list.
+            foreach (var inListMessage in messagesInListView)
+            {
+                // If the current message met with the given removing message condition.
+                // Add the index of this message to indexes.
+                if(removingMessagesConditions.Invoke(inListMessage))
+                {
+                    indexes.Add(messagesInListView.IndexOf(inListMessage));
+                }
+            }
+
+            // Remove all messages as well as item in the list view.
+            foreach (int i in indexes)
+            {
+                messagesInListView.RemoveAt(i);
+                listView1.Items.RemoveAt(i);
+            }
+            listView1.Invalidate();
         }
     }
 }

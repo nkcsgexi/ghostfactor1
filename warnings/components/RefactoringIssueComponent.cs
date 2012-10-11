@@ -16,13 +16,18 @@ using warnings.util;
 
 namespace warnings.components
 {
-    /* Used for any listens to get the warning messages of the entire solution. */
-    public delegate void GlobalRefactoringWarningsReady(IEnumerable<IRefactoringWarningMessage> messages, bool isAdded);
+    /* Used for any listeners to get the new warnings of the entire solution. */
+    public delegate void AddGlobalRefactoringWarnings(IEnumerable<IRefactoringWarningMessage> messages);
+
+    /* Used for any listeners to the event of removing refactoring warnings. */
+    public delegate void RemoveGlobalRefactoringWarnings(Predicate<IRefactoringWarningMessage> removeCondition);
 
     /* A repository for issue computers to be queried, added, and deleted. */
     public interface ICodeIssueComputersRepository
     {
-        event GlobalRefactoringWarningsReady globalWarningsReady;
+        event AddGlobalRefactoringWarnings AddGlobalWarnings;
+        event RemoveGlobalRefactoringWarnings RemoveGlobalWarnings;
+    
         void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
         void RemoveCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
         IEnumerable<CodeIssue> GetCodeIssues(IDocument document, SyntaxNode node);
@@ -43,21 +48,17 @@ namespace warnings.components
         private readonly List<ICodeIssueComputer> codeIssueComputers;
 
         /* Used for any listener to the event of code issue computers added or removed. */
-        private delegate void CodeIssueComputersChanged(ICodeIssueComputersChangedArg arg);
-        
-        /* Used as the parameter for any listeners to the code issue computers changed. */
-        private interface ICodeIssueComputersChangedArg
-        {
-            bool IsAdding();
-            IEnumerable<ICodeIssueComputer> GetChangedCodeIssueComputers();
-        }
+        private delegate void CodeIssueComputersChanged(IEnumerable<ICodeIssueComputer> newCodeIssueComputers);
 
+        /* Event when new code issues are added.*/
+        private event CodeIssueComputersChanged codeIssueComputersAddedEvent;
 
-        /* Event when the code issues are changed. */
-        private event CodeIssueComputersChanged changeEvent;
+        /* Event when new global refactoring addWarningsEvent are ready to be added. */
+        public event AddGlobalRefactoringWarnings AddGlobalWarnings;
 
-        /* Event when a new global refactoring warnings are ready. */
-        public event GlobalRefactoringWarningsReady globalWarningsReady;
+        /* Event when old global refactoring addWarningsEvent are ready to be removed. */
+        public event RemoveGlobalRefactoringWarnings RemoveGlobalWarnings;
+
 
         /* A single thread workqueue. */
         private WorkQueue queue;
@@ -78,16 +79,16 @@ namespace warnings.components
             codeIssueComputers.Add(new NullCodeIssueComputer());
             logger = NLoggerUtil.GetNLogger(typeof (RefactoringCodeIssueComputersComponent));
 
-            changeEvent += OnCodeIssueComputersChanged;
+            codeIssueComputersAddedEvent += OnCodeIssueComputersChanged;
         }
 
         /* When code issue computers are changed, this method will be called. */
-        private void OnCodeIssueComputersChanged(ICodeIssueComputersChangedArg codeIssueComputersChangedArg)
+        private void OnCodeIssueComputersChanged(IEnumerable<ICodeIssueComputer> computers)
         {
             var solution = GhostFactorComponents.searchRealDocumentComponent.GetSolution();
-
+            
             // Create a work item for this task.
-            var item = new GetSolutionRefactoringWarningsWorkItem(solution, codeIssueComputersChangedArg, globalWarningsReady);
+            var item = new GetSolutionRefactoringWarningsWorkItem(solution, computers, AddGlobalWarnings);
             queue.Add(item);
         }
 
@@ -120,13 +121,13 @@ namespace warnings.components
         public void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
             // Create a code issue adding work item and push it to the work queue.
-            queue.Add(new AddCodeIssueComputersWorkItem(codeIssueComputers, computers, changeEvent));
+            queue.Add(new AddCodeIssueComputersWorkItem(codeIssueComputers, computers, codeIssueComputersAddedEvent));
         }
 
         /* Remove a list of code issue computers from the current list. */
         public void RemoveCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
-            queue.Add(new RemoveCodeIssueComputersWorkItem(codeIssueComputers, computers, changeEvent));
+            queue.Add(new RemoveCodeIssueComputersWorkItem(codeIssueComputers, computers, RemoveGlobalWarnings));
         }
 
         /* Get the code issues in the given node of the given document. */
@@ -138,26 +139,6 @@ namespace warnings.components
             return item.GetCodeIssues();
         }
 
-        /* 
-         * An abstract implementation of ICodeIssueComputersChangedArg that leaves only whether adding or removint
-         * to be implemented.
-         */
-        internal abstract class CodeIssueComputersChangedArg : ICodeIssueComputersChangedArg
-        {
-            private readonly IEnumerable<ICodeIssueComputer> computers;
-
-            protected CodeIssueComputersChangedArg(IEnumerable<ICodeIssueComputer> computers)
-            {
-                this.computers = computers;
-            }
-
-            public abstract bool IsAdding();
-
-            public IEnumerable<ICodeIssueComputer> GetChangedCodeIssueComputers()
-            {
-                return computers;
-            }
-        }
 
         /* Work item to add new issue computers to the repository. */
         private class AddCodeIssueComputersWorkItem : WorkItem
@@ -190,20 +171,7 @@ namespace warnings.components
                         addedComputers.Add(computer);
                     }
                 }
-                changeEvent(new CodeIssueComputersAddedArg(addedComputers.AsEnumerable()));
-            }
-
-            /* Used as the argument to inform listeners that there are added computers. */
-            private class CodeIssueComputersAddedArg : CodeIssueComputersChangedArg
-            {
-                public CodeIssueComputersAddedArg(IEnumerable<ICodeIssueComputer> computers) : base(computers)
-                {
-                }
-
-                public override bool IsAdding()
-                {
-                    return true;
-                }
+                changeEvent(addedComputers.AsEnumerable());
             }
         }
 
@@ -212,15 +180,15 @@ namespace warnings.components
         {
             private readonly IList<ICodeIssueComputer> currentComputers;
             private readonly IEnumerable<ICodeIssueComputer> toRemoveComputers;
-            private readonly CodeIssueComputersChanged changeEvent;
+            private readonly RemoveGlobalRefactoringWarnings removeWarningEvent;
             private readonly Logger logger; 
 
             internal RemoveCodeIssueComputersWorkItem(IList<ICodeIssueComputer> currentComputers,
-                IEnumerable<ICodeIssueComputer> toRemoveComputers, CodeIssueComputersChanged changeEvent)
+                IEnumerable<ICodeIssueComputer> toRemoveComputers, RemoveGlobalRefactoringWarnings removeWarningEvent)
             {
                 this.currentComputers = currentComputers;
                 this.toRemoveComputers = toRemoveComputers;
-                this.changeEvent = changeEvent;
+                this.removeWarningEvent = removeWarningEvent;
                 this.logger = NLoggerUtil.GetNLogger(typeof (RemoveCodeIssueComputersWorkItem));
             }
 
@@ -230,19 +198,10 @@ namespace warnings.components
                 {
                     currentComputers.Remove(computer);
                 }
-                changeEvent(new CodeIssueComputersRemovedArg(toRemoveComputers));
-            }
 
-            private class CodeIssueComputersRemovedArg : CodeIssueComputersChangedArg
-            {
-                internal CodeIssueComputersRemovedArg(IEnumerable<ICodeIssueComputer> computers) : base(computers)
-                {
-                }
-
-                public override bool IsAdding()
-                {
-                    return false;
-                }
+                // Invoke the event, the remove condition is any messages whose code issue computer is in 
+                // the toRemove list.
+                removeWarningEvent(n => toRemoveComputers.Contains(n.CodeIssueComputer));
             }
         }
 
@@ -273,11 +232,6 @@ namespace warnings.components
                 this.IsReady = true;
             }
 
-            public bool IsResultReady()
-            {
-                return IsReady;
-            }
-
             public IEnumerable<CodeIssue> GetCodeIssues()
             {
                 return results;
@@ -285,24 +239,22 @@ namespace warnings.components
         }
 
      
-        /* Work item for getting all the refactoring warnings in a given solution and a set of computers. */
+        /* Work item for getting all the refactoring addWarningsEvent in a given solution and a set of computers. */
         private class GetSolutionRefactoringWarningsWorkItem : WorkItem
         {
             private readonly IEnumerable<ICodeIssueComputer> computers;
             private readonly ISolution solution;
             private readonly Logger logger;
-            private readonly GlobalRefactoringWarningsReady warningsReady;
-            private readonly bool isAdding;
+            private readonly AddGlobalRefactoringWarnings addWarningsEvent;
 
 
-            internal GetSolutionRefactoringWarningsWorkItem(ISolution solution, ICodeIssueComputersChangedArg changedArg, 
-                GlobalRefactoringWarningsReady warningsReady)
+            internal GetSolutionRefactoringWarningsWorkItem(ISolution solution, IEnumerable<ICodeIssueComputer> computers, 
+                AddGlobalRefactoringWarnings addWarningsEvent)
             {
                 this.solution = solution;
-                this.computers = changedArg.GetChangedCodeIssueComputers();
-                this.isAdding = changedArg.IsAdding();
+                this.computers = computers;
                 this.logger = NLoggerUtil.GetNLogger(typeof (GetSolutionRefactoringWarningsWorkItem));
-                this.warningsReady = warningsReady;
+                this.addWarningsEvent = addWarningsEvent;
             }
 
             public override void Perform()
@@ -338,7 +290,7 @@ namespace warnings.components
                 }
                
                 // Inform all the listeners that new messages are available.
-                warningsReady(messagesList.AsEnumerable(), isAdding);
+                addWarningsEvent(messagesList.AsEnumerable());
             }
         }
     }

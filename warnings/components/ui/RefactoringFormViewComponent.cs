@@ -16,7 +16,7 @@ using warnings.util;
 namespace warnings.components.ui
 {
     /* delegate for update a control component. */
-    public delegate void ControlUpdate();
+    public delegate void UIUpdate();
 
     /*
      * This the view part in the MVC pattern. It registers to the event of code issue changes. When code issues change, this component
@@ -46,12 +46,18 @@ namespace warnings.components.ui
             form = new RefactoringWariningsForm();
             longRunningQueue = new WorkQueue() {ConcurrentLimit = 1};
             shortTaskQueue = new WorkQueue(){ConcurrentLimit = 1};
-            GhostFactorComponents.RefactoringCodeIssueComputerComponent.globalWarningsReady += OnGlobalWarningsReady;
+            GhostFactorComponents.RefactoringCodeIssueComputerComponent.AddGlobalWarnings += OnAddGlobalWarnings;
+            GhostFactorComponents.RefactoringCodeIssueComputerComponent.RemoveGlobalWarnings += OnRemoveGlobalWarnings;
          }
 
-        private void OnGlobalWarningsReady(IEnumerable<IRefactoringWarningMessage> messages, bool isAdded)
+        private void OnRemoveGlobalWarnings(Predicate<IRefactoringWarningMessage> removeCondition)
         {
-            shortTaskQueue.Add(new UpdateWarningWorkItem(form, messages, isAdded));
+            shortTaskQueue.Add(new RemoveWarningsWorkItem(form, removeCondition));
+        }
+
+        private void OnAddGlobalWarnings(IEnumerable<IRefactoringWarningMessage> messages)
+        {
+            shortTaskQueue.Add(new AddWarningsWorkItem(form, messages));
         }
 
 
@@ -77,41 +83,56 @@ namespace warnings.components.ui
             longRunningQueue.Add(new ShowingFormWorkItem(form));
         }
 
-        /* Work item for updating workitem in the form. */
-        private class UpdateWarningWorkItem : WorkItem
+        /* Work item for adding refactoring errors in the form. */
+        private class AddWarningsWorkItem : WorkItem
         {
             private readonly RefactoringWariningsForm form;
             private readonly Logger logger;
             private readonly IEnumerable<IRefactoringWarningMessage> messages;
-            private readonly bool isAdded;
 
-            internal UpdateWarningWorkItem(RefactoringWariningsForm form, 
-                IEnumerable<IRefactoringWarningMessage> messages, bool isAdded)
+            internal AddWarningsWorkItem(RefactoringWariningsForm form, 
+                IEnumerable<IRefactoringWarningMessage> messages)
             {
                 this.form = form;
                 this.messages = messages;
-                this.isAdded = isAdded;
-                this.logger = NLoggerUtil.GetNLogger(typeof (UpdateWarningWorkItem));
+                this.logger = NLoggerUtil.GetNLogger(typeof (AddWarningsWorkItem));
             }
 
             public override void Perform()
             {
                 // Add messages to the form. 
-                form.Invoke(new ControlUpdate(UpdateRefactoringWarnings));
+                form.Invoke(new UIUpdate(AddRefactoringWarnings));
             }
 
-            private void UpdateRefactoringWarnings()
+            private void AddRefactoringWarnings()
             {
-                if (isAdded)
-                {
-                    logger.Info("Adding messages to the form.");
-                    form.AddRefactoringWarnings(messages);
-                }
-                else
-                {
-                    logger.Info("Removing messages from the form.");
-                    form.RemoveRefactoringWarnings(messages);
-                }
+                logger.Info("Adding messages to the form.");
+                form.AddRefactoringWarnings(messages);
+            }
+        }
+
+        /* This work item is for removing warnings in the refactoring warning list. */
+        private class RemoveWarningsWorkItem : WorkItem
+        {
+            private readonly Predicate<IRefactoringWarningMessage> removeCondition;
+            private readonly RefactoringWariningsForm form;
+
+            public RemoveWarningsWorkItem(RefactoringWariningsForm form, 
+                Predicate<IRefactoringWarningMessage> removeCondition)
+            {
+                this.form = form;
+                this.removeCondition = removeCondition;
+            }
+
+            public override void Perform()
+            {
+                // Invoke the delegate method to remove warnings.
+                form.Invoke(new UIUpdate(RemoveWarnings));
+            }
+
+            private void RemoveWarnings()
+            {
+                form.RemoveRefactoringWarnings(removeCondition);
             }
         }
 
@@ -131,4 +152,6 @@ namespace warnings.components.ui
             }
         }
     }
+
+
 }
