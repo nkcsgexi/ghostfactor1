@@ -37,33 +37,35 @@ namespace warnings.ui
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(RefactoringWariningsForm));
-            this.listView1 = new System.Windows.Forms.ListView();
+            this.refactoringWarningsListView = new System.Windows.Forms.ListView();
             this.File = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Line = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Refactoring = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Description = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.imageList = new System.Windows.Forms.ImageList(this.components);
-            this.button1 = new System.Windows.Forms.Button();
+            this.removeRefactoringWarningsButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.refactoringCountLabel = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
-            // listView1
+            // refactoringWarningsListView
             // 
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.refactoringWarningsListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.File,
             this.Line,
             this.Refactoring,
             this.Description});
-            this.listView1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.listView1.FullRowSelect = true;
-            this.listView1.Location = new System.Drawing.Point(12, 12);
-            this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(510, 284);
-            this.listView1.SmallImageList = this.imageList;
-            this.listView1.TabIndex = 0;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View = System.Windows.Forms.View.Details;
-            this.listView1.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
-            this.listView1.DoubleClick += new System.EventHandler(this.listView1_DoubleClicked);
+            this.refactoringWarningsListView.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.refactoringWarningsListView.FullRowSelect = true;
+            this.refactoringWarningsListView.Location = new System.Drawing.Point(12, 12);
+            this.refactoringWarningsListView.Name = "refactoringWarningsListView";
+            this.refactoringWarningsListView.Size = new System.Drawing.Size(510, 284);
+            this.refactoringWarningsListView.SmallImageList = this.imageList;
+            this.refactoringWarningsListView.TabIndex = 0;
+            this.refactoringWarningsListView.UseCompatibleStateImageBehavior = false;
+            this.refactoringWarningsListView.View = System.Windows.Forms.View.Details;
+            this.refactoringWarningsListView.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.refactoringWarningsListView.DoubleClick += new System.EventHandler(this.listView1_DoubleClicked);
             // 
             // File
             // 
@@ -94,40 +96,65 @@ namespace warnings.ui
             this.imageList.TransparentColor = System.Drawing.Color.Transparent;
             this.imageList.Images.SetKeyName(0, "warning-sign.jpg");
             // 
-            // button1
+            // removeRefactoringWarningsButton
             // 
-            this.button1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.button1.Location = new System.Drawing.Point(12, 302);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(117, 32);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Ignore Warnings";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click_1);
+            this.removeRefactoringWarningsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.removeRefactoringWarningsButton.Location = new System.Drawing.Point(405, 302);
+            this.removeRefactoringWarningsButton.Name = "removeRefactoringWarningsButton";
+            this.removeRefactoringWarningsButton.Size = new System.Drawing.Size(117, 32);
+            this.removeRefactoringWarningsButton.TabIndex = 1;
+            this.removeRefactoringWarningsButton.Text = "Ignore Warnings";
+            this.removeRefactoringWarningsButton.UseVisualStyleBackColor = true;
+            this.removeRefactoringWarningsButton.Click += new System.EventHandler(this.OnRemoveWarningButtonClick);
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(12, 310);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(199, 16);
+            this.label1.TabIndex = 2;
+            this.label1.Text = "Problematic Refactorings Count:";
+            // 
+            // refactoringCountLabel
+            // 
+            this.refactoringCountLabel.AutoSize = true;
+            this.refactoringCountLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.refactoringCountLabel.Location = new System.Drawing.Point(211, 310);
+            this.refactoringCountLabel.Name = "refactoringCountLabel";
+            this.refactoringCountLabel.Size = new System.Drawing.Size(15, 16);
+            this.refactoringCountLabel.TabIndex = 3;
+            this.refactoringCountLabel.Text = "0";
             // 
             // RefactoringWariningsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(536, 346);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.listView1);
+            this.Controls.Add(this.refactoringCountLabel);
+            this.Controls.Add(this.label1);
+            this.Controls.Add(this.removeRefactoringWarningsButton);
+            this.Controls.Add(this.refactoringWarningsListView);
             this.Name = "RefactoringWariningsForm";
             this.Text = "RefactoringWariningForm";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView refactoringWarningsListView;
         private System.Windows.Forms.ColumnHeader File;
         private System.Windows.Forms.ColumnHeader Line;
         private System.Windows.Forms.ColumnHeader Refactoring;
         private System.Windows.Forms.ColumnHeader Description;
 
-        private Button button1;
+        private Button removeRefactoringWarningsButton;
         private ImageList imageList;
+        private Label label1;
+        private Label refactoringCountLabel;
     }
 
 

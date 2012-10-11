@@ -22,11 +22,17 @@ namespace warnings.components
     /* Used for any listeners to the event of removing refactoring warnings. */
     public delegate void RemoveGlobalRefactoringWarnings(Predicate<IRefactoringWarningMessage> removeCondition);
 
+    /* Used for any listeners who are instersted at how many refactorings are problematic. */
+    public delegate void ProblematicRefactoringsCountChanged(int newCount);
+
+
     /* A repository for issue computers to be queried, added, and deleted. */
     public interface ICodeIssueComputersRepository
     {
         event AddGlobalRefactoringWarnings AddGlobalWarnings;
         event RemoveGlobalRefactoringWarnings RemoveGlobalWarnings;
+        event ProblematicRefactoringsCountChanged ProblematicRefactoringCountChanged;
+ 
     
         void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
         void RemoveCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers);
@@ -45,19 +51,25 @@ namespace warnings.components
         }
 
         /* Saving all of the code issue computers. */
-        private readonly List<ICodeIssueComputer> codeIssueComputers;
+        private readonly IList<ICodeIssueComputer> codeIssueComputers;
+
+        /* The black list of computers that are not allowed to add. */
+        private readonly CodeIssueComputersBlackList blackList;
+
 
         /* Used for any listener to the event of code issue computers added or removed. */
-        private delegate void CodeIssueComputersChanged(IEnumerable<ICodeIssueComputer> newCodeIssueComputers);
+        private delegate void CodeIssueComputersAdded(IEnumerable<ICodeIssueComputer> newCodeIssueComputers);
 
         /* Event when new code issues are added.*/
-        private event CodeIssueComputersChanged codeIssueComputersAddedEvent;
+        private event CodeIssueComputersAdded codeIssueComputersAddedEvent;
 
         /* Event when new global refactoring addWarningsEvent are ready to be added. */
         public event AddGlobalRefactoringWarnings AddGlobalWarnings;
 
         /* Event when old global refactoring addWarningsEvent are ready to be removed. */
         public event RemoveGlobalRefactoringWarnings RemoveGlobalWarnings;
+
+        public event ProblematicRefactoringsCountChanged ProblematicRefactoringCountChanged;
 
 
         /* A single thread workqueue. */
@@ -74,16 +86,15 @@ namespace warnings.components
 
             // Add a listener for failed work item.
             queue.FailedWorkItem += OnItemFailed;
-
-            // Add a null computer to avoid adding more null computers.
-            codeIssueComputers.Add(new NullCodeIssueComputer());
             logger = NLoggerUtil.GetNLogger(typeof (RefactoringCodeIssueComputersComponent));
 
-            codeIssueComputersAddedEvent += OnCodeIssueComputersChanged;
+            blackList = new CodeIssueComputersBlackList(5);
+
+            codeIssueComputersAddedEvent += OnCodeIssueComputersAdded;
         }
 
-        /* When code issue computers are changed, this method will be called. */
-        private void OnCodeIssueComputersChanged(IEnumerable<ICodeIssueComputer> computers)
+        /* When code issue computers are added, this method will be called. */
+        private void OnCodeIssueComputersAdded(IEnumerable<ICodeIssueComputer> computers)
         {
             var solution = GhostFactorComponents.searchRealDocumentComponent.GetSolution();
             
@@ -121,13 +132,15 @@ namespace warnings.components
         public void AddCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
             // Create a code issue adding work item and push it to the work queue.
-            queue.Add(new AddCodeIssueComputersWorkItem(codeIssueComputers, computers, codeIssueComputersAddedEvent));
+            queue.Add(new AddCodeIssueComputersWorkItem(codeIssueComputers, computers, blackList, codeIssueComputersAddedEvent, 
+                ProblematicRefactoringCountChanged));
         }
 
         /* Remove a list of code issue computers from the current list. */
         public void RemoveCodeIssueComputers(IEnumerable<ICodeIssueComputer> computers)
         {
-            queue.Add(new RemoveCodeIssueComputersWorkItem(codeIssueComputers, computers, RemoveGlobalWarnings));
+            queue.Add(new RemoveCodeIssueComputersWorkItem(codeIssueComputers, computers, blackList, RemoveGlobalWarnings, 
+                ProblematicRefactoringCountChanged));
         }
 
         /* Get the code issues in the given node of the given document. */
@@ -140,21 +153,52 @@ namespace warnings.components
         }
 
 
+        private class CodeIssueComputersBlackList
+        {
+            private readonly int maxCount;
+            private readonly IList<ICodeIssueComputer> blackList; 
+            
+            internal CodeIssueComputersBlackList(int maxCount)
+            {
+                this.maxCount = maxCount;
+                this.blackList = new List<ICodeIssueComputer>();
+            }
+
+            public void Add(ICodeIssueComputer computer)
+            {
+                if (blackList.Count() == maxCount)
+                {
+                    blackList.RemoveAt(maxCount - 1);
+                }
+                blackList.Add(computer);
+            }
+
+            public bool IsBlack(ICodeIssueComputer computer)
+            {
+                return blackList.Contains(computer);
+            }
+        }
+
+
+
         /* Work item to add new issue computers to the repository. */
         private class AddCodeIssueComputersWorkItem : WorkItem
         {
             private readonly IList<ICodeIssueComputer> currentComputers;
             private readonly IEnumerable<ICodeIssueComputer> newComputers;
-            private readonly CodeIssueComputersChanged changeEvent;
-            private readonly Logger logger;
+            private readonly CodeIssueComputersAdded changeEvent;
+            private readonly ProblematicRefactoringsCountChanged countChangd;
+            private readonly CodeIssueComputersBlackList blackList;
 
-            public AddCodeIssueComputersWorkItem(IList<ICodeIssueComputer> currentComputers,
-                IEnumerable<ICodeIssueComputer> newComputers, CodeIssueComputersChanged changeEvent)
+            public AddCodeIssueComputersWorkItem(IList<ICodeIssueComputer> currentComputers, 
+                IEnumerable<ICodeIssueComputer> newComputers, CodeIssueComputersBlackList blackList, 
+                CodeIssueComputersAdded changeEvent, ProblematicRefactoringsCountChanged countChanged)
             {
                 this.currentComputers = currentComputers;
                 this.newComputers = newComputers;
+                this.blackList = blackList;
                 this.changeEvent = changeEvent;
-                this.logger = NLoggerUtil.GetNLogger(typeof (AddCodeIssueComputersWorkItem));
+                this.countChangd = countChanged;
             }
 
             public override void Perform()
@@ -164,14 +208,23 @@ namespace warnings.components
                 // For every computer in the new computers list. 
                 foreach (var computer in newComputers)
                 {
-                    // If a computer is not already in the list, add it.
-                    if (!currentComputers.Contains(computer))
+                    // If a computer is not already in the list.
+                    if (!currentComputers.Contains(computer) && 
+                        // And the computer is not null computer.
+                        !(computer is NullCodeIssueComputer) &&
+                        !blackList.IsBlack(computer))
                     {
                         currentComputers.Add(computer);
                         addedComputers.Add(computer);
                     }
                 }
-                changeEvent(addedComputers.AsEnumerable());
+
+                // If has added new computers, then send messages to listeners.
+                if (addedComputers.Any())
+                {
+                    changeEvent(addedComputers.AsEnumerable());
+                    countChangd(currentComputers.Count());
+                }
             }
         }
 
@@ -181,14 +234,20 @@ namespace warnings.components
             private readonly IList<ICodeIssueComputer> currentComputers;
             private readonly IEnumerable<ICodeIssueComputer> toRemoveComputers;
             private readonly RemoveGlobalRefactoringWarnings removeWarningEvent;
-            private readonly Logger logger; 
+            private readonly ProblematicRefactoringsCountChanged countChangedEvent;
+            private readonly CodeIssueComputersBlackList blackList;
+            private readonly Logger logger;
 
             internal RemoveCodeIssueComputersWorkItem(IList<ICodeIssueComputer> currentComputers,
-                IEnumerable<ICodeIssueComputer> toRemoveComputers, RemoveGlobalRefactoringWarnings removeWarningEvent)
+                IEnumerable<ICodeIssueComputer> toRemoveComputers, CodeIssueComputersBlackList blackList,
+                RemoveGlobalRefactoringWarnings removeWarningEvent, 
+                ProblematicRefactoringsCountChanged countChangedEvent)
             {
                 this.currentComputers = currentComputers;
                 this.toRemoveComputers = toRemoveComputers;
+                this.blackList = blackList;
                 this.removeWarningEvent = removeWarningEvent;
+                this.countChangedEvent = countChangedEvent;
                 this.logger = NLoggerUtil.GetNLogger(typeof (RemoveCodeIssueComputersWorkItem));
             }
 
@@ -196,12 +255,19 @@ namespace warnings.components
             {
                 foreach (ICodeIssueComputer computer in toRemoveComputers)
                 {
-                    currentComputers.Remove(computer);
+                    if(!currentComputers.Remove(computer))
+                    {
+                        logger.Fatal("Cannot remove a code issue computer.");
+                    }
+
+                    // Add the removed computer to the black list.
+                    blackList.Add(computer);
                 }
 
                 // Invoke the event, the remove condition is any messages whose code issue computer is in 
                 // the toRemove list.
                 removeWarningEvent(n => toRemoveComputers.Contains(n.CodeIssueComputer));
+                countChangedEvent(currentComputers.Count);
             }
         }
 
@@ -211,10 +277,7 @@ namespace warnings.components
             private readonly IDocument document;
             private readonly SyntaxNode node;
             private readonly IEnumerable<ICodeIssueComputer> computers;
-            private readonly Logger logger;
             private IEnumerable<CodeIssue> results;
-            private bool IsReady;
-
 
             internal GetDocumentNodeCodeIssueWorkItem(IDocument document, SyntaxNode node, 
                 IEnumerable<ICodeIssueComputer> computers)
@@ -222,15 +285,12 @@ namespace warnings.components
                 this.document = document;
                 this.node = node;
                 this.computers = computers;
-                this.logger = NLoggerUtil.GetNLogger(typeof (GetDocumentNodeCodeIssueWorkItem));
-                this.IsReady = false;
             }
 
             public override void Perform()
             {
                 results = computers.SelectMany(c => c.ComputeCodeIssues(document, node));
-                this.IsReady = true;
-            }
+             }
 
             public IEnumerable<CodeIssue> GetCodeIssues()
             {

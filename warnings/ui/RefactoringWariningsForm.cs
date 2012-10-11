@@ -21,20 +21,40 @@ namespace warnings.ui
 
         private readonly Logger logger = NLoggerUtil.GetNLogger(typeof(RefactoringWariningsForm));
 
-
-
         public RefactoringWariningsForm()
         {
             InitializeComponent();
             messagesInListView = new List<IRefactoringWarningMessage>();
         }
      
-        private void button1_Click_1(object sender, EventArgs e)
+        /* This is the control part of the control-view-model pattern. */
+        private void OnRemoveWarningButtonClick(object sender, EventArgs e)
         {
-            for (int  i = 0; i < listView1.SelectedItems.Count; i++)
+            var toRemoveCodeIssueComputers = new List<ICodeIssueComputer>();
+            var items = refactoringWarningsListView.SelectedItems;
+            
+            // For each item in the list of selected items.
+            foreach (ListViewItem item in items)
             {
-                var removedItem = listView1.SelectedItems[i];
-                listView1.Items.Remove(removedItem);   
+                // Get the index of this item among all the items.
+                int index = refactoringWarningsListView.Items.IndexOf(item);
+
+                // Get the corresponding code issue computer to this item.
+                var computer = messagesInListView.ElementAt(index).CodeIssueComputer;
+
+                // Add the computer to the toremove list, if it is not aready there. 
+                if(!toRemoveCodeIssueComputers.Contains(computer))
+                {
+                    toRemoveCodeIssueComputers.Add(computer);
+                }
+            }
+
+            // If the toRemove list has some element, remove these computers directly from the 
+            // code issue component. 
+            if(toRemoveCodeIssueComputers.Any())
+            {
+                GhostFactorComponents.RefactoringCodeIssueComputerComponent.
+                    RemoveCodeIssueComputers(toRemoveCodeIssueComputers);
             }
         }
 
@@ -100,11 +120,11 @@ namespace warnings.ui
             // If the item is created, add to the list view.
             if (item != null)
             {
-                listView1.Items.Add(item);
+                refactoringWarningsListView.Items.Add(item);
                 
                 // Save message.
                 messagesInListView.Add(message);
-                listView1.Invalidate();
+                refactoringWarningsListView.Invalidate();
                 logger.Info("Item added.");
                 return true;
             }
@@ -114,13 +134,13 @@ namespace warnings.ui
         /* Invoked when double clicking a warning, shall redirect to where the problem is. */
         private void listView1_DoubleClicked(object sender, EventArgs e)
         {
-            var selectedItems = listView1.SelectedItems;
+            var selectedItems = refactoringWarningsListView.SelectedItems;
             if(selectedItems.Count > 0)
             {
                 var removedCodeIssueComputers = new List<ICodeIssueComputer>();
                 foreach (ListViewItem item in selectedItems)
                 {
-                    int index = listView1.Items.IndexOf(item);
+                    int index = refactoringWarningsListView.Items.IndexOf(item);
                     var message = messagesInListView.ElementAt(index);
                     removedCodeIssueComputers.Add(message.CodeIssueComputer);
                 }
@@ -148,9 +168,16 @@ namespace warnings.ui
             foreach (int i in indexes)
             {
                 messagesInListView.RemoveAt(i);
-                listView1.Items.RemoveAt(i);
+                refactoringWarningsListView.Items.RemoveAt(i);
             }
-            listView1.Invalidate();
+            refactoringWarningsListView.Invalidate();
         }
+
+        /* Set the text label indicates how many problematic refactorings are there. */
+        public void SetProblematicRefactoringsCount(int count)
+        {
+            refactoringCountLabel.Text = count.ToString();
+        }
+
     }
 }

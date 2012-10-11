@@ -48,7 +48,13 @@ namespace warnings.components.ui
             shortTaskQueue = new WorkQueue(){ConcurrentLimit = 1};
             GhostFactorComponents.RefactoringCodeIssueComputerComponent.AddGlobalWarnings += OnAddGlobalWarnings;
             GhostFactorComponents.RefactoringCodeIssueComputerComponent.RemoveGlobalWarnings += OnRemoveGlobalWarnings;
-         }
+            GhostFactorComponents.RefactoringCodeIssueComputerComponent.ProblematicRefactoringCountChanged += OnProblematicRefactoringsCountChanged;
+        }
+
+        private void OnProblematicRefactoringsCountChanged(int newCount)
+        {
+            shortTaskQueue.Add(new ResetRefactoringCountWorkItem(form, newCount));
+        }
 
         private void OnRemoveGlobalWarnings(Predicate<IRefactoringWarningMessage> removeCondition)
         {
@@ -117,7 +123,7 @@ namespace warnings.components.ui
             private readonly Predicate<IRefactoringWarningMessage> removeCondition;
             private readonly RefactoringWariningsForm form;
 
-            public RemoveWarningsWorkItem(RefactoringWariningsForm form, 
+            internal RemoveWarningsWorkItem(RefactoringWariningsForm form, 
                 Predicate<IRefactoringWarningMessage> removeCondition)
             {
                 this.form = form;
@@ -136,6 +142,30 @@ namespace warnings.components.ui
             }
         }
 
+        /* Reset the refactoring count showing in the form. */
+        private class ResetRefactoringCountWorkItem : WorkItem
+        {
+            private readonly RefactoringWariningsForm form;
+            private readonly int newCount;
+
+            internal ResetRefactoringCountWorkItem(RefactoringWariningsForm form, int newCount)
+            {
+                this.form = form;
+                this.newCount = newCount;
+            }
+
+            public override void Perform()
+            {
+                form.Invoke(new UIUpdate(ResetRefactoringCount));
+            }
+
+            private void ResetRefactoringCount()
+            {
+                form.SetProblematicRefactoringsCount(newCount);
+            }
+        }
+
+
         /* Work item for showing the form, unlike other workitem, this work item does not stop. */
         private class ShowingFormWorkItem : WorkItem
         {
@@ -152,6 +182,4 @@ namespace warnings.components.ui
             }
         }
     }
-
-
 }
