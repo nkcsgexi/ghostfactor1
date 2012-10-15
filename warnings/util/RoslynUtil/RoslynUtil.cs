@@ -41,7 +41,7 @@ namespace warnings.util
         public static IDocument UpdateDocumentToString(IDocument document, String s)
         {
             IText text = new StringText(s);
-            CommonSyntaxNode node = ASTUtil.getSyntaxTreeFromSource(s).GetRoot();
+            CommonSyntaxNode node = ASTUtil.GetSyntaxTreeFromSource(s).GetRoot();
             return document.Project.Solution.UpdateDocument(document.Id, text).GetDocument(document.Id);
         }
     }

@@ -32,7 +32,7 @@ namespace warnings.util
         /* Replace the specified start(length) in a text with the replacer. */
         public static String ReplaceWith(String text, String replacer, int start, int length)
         {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
             sb.Append(text.Substring(0, start));
             sb.Append(replacer);
             sb.Append(text.Substring(start + length));

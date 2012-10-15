@@ -37,7 +37,7 @@ namespace WarningTest
             return @"D:\VS workspaces\BeneWar\warnings\WarningTest\WarningTest.csproj";
         }
 
-        public static string getFakeSourceFolder()
+        public static string GetFakeSourceFolder()
         {
             return @"D:\VS workspaces\BeneWar\warnings\WarningTest\fakesource\";
         }

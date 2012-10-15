@@ -29,7 +29,7 @@ namespace WarningTest
 
         public MethodAnalyzerTests()
         {
-            var code = TestUtil.getFakeSourceFolder() + "MethodAnalyzerExample.cs";
+            var code = TestUtil.GetFakeSourceFolder() + "MethodAnalyzerExample.cs";
             var converter = new String2IDocumentConverter();
             document = (IDocument) converter.Convert(FileUtil.ReadAllText(code), null, null, null);
             logger = NLoggerUtil.GetNLogger(typeof (MethodAnalyzerTests));

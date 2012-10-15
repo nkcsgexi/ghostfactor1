@@ -58,7 +58,7 @@ namespace warnings.ui
             }
         }
 
-        private void listView1_SelectedIndexChanged(object sender, EventArgs e)
+        private void RefactoringWarninglistViewSelectedIndexChanged(object sender, EventArgs e)
         {
 
         }

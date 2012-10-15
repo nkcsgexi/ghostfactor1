@@ -93,10 +93,10 @@ namespace warnings.refactoring.detection
         public void SetSourceBefore(string source)
         {
             this.beforeSource = source;
-            this.beforeRoot = ASTUtil.getSyntaxTreeFromSource(beforeSource).GetRoot();
+            this.beforeRoot = ASTUtil.GetSyntaxTreeFromSource(beforeSource).GetRoot();
         }
 
-        public string getSourceBefore()
+        public string GetSourceBefore()
         {
             return beforeSource;
         }
@@ -104,10 +104,10 @@ namespace warnings.refactoring.detection
         public void SetSourceAfter(string source)
         {
             this.afterSource = source;
-            this.afterRoot = ASTUtil.getSyntaxTreeFromSource(afterSource).GetRoot();
+            this.afterRoot = ASTUtil.GetSyntaxTreeFromSource(afterSource).GetRoot();
         }
 
-        public string getSourceAfter()
+        public string GetSourceAfter()
         {
             return afterSource;
         }

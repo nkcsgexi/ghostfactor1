@@ -64,7 +64,7 @@ namespace warnings.ui
             this.refactoringWarningsListView.TabIndex = 0;
             this.refactoringWarningsListView.UseCompatibleStateImageBehavior = false;
             this.refactoringWarningsListView.View = System.Windows.Forms.View.Details;
-            this.refactoringWarningsListView.SelectedIndexChanged += new System.EventHandler(this.listView1_SelectedIndexChanged);
+            this.refactoringWarningsListView.SelectedIndexChanged += new System.EventHandler(this.RefactoringWarninglistViewSelectedIndexChanged);
             this.refactoringWarningsListView.DoubleClick += new System.EventHandler(this.listView1_DoubleClicked);
             // 
             // File

@@ -19,7 +19,7 @@ namespace WarningTest.analyzer_test
 
         public TypeHierarchyAnalyzerTests()
         {
-            var source = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "/TypeHierarchyFakeSource.cs");
+            var source = FileUtil.ReadAllText(TestUtil.GetFakeSourceFolder() + "/TypeHierarchyFakeSource.cs");
             var converter = new String2IDocumentConverter();
             document = (IDocument)converter.Convert(source, null, null, null);
             analyzer = AnalyzerFactory.GetTypeHierarchyAnalyzer();

@@ -21,7 +21,7 @@ namespace WarningTest
         public ASTUtilTests()
         {
             this.code = FileUtil.ReadAllText(path);
-            this.tree = ASTUtil.getSyntaxTreeFromSource(code);
+            this.tree = ASTUtil.GetSyntaxTreeFromSource(code);
         }
 
 

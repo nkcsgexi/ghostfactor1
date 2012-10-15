@@ -32,7 +32,7 @@ namespace WarningTest
 
         public SyntaxNodesAnalyzerTests()
         {
-            var code = TestUtil.getFakeSourceFolder() + "SyntaxNodesAnalyzerExamples.cs";
+            var code = TestUtil.GetFakeSourceFolder() + "SyntaxNodesAnalyzerExamples.cs";
             var converter = new String2IDocumentConverter();
             document = (IDocument) converter.Convert(FileUtil.ReadAllText(code), null, null, null);
             logger = NLoggerUtil.GetNLogger(typeof (MethodAnalyzerTests));

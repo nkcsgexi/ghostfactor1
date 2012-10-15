@@ -31,7 +31,7 @@ namespace warnings.refactoring.detection
             this.before = before;
         }
 
-        public string getSourceBefore()
+        public string GetSourceBefore()
         {
             return before;
         }
@@ -41,7 +41,7 @@ namespace warnings.refactoring.detection
             this.after = after;
         }
 
-        public string getSourceAfter()
+        public string GetSourceAfter()
         {
             return after;
         }
@@ -54,16 +54,16 @@ namespace warnings.refactoring.detection
             SyntaxTree treeAfter = SyntaxTree.ParseCompilationUnit(after);
 
             // Get the classes in the code before and after.
-            var classesBefore = treeBefore.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
-            var classesAfter = treeAfter.GetRoot().DescendantNodes().OfType<ClassDeclarationSyntax>();
+            var classesBefore = treeBefore.GetRoot().DescendantNodes().Where(n => n.Kind == SyntaxKind.ClassDeclaration);
+            var classesAfter = treeAfter.GetRoot().DescendantNodes().Where(n => n.Kind == SyntaxKind.ClassDeclaration);
             
             // Get the pairs of class declaration in the code before and after
             var paris = GetClassDeclarationPairs(classesBefore, classesAfter);
             foreach (var pair in paris)
             {
-                var detector = new InClassExtractMethodDetector(pair.Key, pair.Value);
-                detector.setSyntaxTreeBefore(treeBefore);
-                detector.setSyntaxTreeAfter(treeAfter);
+                var detector = new InClassExtractMethodDetector((ClassDeclarationSyntax)pair.Key, (ClassDeclarationSyntax)pair.Value);
+                detector.SetSyntaxTreeBefore(treeBefore);
+                detector.SetSyntaxTreeAfter(treeAfter);
                 if(detector.HasRefactoring())
                 {
                     refactorings = refactorings.Union(detector.GetRefactorings());
@@ -74,17 +74,17 @@ namespace warnings.refactoring.detection
         }
 
         /* Get the definition of same classes before and after. */
-        private IEnumerable<KeyValuePair<ClassDeclarationSyntax, ClassDeclarationSyntax>> GetClassDeclarationPairs
-            (IEnumerable<ClassDeclarationSyntax> classesBefore, IEnumerable<ClassDeclarationSyntax> classesAfter)
+        private IEnumerable<KeyValuePair<SyntaxNode, SyntaxNode>> GetClassDeclarationPairs
+            (IEnumerable<SyntaxNode> classesBefore, IEnumerable<SyntaxNode> classesAfter)
         {
-            var pairs = new List<KeyValuePair<ClassDeclarationSyntax, ClassDeclarationSyntax>>();
-            foreach(var b in classesBefore)
+            var pairs = new List<KeyValuePair<SyntaxNode, SyntaxNode>>();
+            foreach (ClassDeclarationSyntax b in classesBefore)
             {
-                foreach (var a in classesAfter)
+                foreach (ClassDeclarationSyntax a in classesAfter)
                 {
                     if(b.Identifier.Value.Equals(a.Identifier.Value))
                     {
-                        pairs.Add(new KeyValuePair<ClassDeclarationSyntax, ClassDeclarationSyntax>(b, a));
+                        pairs.Add(new KeyValuePair<SyntaxNode, SyntaxNode>(b, a));
                         break;
                     }
                 }
@@ -128,8 +128,8 @@ namespace warnings.refactoring.detection
             refactorings = Enumerable.Empty<IManualRefactoring>();
 
             // Build the call graphs of classes before and after.
-            CallGraph callGraphBefore = new CallGraphBuilder(classBefore, treeBefore).buildCallGraph();
-            CallGraph callGraphAfter = new CallGraphBuilder(classAfter, treeAfter).buildCallGraph();
+            CallGraph callGraphBefore = new CallGraphBuilder(classBefore, treeBefore).BuildCallGraph();
+            CallGraph callGraphAfter = new CallGraphBuilder(classAfter, treeAfter).BuildCallGraph();
             
             // Get the methods that are newly created.
             var addedMethods = callGraphAfter.getVerticesNotIn(callGraphBefore);
@@ -151,8 +151,8 @@ namespace warnings.refactoring.detection
                         var detector = new InMethodExtractMethodDectector(callerBefore, caller, callee);
 
                         // Set the trees to the detector.
-                        detector.setSyntaxTreeBefore(treeBefore);
-                        detector.setSyntaxTreeAfter(treeAfter);
+                        detector.SetSyntaxTreeBefore(treeBefore);
+                        detector.SetSyntaxTreeAfter(treeAfter);
 
                         // Start to detect.
                         if (detector.HasRefactoring())
@@ -171,12 +171,12 @@ namespace warnings.refactoring.detection
             return this.refactorings;
         }
 
-        public void setSyntaxTreeBefore(SyntaxTree before)
+        public void SetSyntaxTreeBefore(SyntaxTree before)
         {
             this.treeBefore = before;
         }
 
-        public void setSyntaxTreeAfter(SyntaxTree after)
+        public void SetSyntaxTreeAfter(SyntaxTree after)
         {
             this.treeAfter = after;
         }
@@ -214,7 +214,8 @@ namespace warnings.refactoring.detection
         public bool HasRefactoring()
         {
             // Get the first invocation of callee in the caller method body.
-            var invocation = ASTUtil.GetAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter)[0];
+            var invocation = ASTUtil.GetAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter).First();
+
             // Precondition  
             Contract.Requires(invocation!= null);
             
@@ -260,12 +261,12 @@ namespace warnings.refactoring.detection
             yield return refactoring;
         }
 
-        public void setSyntaxTreeBefore(SyntaxTree before)
+        public void SetSyntaxTreeBefore(SyntaxTree before)
         {
             this.treeBefore = before;
         }
 
-        public void setSyntaxTreeAfter(SyntaxTree after)
+        public void SetSyntaxTreeAfter(SyntaxTree after)
         {
             this.treeAfter = after;
         }

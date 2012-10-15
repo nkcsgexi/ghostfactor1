@@ -139,6 +139,7 @@
     <Compile Include="conditions\Rename\RenameConditionChecker.cs" />
     <Compile Include="configuration\GlobalConfigurations.cs" />
     <Compile Include="detection\ChangeMethodSignatureDetector.cs" />
+    <Compile Include="detection\extract method\SimpleExtractMethodDetector.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -149,7 +150,7 @@
     <Compile Include="analyzer\retriever\RetrieverFactory.cs" />
     <Compile Include="analyzer\retriever\TypablesRetriever.cs" />
     <Compile Include="ui\RefactoringQuickFix.cs" />
-    <Compile Include="detection\ExtractMethodDetector.cs" />
+    <Compile Include="detection\extract method\ExtractMethodDetector.cs" />
     <Compile Include="detection\rename\RenameDetector.cs" />
     <Compile Include="refactoring\analyzer\ManualExtractMethodAnalyzer.cs" />
     <Compile Include="refactoring\analyzer\RefactoringAnalyzerFactory.cs" />

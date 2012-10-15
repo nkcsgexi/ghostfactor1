@@ -32,7 +32,7 @@ namespace warnings.util
         public void setSource(string source)
         {
             this.source = source;
-            this.tree = ASTUtil.getSyntaxTreeFromSource(source);
+            this.tree = ASTUtil.GetSyntaxTreeFromSource(source);
             methods = ASTUtil.getAllMethodDeclarations(tree);
             blocks = new List<string>();
             methodNames = new List<string>();

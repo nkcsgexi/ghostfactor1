@@ -26,10 +26,10 @@ namespace WarningTest
 
         public RenameDetectorTests()
         {
-            var sourceBefore = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "RenameDetectorExampleBefore.txt");
-            var sourceAfter = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "RenameDetectorExampleAfter.txt");
-            before = ASTUtil.getSyntaxTreeFromSource(sourceBefore).GetRoot();
-            after = ASTUtil.getSyntaxTreeFromSource(sourceAfter).GetRoot();
+            var sourceBefore = FileUtil.ReadAllText(TestUtil.GetFakeSourceFolder() + "RenameDetectorExampleBefore.txt");
+            var sourceAfter = FileUtil.ReadAllText(TestUtil.GetFakeSourceFolder() + "RenameDetectorExampleAfter.txt");
+            before = ASTUtil.GetSyntaxTreeFromSource(sourceBefore).GetRoot();
+            after = ASTUtil.GetSyntaxTreeFromSource(sourceAfter).GetRoot();
             detector = RefactoringDetectorFactory.CreateRenameDetector();
             logger = NLoggerUtil.GetNLogger(typeof (RenameDetectorTests));
         }
@@ -43,7 +43,7 @@ namespace WarningTest
             TextSpan span = tokens.ElementAt(idIndex).Span;
             string beforeTokenCode = node.GetText().Substring(0, span.Start);
             string afterTokenCode = node.GetText().Substring(span.End);
-            return ASTUtil.getSyntaxTreeFromSource(beforeTokenCode + newName + afterTokenCode).GetRoot();
+            return ASTUtil.GetSyntaxTreeFromSource(beforeTokenCode + newName + afterTokenCode).GetRoot();
         }
 
 

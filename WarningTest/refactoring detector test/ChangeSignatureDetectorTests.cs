@@ -21,8 +21,8 @@ namespace WarningTest
 
         public ChangeSignatureDetectorTests()
         {
-            sourceBefore = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "ChangeMethodSignatureBefore.txt");
-            sourceAfter = FileUtil.ReadAllText(TestUtil.getFakeSourceFolder() + "ChangeMethodSignatureAfter.txt");
+            sourceBefore = FileUtil.ReadAllText(TestUtil.GetFakeSourceFolder() + "ChangeMethodSignatureBefore.txt");
+            sourceAfter = FileUtil.ReadAllText(TestUtil.GetFakeSourceFolder() + "ChangeMethodSignatureAfter.txt");
             detector = RefactoringDetectorFactory.CreateChangeMethodSignatureDetector();
             detector.SetSourceBefore(sourceBefore);
             detector.SetSourceAfter(sourceAfter);

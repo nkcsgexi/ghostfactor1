@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Roslyn.Compilers.CSharp;
+using warnings.detection;
 using warnings.source;
 using warnings.refactoring;
 
@@ -17,15 +18,21 @@ namespace warnings.refactoring.detection
     public interface IBeforeAndAfterSourceKeeper
     {
         void SetSourceBefore(String source);
-        string getSourceBefore();
+        string GetSourceBefore();
         void SetSourceAfter(String source);
-        string getSourceAfter();
+        string GetSourceAfter();
     }
 
     public interface IBeforeAndAfterSyntaxTreeKeeper
     {
-        void setSyntaxTreeBefore(SyntaxTree before);
-        void setSyntaxTreeAfter(SyntaxTree after);
+        void SetSyntaxTreeBefore(SyntaxTree before);
+        void SetSyntaxTreeAfter(SyntaxTree after);
+    }
+
+    public interface IBeforeAndAfterSyntaxNodeKeeper
+    {
+        void SetSyntaxNodeBefore(SyntaxNode before);
+        void SetSyntaxNodeAfter(SyntaxNode after);
     }
 
     public interface IExternalRefactoringDetector : IRefactoringDetector, IBeforeAndAfterSourceKeeper
@@ -45,9 +52,16 @@ namespace warnings.refactoring.detection
             return new ExtractMethodDetector();
         }
 
+        public static IExternalRefactoringDetector CreateSimpleExtractMethodDetector()
+        {
+            return new SimpleExtractMethodDetector();
+        }
+
         public static IExternalRefactoringDetector CreateChangeMethodSignatureDetector()
         {
             return  new ChangeMethodSignatureDetector();
         }
+
+
     }
 }

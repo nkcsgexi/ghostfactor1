@@ -31,7 +31,7 @@ namespace WarningTest
 
         public DataFlowAnalyzerTests()
         {
-            var code = TestUtil.getFakeSourceFolder() + "DataFlowExample.cs";
+            var code = TestUtil.GetFakeSourceFolder() + "DataFlowExample.cs";
             var converter = new String2IDocumentConverter();
             this.document = (IDocument)converter.Convert(FileUtil.ReadAllText(code), null, null, null);
             logger = NLoggerUtil.GetNLogger(typeof(DataFlowAnalyzerTests));

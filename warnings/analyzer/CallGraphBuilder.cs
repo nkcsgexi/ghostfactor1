@@ -12,6 +12,7 @@ namespace warnings.analyzer
     {
         /* The class where a call graph should ananlyze. */
         private readonly ClassDeclarationSyntax classDeclaration;
+
         /* The entire syntax tree of the file containing this class defined above. */
         private readonly SyntaxTree tree;
 
@@ -21,28 +22,30 @@ namespace warnings.analyzer
             this.classDeclaration = classDeclaration;
             this.tree = tree;
         }
+
         /* Build the graph. */
-        public CallGraph buildCallGraph()
+        public CallGraph BuildCallGraph()
         {
             // Get all the method declarations in the class.
-            var methodDeclarations = classDeclaration.DescendantNodes().
-                OfType<MethodDeclarationSyntax>();
+            var methods = classDeclaration.DescendantNodes().Where(n => n.Kind == SyntaxKind.MethodDeclaration);
             var callGraph = new CallGraph();
             
             // Add all the methods to the call graph as vertices.
-            foreach (var m in methodDeclarations)
+            foreach (MethodDeclarationSyntax m in methods)
             {
                 callGraph.addVertice(m);
             }
 
             // For each pair of method, check if they have caller/callee relationship and adds to 
             // the call graph as edges if true.
-            foreach (var m1 in methodDeclarations)
+            foreach (var m1 in methods)
             {
-                foreach (var m2 in methodDeclarations)
+                foreach (var m2 in methods)
                 {
-                    if (ASTUtil.IsInvoking(m1, m2, tree)) 
-                        callGraph.addEdge(m1, m2);
+                    if (ASTUtil.IsInvoking(m1, m2, tree))
+                    {
+                        callGraph.addEdge((MethodDeclarationSyntax)m1, (MethodDeclarationSyntax)m2);
+                    }
                 }
             }
             return callGraph;

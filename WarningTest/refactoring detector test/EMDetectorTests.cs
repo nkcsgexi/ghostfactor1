@@ -13,11 +13,11 @@ namespace WarningTest
     public class EMDetectorTests
     {
         private static readonly string fileBefore = 
-            TestUtil.getFakeSourceFolder() + "EMDetectorBefore.cs";
+            TestUtil.GetFakeSourceFolder() + "EMDetectorBefore.cs";
 
 
         private static readonly string fileAfter = 
-            TestUtil.getFakeSourceFolder() + "EMDetectorAfter.cs";
+            TestUtil.GetFakeSourceFolder() + "EMDetectorAfter.cs";
 
         private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (EMDetectorTests));
 

@@ -42,7 +42,7 @@ namespace warnings.analyzer
         public void SetSource(string source)
         {
             this.source = source;
-            statement = ASTUtil.getSyntaxTreeFromSource(this.source).GetRoot();
+            statement = ASTUtil.GetSyntaxTreeFromSource(this.source).GetRoot();
         }
 
         public void SetSyntaxNode(SyntaxNode statement)

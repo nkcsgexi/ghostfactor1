@@ -28,7 +28,7 @@ namespace WarningTest
 
         public RenamableRetrieverTests()
         {
-            var code = TestUtil.getFakeSourceFolder() + "MethodAnalyzerExample.cs";
+            var code = TestUtil.GetFakeSourceFolder() + "MethodAnalyzerExample.cs";
             var converter = new String2IDocumentConverter();
             this.document = (IDocument) converter.Convert(FileUtil.ReadAllText(code), null, null, null);
             model = document.GetSemanticModel();

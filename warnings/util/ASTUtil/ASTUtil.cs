@@ -13,7 +13,7 @@ namespace warnings.util
     public class ASTUtil
     {
         /* Builds Syntax Tree from the source code of a file. */
-        public static SyntaxTree getSyntaxTreeFromSource(String source)
+        public static SyntaxTree GetSyntaxTreeFromSource(String source)
         {
             return SyntaxTree.ParseCompilationUnit(source);
         }
@@ -48,7 +48,7 @@ namespace warnings.util
         }
 
         /* Create the semantic model of a given tree. */
-        public static SemanticModel createSemanticModel(SyntaxTree tree)
+        public static SemanticModel CreateSemanticModel(SyntaxTree tree)
         {
             return Compilation.Create("compilation").AddSyntaxTrees(tree)
                 .AddReferences(new AssemblyFileReference(typeof(object).Assembly.Location))
@@ -68,38 +68,31 @@ namespace warnings.util
         }
 
         /* Return true if caller is actually calling the callee, otherwise return false. */
-        public static bool IsInvoking(MethodDeclarationSyntax caller, MethodDeclarationSyntax callee, SyntaxTree tree)
+        public static bool IsInvoking(SyntaxNode caller, SyntaxNode callee, SyntaxTree tree)
         {
             return GetAllInvocationsInMethod(caller, callee, tree).Any();
         }
 
         /* Get all the invocations of callee in the body of caller method. */
-        public static IList<InvocationExpressionSyntax> GetAllInvocationsInMethod
-            (MethodDeclarationSyntax caller, MethodDeclarationSyntax callee, SyntaxTree tree)
+        public static IEnumerable<InvocationExpressionSyntax> GetAllInvocationsInMethod
+            (SyntaxNode caller, SyntaxNode callee, SyntaxTree tree)
         {
             // Where the results are stored.
             var results = new List<InvocationExpressionSyntax>();
             
             // Create semantic model of the given tree.
-            SemanticModel model = createSemanticModel(tree);
+            SemanticModel model = CreateSemanticModel(tree);
 
             // Get the entry of callee in the symble table.
-            Symbol calleeSymbol = model.GetDeclaredSymbol(callee);
+            Symbol calleeSymbol = model.GetDeclaredSymbol((MethodDeclarationSyntax)callee);
 
-            // Get the invocations of the callee methods in the given tree.
-            IEnumerable<InvocationExpressionSyntax> allInvocations = tree.GetRoot().DescendantNodes().
-                OfType<InvocationExpressionSyntax>();
-            IEnumerable<InvocationExpressionSyntax> calleeInvocations = allInvocations.Where
-                (i => model.GetSymbolInfo(i).Symbol == calleeSymbol);
+            // Get all the invocations in the caller.
+            var allInvocations = caller.DescendantNodes().
+                Where(n => n.Kind == SyntaxKind.InvocationExpression).
+                    Select(n => (InvocationExpressionSyntax) n);
 
-
-            // Check if one of thsee invocations is in the caller.
-            foreach (InvocationExpressionSyntax invocation in calleeInvocations)
-            {
-                if (caller.FullSpan.Contains(invocation.FullSpan))
-                    results.Add(invocation);
-            }
-            return results;
+            // Among all the invocations, select the ones that are calling the callee symbol.
+            return allInvocations.Where(i => model.GetSymbolInfo(i).Symbol == calleeSymbol);
         }
 
         /* Flatten the caller by replacing a invocation of the callee with the code in the callee. */

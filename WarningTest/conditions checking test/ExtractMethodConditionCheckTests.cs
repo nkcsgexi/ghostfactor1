@@ -30,8 +30,8 @@ namespace WarningTest
 
         public ExtractMethodConditionCheckTests()
         {
-            string fileBefore = TestUtil.getFakeSourceFolder() + "EMDetectorBefore.cs";
-            string fileAfter = TestUtil.getFakeSourceFolder() + "EMDetectorAfter.cs";
+            string fileBefore = TestUtil.GetFakeSourceFolder() + "EMDetectorBefore.cs";
+            string fileAfter = TestUtil.GetFakeSourceFolder() + "EMDetectorAfter.cs";
             var converter = new String2IDocumentConverter();
 
             // Get before and after document.
