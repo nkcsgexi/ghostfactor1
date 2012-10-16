@@ -1,66 +1,58 @@
 ﻿<RecentFiles>
   <RecentFiles>
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:StatementAnalyzerTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:TryToUpdate.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:DataStructureUtil.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:RoslynUtilTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:CallGraphTest.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:component test/f:ComponentTimerTests.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:RoslynUtil/f:RoslynUtil.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:component test/f:ResourcesTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:component test/f:WorkqueueTests.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:RoslynRefactoringUtilTest.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:RoslynUtil/f:ServiceArchives.cs" caret="0" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
-    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:Properties/f:AssemblyInfo.cs" caret="0" fromTop="0" />
-    <File id="D25188E3-079A-4D53-9EBC-CCE721391322/f:SynchronizedWorkItem.cs" caret="1375" fromTop="46" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringWarningMessage.cs" caret="428" fromTop="0" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.Designer.cs" caret="0" fromTop="0" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:conditions/f:ConditionInterfaces.cs" caret="2121" fromTop="26" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:search/f:SearchRenameComponent.cs" caret="1625" fromTop="22" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/d:ui/f:RefactoringFormViewComponent.cs" caret="5606" fromTop="128" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringQuickFix.cs" caret="1685" fromTop="52" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3391" fromTop="17" />
-    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1506" fromTop="19" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/f:CodeIssueProvider.cs" caret="1405" fromTop="25" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="4659" fromTop="27" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:StringUtil.cs" caret="2316" fromTop="66" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:ConditionCheckingComponent.cs" caret="5074" fromTop="88" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:IFactorComponent.cs" caret="2232" fromTop="20" />
     <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:HistorySavingComponent.cs" caret="6824" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="774" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:ExtractMethodDetector.cs" caret="1708" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:analyzer/f:CallGraphBuilder.cs" caret="547" fromTop="18" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/f:TestUtil.cs" caret="1176" fromTop="26" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodBefore.txt" caret="452" fromTop="29" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodAfter.txt" caret="509" fromTop="33" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:ExtractMethodDetector.cs" caret="8227" fromTop="158" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:IRefactoringDetector.cs" caret="1609" fromTop="28" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:ChangeMethodSignatureDetector.cs" caret="724" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:ExtractMethodExample.cs" caret="326" fromTop="19" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:RenameDetectorTests.cs" caret="980" fromTop="27" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:util test/f:ASTUtilTests.cs" caret="617" fromTop="22" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:analyzer test/f:CallGraphTest.cs" caret="1373" fromTop="27" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="5092" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:ASTUtil.cs" caret="3223" fromTop="25" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="2424" fromTop="46" />
+    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1349" fromTop="16" />
   </RecentFiles>
   <RecentEdits>
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="1734" fromTop="34" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="2199" fromTop="42" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="679" fromTop="15" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="1710" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="2034" fromTop="40" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="6437" fromTop="33" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="6128" fromTop="24" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="6674" fromTop="39" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="2206" fromTop="15" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="3651" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="5083" fromTop="13" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="7820" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="7329" fromTop="15" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="8521" fromTop="27" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="11114" fromTop="30" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="10146" fromTop="14" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="9631" fromTop="6" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="10477" fromTop="23" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="10809" fromTop="30" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:components/f:RefactoringIssueComponent.cs" caret="5470" fromTop="17" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:ui/f:RefactoringWariningsForm.cs" caret="2349" fromTop="36" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/f:StringUtil.cs" caret="1293" fromTop="21" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:ExtractMethodDetector.cs" caret="6664" fromTop="32" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="1229" fromTop="33" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="1113" fromTop="28" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="1325" fromTop="40" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="898" fromTop="22" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="774" fromTop="20" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="600" fromTop="19" />
-    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:ExtractMethodDetector.cs" caret="1708" fromTop="14" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="6227" fromTop="9" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="5940" fromTop="18" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="5319" fromTop="11" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodBefore.txt" caret="464" fromTop="6" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodBefore.txt" caret="0" fromTop="0" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodBefore.txt" caret="452" fromTop="19" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="1081" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:IRefactoringDetector.cs" caret="1796" fromTop="31" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/f:IRefactoringDetector.cs" caret="1609" fromTop="28" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodBefore.txt" caret="350" fromTop="21" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodAfter.txt" caret="363" fromTop="23" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:fakesource/f:SimpleExtractMethodAfter.txt" caret="509" fromTop="33" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="3805" fromTop="13" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="4316" fromTop="24" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="438" fromTop="14" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="1081" fromTop="21" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="6992" fromTop="30" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="4940" fromTop="12" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:detection/d:extract method/f:SimpleExtractMethodDetector.cs" caret="6270" fromTop="20" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:ASTUtil.cs" caret="3596" fromTop="33" />
+    <File id="D607D17A-326A-47B2-91BD-F4DAD09C55CE/d:util/d:ASTUtil/f:ASTUtil.cs" caret="3084" fromTop="21" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="1082" fromTop="25" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="1256" fromTop="31" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="1756" fromTop="43" />
+    <File id="EA60B585-BD4A-4667-863C-21FFFB2599B4/d:refactoring detector test/f:SimpleExtractMethodTests.cs" caret="2493" fromTop="47" />
+    <File id="0C1C4956-0090-420D-9329-D4B54AC10799/f:readme.txt/s:..?readme.txt" caret="1189" fromTop="16" />
   </RecentEdits>
 </RecentFiles>

@@ -18,13 +18,18 @@ using warnings.util;
 
 namespace warnings.components
 {
+    public interface IHistorySavingComponent : IFactorComponent
+    {
+        void UpdateActiveDocument(IDocument document);
+    }
+
     /* Component for recording new version of a source code file.*/
-    public class HistorySavingComponent : IFactorComponent
+    public class HistorySavingComponent : IHistorySavingComponent
     {
         /* Singleton the instance. */
         private static HistorySavingComponent instance = new HistorySavingComponent();
 
-        public static IFactorComponent getInstance()
+        public static IHistorySavingComponent GetInstance()
         {
             return instance;
         }
@@ -35,8 +40,8 @@ namespace warnings.components
         /* logger for the history saving component. */
         private readonly Logger logger;
 
-        /* Current active document. */
-        private IDocument activeDocument;
+        /* Current active document boxed to facilitate update. */
+        private StrongBox<IDocument> activeDocumentBox;
 
         /* Timer for triggering saving current version. */
         private readonly ComponentTimer timer;
@@ -60,12 +65,13 @@ namespace warnings.components
 
             // Initialize the logger used in this component.
             logger = NLoggerUtil.GetNLogger(typeof (HistorySavingComponent));
+            
+            activeDocumentBox = new StrongBox<IDocument>();
         }
 
         /* Add a new work item to the queue. */
         public void Enqueue(IWorkItem item)
         {
-            activeDocument = ((DocumentWorkItem)item).document;
         }
 
         /* Return the name of this work queue. */
@@ -86,17 +92,36 @@ namespace warnings.components
             this.timer.start();
         }
 
+        public void UpdateActiveDocument(IDocument newDoc)
+        {
+             queue.Add(new UpdateActiveDocumentWorkItem(activeDocumentBox, newDoc));
+        }
+
+        private class UpdateActiveDocumentWorkItem : WorkItem
+        {
+            private readonly IDocument document;
+            private readonly StrongBox<IDocument> documentBox;
+
+            public UpdateActiveDocumentWorkItem(StrongBox<IDocument> documentBox, IDocument document)
+            {
+                this.documentBox = documentBox;
+                this.document = document;
+            }
+
+            public override void Perform()
+            {
+                documentBox.Value = document;
+            }
+        }
+
         /* handler when time up event is triggered. */
         private void TimeUpHandler(object o, EventArgs args)
         {
             // If no active document is not null, continue with saving.
-            if (activeDocument != null)
+            if (activeDocumentBox.Value != null)
             {
-                lock (activeDocument)
-                {
-                    // When timer is triggered, save current active file to the versions. 
-                    queue.Add(new HistorySavingWorkItem(activeDocument));
-                }
+                // When timer is triggered, save current active file to the versions. 
+                queue.Add(new HistorySavingWorkItem(activeDocumentBox.Value));
             }
         }
 
@@ -107,42 +132,41 @@ namespace warnings.components
         }
 
         /* The work item supposed to added to HistorySavingComponent. */
-        internal class HistorySavingWorkItem : WorkItem
+        private class HistorySavingWorkItem : WorkItem
         {
-            private readonly String solutionName;
-            private readonly String namespaceName;
-            private readonly String fileName;
-            private readonly String code;
+            private readonly static SavedDocumentRecords records = new SavedDocumentRecords();
             private readonly Logger logger;
+            private readonly IDocument document;
 
             /* Retrieve all the properties needed to save this new record. */
             internal HistorySavingWorkItem(IDocument document)
             {
-                fileName = document.Name;
-                namespaceName = document.Project.Name;
-
-                // TODO: can we get the real solution name?
-                solutionName = "solution";
-                code = document.GetText().GetText();
-                logger = NLoggerUtil.GetNLogger(typeof(HistorySavingWorkItem));
+                this.logger = NLoggerUtil.GetNLogger(typeof(HistorySavingWorkItem));
+                this.document = document;
             }
-
-          
 
             public override void Perform()
             {
                 try
                 {
-                    logger.Info(solutionName + "," + namespaceName + "," + fileName);
+                    if (records.IsDocumentUpdated(document))
+                    {
+                        var fileName = document.Name;
+                        var namespaceName = document.Project.Name;
 
-                    // Log the saved code if needed.
-                    // logger.Info(Environment.NewLine + code);
+                        var solutionName = "solution";
+                        var code = document.GetText().GetText();
+                        logger.Info("Saved document:" + solutionName + "," + namespaceName + "," + fileName);
 
-                    // Add the new IDocuemnt to the code history.
-                    CodeHistory.GetInstance().addRecord(solutionName, namespaceName, fileName, code);
-                    
-                    // Add work item to search component.
-                    AddSearchRefactoringWorkItem();
+                        // Add the new IDocuemnt to the code history.
+                        CodeHistory.GetInstance().addRecord(solutionName, namespaceName, fileName, code);
+
+                        // Update the records of saved documents.
+                        records.AddSavedDocument(document);
+
+                        // Add work item to search component.
+                        AddSearchRefactoringWorkItem(solutionName, namespaceName, fileName);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -151,7 +175,7 @@ namespace warnings.components
                 }
             }
 
-            private void AddSearchRefactoringWorkItem()
+            private void AddSearchRefactoringWorkItem(string solutionName, string namespaceName, string fileName)
             {
                 // Get the latest record of the file just editted.    
                 ICodeHistoryRecord record = CodeHistory.GetInstance().GetLatestRecord(solutionName, namespaceName, fileName);
@@ -175,24 +199,44 @@ namespace warnings.components
                        new SearchChangeMethodSignatureWorkItem(record));
                }
             }
+            
+            /* 
+             * This class records whether a newly coming document is an update from its previous version, reducing the redundancy of
+             * saving multiple versions of same code.
+             */
+            private class SavedDocumentRecords
+            {
+                /* Dictionary saves document id and its version number of its latest saved code.*/
+                private Dictionary<DocumentId, VersionStamp> dictionary = new Dictionary<DocumentId, VersionStamp>();
 
+                /* Whether we have saved a document before. */
+                private bool HasSaved(IDocument document)
+                {
+                    return dictionary.ContainsKey(document.Id);
+                }
+
+                /* Whether a document differs from its previous version. */
+                public bool IsDocumentUpdated(IDocument document)
+                {
+                    if (HasSaved(document))
+                    {
+                        VersionStamp version;
+                        dictionary.TryGetValue(document.Id, out version);
+                        return version != document.GetTextVersion();
+                    }
+                    return true;
+                }
+
+                /* Add a newly saved document to the dictionary for future reference. */
+                public void AddSavedDocument(IDocument document)
+                {
+                    if (HasSaved(document))
+                    {
+                        dictionary.Remove(document.Id);
+                    }
+                    dictionary.Add(document.Id, document.GetTextVersion());
+                }
+            }
         }
     }
-
-    /* This is a wrapper for IDocument using a WorkItem abstract class. */
-    public class DocumentWorkItem : WorkItem
-    {
-        public IDocument document { get; private set; }
-
-        public DocumentWorkItem (IDocument document)
-        {
-            this.document = document;
-        }
-        public override void Perform()
-        {
-        }
-    }
-
-
-
 }

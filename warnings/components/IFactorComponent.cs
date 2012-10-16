@@ -22,7 +22,7 @@ namespace warnings.components
     public class GhostFactorComponents
     {
         /* Component for saving the source code at certain time interval. */
-        public static readonly IFactorComponent historyComponent = HistorySavingComponent.getInstance();
+        public static readonly IHistorySavingComponent historyComponent = HistorySavingComponent.GetInstance();
 
         /* Component for traversing the source code history and looking for manual rename refactoring. */
         public static readonly IFactorComponent searchRenameComponent = SearchRenameComponent.getInstance();

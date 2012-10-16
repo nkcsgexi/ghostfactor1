@@ -43,6 +43,9 @@
     <StartArguments>/rootsuffix Roslyn</StartArguments>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="envdte80, Version=8.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="NLog, Version=2.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -129,6 +132,7 @@
     <Compile Include="components\RefactoringIssueComponent.cs" />
     <Compile Include="components\ui\RefactoringFormViewComponent.cs" />
     <Compile Include="components\ui\RefactoringWarningMessage.cs" />
+    <Compile Include="components\ui\RefactoringWarningTab.cs" />
     <Compile Include="conditions\ChangeMethodSignature\ChangeMethodSignatureConditionsList.cs" />
     <Compile Include="conditions\ChangeMethodSignature\UnupdatedMethodSignatureChecker.cs" />
     <Compile Include="conditions\ConditionCheckingFactory.cs" />

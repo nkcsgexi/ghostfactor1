@@ -28,7 +28,7 @@ namespace warnings
             initialize(document);
 
             // Add the new record to the history component.
-            GhostFactorComponents.historyComponent.Enqueue(new DocumentWorkItem(document));
+            GhostFactorComponents.historyComponent.UpdateActiveDocument(document);
             return GhostFactorComponents.RefactoringCodeIssueComputerComponent.GetCodeIssues(document, (SyntaxNode) node);  
         }
 
