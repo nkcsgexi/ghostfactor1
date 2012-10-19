@@ -10,7 +10,6 @@ using warnings.util;
 
 namespace warnings.refactoring.detection
 {
-
     /* 
      * This is a detector for extract method refactoring. After setting the code before and after some time interval, 
      * the detector should be able to tell whether there is a reafactoring performed. 
@@ -96,179 +95,179 @@ namespace warnings.refactoring.detection
         {
             return this.refactorings;
         }
-    }
 
-
-    /* Extract method detector for same classes before and after. */
-    class InClassExtractMethodDetector : IRefactoringDetector, IBeforeAndAfterSyntaxTreeKeeper
-    {
-        private readonly ClassDeclarationSyntax classBefore;
-        private readonly ClassDeclarationSyntax classAfter;
-
-        /* Entire trees of the files containing the class definitions above. */
-        private SyntaxTree treeBefore;
-        private SyntaxTree treeAfter;
-
-        /* The detected refactorings. */
-        private IEnumerable<IManualRefactoring> refactorings;
-
-        private Logger logger;
-
-
-        public InClassExtractMethodDetector (ClassDeclarationSyntax classBefore,
-            ClassDeclarationSyntax classAfter)
+        /* Extract method detector for same classes before and after. */
+        private class InClassExtractMethodDetector : IRefactoringDetector, IBeforeAndAfterSyntaxTreeKeeper
         {
-            this.classBefore = classBefore;
-            this.classAfter = classAfter;
-            logger = NLoggerUtil.GetNLogger(typeof (InClassExtractMethodDetector));
-        }
+            private readonly ClassDeclarationSyntax classBefore;
+            private readonly ClassDeclarationSyntax classAfter;
 
-        public Boolean HasRefactoring()
-        {
-            refactorings = Enumerable.Empty<IManualRefactoring>();
+            /* Entire trees of the files containing the class definitions above. */
+            private SyntaxTree treeBefore;
+            private SyntaxTree treeAfter;
 
-            // Build the call graphs of classes before and after.
-            CallGraph callGraphBefore = new CallGraphBuilder(classBefore, treeBefore).BuildCallGraph();
-            CallGraph callGraphAfter = new CallGraphBuilder(classAfter, treeAfter).BuildCallGraph();
-            
-            // Get the methods that are newly created.
-            var addedMethods = callGraphAfter.getVerticesNotIn(callGraphBefore);
+            /* The detected refactorings. */
+            private IEnumerable<IManualRefactoring> refactorings;
 
-            // Get the common methods between the classes before and after.
-            var commonMethods = callGraphAfter.getCommonVertices(callGraphBefore);
+            private Logger logger;
 
-            // Find the suspicious pairs of callers and callees; callers are common; callees are added;  
-            foreach (var caller in commonMethods)
+
+            public InClassExtractMethodDetector(ClassDeclarationSyntax classBefore,
+                ClassDeclarationSyntax classAfter)
             {
-                foreach (var callee in addedMethods)
+                this.classBefore = classBefore;
+                this.classAfter = classAfter;
+                logger = NLoggerUtil.GetNLogger(typeof(InClassExtractMethodDetector));
+            }
+
+            public Boolean HasRefactoring()
+            {
+                refactorings = Enumerable.Empty<IManualRefactoring>();
+
+                // Build the call graphs of classes before and after.
+                CallGraph callGraphBefore = new CallGraphBuilder(classBefore, treeBefore).BuildCallGraph();
+                CallGraph callGraphAfter = new CallGraphBuilder(classAfter, treeAfter).BuildCallGraph();
+
+                // Get the methods that are newly created.
+                var addedMethods = callGraphAfter.getVerticesNotIn(callGraphBefore);
+
+                // Get the common methods between the classes before and after.
+                var commonMethods = callGraphAfter.getCommonVertices(callGraphBefore);
+
+                // Find the suspicious pairs of callers and callees; callers are common; callees are added;  
+                foreach (var caller in commonMethods)
                 {
-                    if(ASTUtil.IsInvoking(caller, callee, treeAfter))
+                    foreach (var callee in addedMethods)
                     {
-                        // Get what does the caller look like before. 
-                        var callerBefore = callGraphBefore.getVertice((String)caller.Identifier.Value);
-
-                        // Create in method detector;
-                        var detector = new InMethodExtractMethodDectector(callerBefore, caller, callee);
-
-                        // Set the trees to the detector.
-                        detector.SetSyntaxTreeBefore(treeBefore);
-                        detector.SetSyntaxTreeAfter(treeAfter);
-
-                        // Start to detect.
-                        if (detector.HasRefactoring())
+                        if (ASTUtil.IsInvoking(caller, callee, treeAfter))
                         {
-                            refactorings = refactorings.Union(detector.GetRefactorings());
-                            return true;
+                            // Get what does the caller look like before. 
+                            var callerBefore = callGraphBefore.getVertice((String)caller.Identifier.Value);
+
+                            // Create in method detector;
+                            var detector = new InMethodExtractMethodDectector(callerBefore, caller, callee);
+
+                            // Set the trees to the detector.
+                            detector.SetSyntaxTreeBefore(treeBefore);
+                            detector.SetSyntaxTreeAfter(treeAfter);
+
+                            // Start to detect.
+                            if (detector.HasRefactoring())
+                            {
+                                refactorings = refactorings.Union(detector.GetRefactorings());
+                                return true;
+                            }
                         }
                     }
                 }
+                return false;
             }
-            return false;
-        }
 
-        public IEnumerable<IManualRefactoring> GetRefactorings()
-        {
-            return this.refactorings;
-        }
-
-        public void SetSyntaxTreeBefore(SyntaxTree before)
-        {
-            this.treeBefore = before;
-        }
-
-        public void SetSyntaxTreeAfter(SyntaxTree after)
-        {
-            this.treeAfter = after;
-        }
-    }
-    /* Extract method detector for a given caller and an added callee. */
-    class InMethodExtractMethodDectector : IRefactoringDetector, IBeforeAndAfterSyntaxTreeKeeper
-    {
-        /* The caller declaration before. */
-        private readonly MethodDeclarationSyntax callerBefore;
-
-        /* The caller declaration after. */
-        private readonly MethodDeclarationSyntax callerAfter;
-        
-        /* The callee that is called after but never called before. */
-        private readonly MethodDeclarationSyntax calleeAfter;
-        
-        /* The entire trees before and after. */
-        private SyntaxTree treeAfter;
-        private SyntaxTree treeBefore;
-      
-        /* The detected refactoring if any. */
-        private IManualRefactoring refactoring;
-       
-        private readonly Logger logger;
-
-        public InMethodExtractMethodDectector(MethodDeclarationSyntax callerBefore, MethodDeclarationSyntax callerAfter, 
-            MethodDeclarationSyntax calleeAfter)
-        {
-            this.callerBefore = callerBefore;
-            this.callerAfter = callerAfter;
-            this.calleeAfter = calleeAfter;
-            logger = NLoggerUtil.GetNLogger(typeof (InMethodExtractMethodDectector));
-        }
-
-        public bool HasRefactoring()
-        {
-            // Get the first invocation of callee in the caller method body.
-            var invocation = ASTUtil.GetAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter).First();
-
-            // Precondition  
-            Contract.Requires(invocation!= null);
-            
-            /* Flatten the caller after by replacing callee invocation with the code in the calle method body. */
-            String callerAfterFlattenned = ASTUtil.flattenMethodInvocation(callerAfter, calleeAfter, invocation);
-            
-            // logger.Info("Caller Before:\n" + callerBefore.GetText());
-            // logger.Info("Caller After:\n" + callerAfter.GetText());
-            // logger.Info("Callee after:\n" + calleeAfter.GetText());
-            // logger.Info("Flattened Caller:\n" + callerAfterFlattenned);
-
-            var beforeWithoutSpace = callerBefore.GetFullText().Replace(" ", "");
-
-            // The distance between flattened caller after and the caller before.
-            int dis1 = StringUtil.GetStringDistance(callerAfterFlattenned.Replace(" ", ""), beforeWithoutSpace);
-           
-            // The distance between caller after and the caller before.
-            int dis2 = StringUtil.GetStringDistance(callerAfter.GetFullText().Replace(" ", ""), beforeWithoutSpace);
-            logger.Info("Distance Gain by Flattening:" + (dis2 - dis1));
-            
-            // Check whether the distance is shortened by flatten. 
-            if (dis2 > dis1)
+            public IEnumerable<IManualRefactoring> GetRefactorings()
             {
-                // If similar enough, a manual refactoring instance is likely to be detected and created.
-                var analyzer = RefactoringAnalyzerFactory.CreateManualExtractMethodAnalyzer();
-                analyzer.SetMethodDeclarationBeforeExtracting(callerBefore);
-                analyzer.SetExtractedMethodDeclaration(calleeAfter);
-                analyzer.SetInvocationExpression(invocation);
+                return this.refactorings;
+            }
 
-                // If the analyzer can get a refactoring from the given information, get the refactoring 
-                // and return true.
-                if(analyzer.CanGetRefactoring())
+            public void SetSyntaxTreeBefore(SyntaxTree before)
+            {
+                this.treeBefore = before;
+            }
+
+            public void SetSyntaxTreeAfter(SyntaxTree after)
+            {
+                this.treeAfter = after;
+            }
+
+            /* Extract method detector for a given caller and an added callee. */
+            private class InMethodExtractMethodDectector : IRefactoringDetector, IBeforeAndAfterSyntaxTreeKeeper
+            {
+                /* The caller declaration before. */
+                private readonly MethodDeclarationSyntax callerBefore;
+
+                /* The caller declaration after. */
+                private readonly MethodDeclarationSyntax callerAfter;
+
+                /* The callee that is called after but never called before. */
+                private readonly MethodDeclarationSyntax calleeAfter;
+
+                /* The entire trees before and after. */
+                private SyntaxTree treeAfter;
+                private SyntaxTree treeBefore;
+
+                /* The detected refactoring if any. */
+                private IManualRefactoring refactoring;
+
+                private readonly Logger logger;
+
+                public InMethodExtractMethodDectector(MethodDeclarationSyntax callerBefore, MethodDeclarationSyntax callerAfter,
+                    MethodDeclarationSyntax calleeAfter)
                 {
-                    refactoring = analyzer.GetRefactoring();
-                    return true;
+                    this.callerBefore = callerBefore;
+                    this.callerAfter = callerAfter;
+                    this.calleeAfter = calleeAfter;
+                    logger = NLoggerUtil.GetNLogger(typeof(InMethodExtractMethodDectector));
+                }
+
+                public bool HasRefactoring()
+                {
+                    // Get the first invocation of callee in the caller method body.
+                    var invocation = ASTUtil.GetAllInvocationsInMethod(callerAfter, calleeAfter, treeAfter).First();
+
+                    // Precondition  
+                    Contract.Requires(invocation != null);
+
+                    /* Flatten the caller after by replacing callee invocation with the code in the calle method body. */
+                    String callerAfterFlattenned = ASTUtil.FlattenMethodInvocation(callerAfter, calleeAfter, invocation);
+
+                    // logger.Info("Caller Before:\n" + callerBefore.GetText());
+                    // logger.Info("Caller After:\n" + callerAfter.GetText());
+                    // logger.Info("Callee after:\n" + calleeAfter.GetText());
+                    // logger.Info("Flattened Caller:\n" + callerAfterFlattenned);
+
+                    var beforeWithoutSpace = callerBefore.GetFullText().Replace(" ", "");
+
+                    // The distance between flattened caller after and the caller before.
+                    int dis1 = StringUtil.GetStringDistance(callerAfterFlattenned.Replace(" ", ""), beforeWithoutSpace);
+
+                    // The distance between caller after and the caller before.
+                    int dis2 = StringUtil.GetStringDistance(callerAfter.GetFullText().Replace(" ", ""), beforeWithoutSpace);
+                    logger.Info("Distance Gain by Flattening:" + (dis2 - dis1));
+
+                    // Check whether the distance is shortened by flatten. 
+                    if (dis2 > dis1)
+                    {
+                        // If similar enough, a manual refactoring instance is likely to be detected and created.
+                        var analyzer = RefactoringAnalyzerFactory.CreateManualExtractMethodAnalyzer();
+                        analyzer.SetMethodDeclarationBeforeExtracting(callerBefore);
+                        analyzer.SetExtractedMethodDeclaration(calleeAfter);
+                        analyzer.SetInvocationExpression(invocation);
+
+                        // If the analyzer can get a refactoring from the given information, get the refactoring 
+                        // and return true.
+                        if (analyzer.CanGetRefactoring())
+                        {
+                            refactoring = analyzer.GetRefactoring();
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+
+                public IEnumerable<IManualRefactoring> GetRefactorings()
+                {
+                    yield return refactoring;
+                }
+
+                public void SetSyntaxTreeBefore(SyntaxTree before)
+                {
+                    this.treeBefore = before;
+                }
+
+                public void SetSyntaxTreeAfter(SyntaxTree after)
+                {
+                    this.treeAfter = after;
                 }
             }
-            return false;
         }
-
-        public IEnumerable<IManualRefactoring> GetRefactorings()
-        {
-            yield return refactoring;
-        }
-
-        public void SetSyntaxTreeBefore(SyntaxTree before)
-        {
-            this.treeBefore = before;
-        }
-
-        public void SetSyntaxTreeAfter(SyntaxTree after)
-        {
-            this.treeAfter = after;
-        }
-    }
+    }  
 }

@@ -10,6 +10,7 @@ namespace warnings.refactoring
         RENAME,
         EXTRACT_METHOD,
         CHANGE_METHOD_SIGNATURE,
+        INLINE_METHOD,
         UNKOWN
     }
 }

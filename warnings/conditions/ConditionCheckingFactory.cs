@@ -21,5 +21,10 @@ namespace warnings.conditions
         {
             return ChangeMethodSignatureConditionsList.GetInstance();
         }
+
+        public static IRefactoringConditionsList GetInlineMethodConditionsList()
+        {
+            return InlineMethodConditionCheckersList.GetInstance();
+        }
     }
 }

@@ -33,7 +33,7 @@ namespace warnings.util
         {
             this.source = source;
             this.tree = ASTUtil.GetSyntaxTreeFromSource(source);
-            methods = ASTUtil.getAllMethodDeclarations(tree);
+            methods = ASTUtil.GetAllMethodDeclarations(tree);
             blocks = new List<string>();
             methodNames = new List<string>();
             foreach (MethodDeclarationSyntax method in methods)
@@ -42,7 +42,7 @@ namespace warnings.util
                 if(block != null)
                 {
                     StringBuilder sb = new StringBuilder();
-                    StatementSyntax[] stats = ASTUtil.GetStatementsInBlock(block);
+                    IEnumerable<SyntaxNode> stats = ASTUtil.GetStatementsInNode(block);
                     foreach(StatementSyntax st in stats)
                     {
                         sb.AppendLine(st.GetText());

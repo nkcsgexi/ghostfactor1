@@ -132,18 +132,23 @@
     <Compile Include="components\RefactoringIssueComponent.cs" />
     <Compile Include="components\ui\RefactoringFormViewComponent.cs" />
     <Compile Include="components\ui\RefactoringWarningMessage.cs" />
-    <Compile Include="components\ui\RefactoringWarningTab.cs" />
     <Compile Include="conditions\ChangeMethodSignature\ChangeMethodSignatureConditionsList.cs" />
     <Compile Include="conditions\ChangeMethodSignature\UnupdatedMethodSignatureChecker.cs" />
+    <Compile Include="conditions\ConditionCheckersUtils.cs" />
     <Compile Include="conditions\ConditionCheckingFactory.cs" />
     <Compile Include="conditions\ConditionInterfaces.cs" />
     <Compile Include="conditions\ExtractMethod\ExtractMethodConditionChecker.cs" />
     <Compile Include="conditions\ExtractMethod\ParametersChecker.cs" />
     <Compile Include="conditions\ExtractMethod\ReturnTypeChecker.cs" />
+    <Compile Include="conditions\InlineMethod\ChangedVariablesChecker.cs" />
+    <Compile Include="conditions\InlineMethod\InlineMethodConditionsChecker.cs" />
+    <Compile Include="conditions\InlineMethod\VariableNamesChecker.cs" />
     <Compile Include="conditions\Rename\RenameConditionChecker.cs" />
     <Compile Include="configuration\GlobalConfigurations.cs" />
     <Compile Include="detection\ChangeMethodSignatureDetector.cs" />
     <Compile Include="detection\extract method\SimpleExtractMethodDetector.cs" />
+    <Compile Include="detection\InlineMethodDetector.cs" />
+    <Compile Include="detection\RefactoringDetectionUtils.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

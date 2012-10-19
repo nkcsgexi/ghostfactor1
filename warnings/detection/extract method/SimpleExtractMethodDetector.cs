@@ -41,8 +41,8 @@ namespace warnings.detection
             var rootAfter = treeAfter.GetRoot();
 
             // Get the clasess in the before and after tree.
-            var beforeClasses = GetClasses(rootBefore);
-            var afterClasses = GetClasses(rootAfter);
+            var beforeClasses = ASTUtil.GetClassDeclarations(rootBefore);
+            var afterClasses = ASTUtil.GetClassDeclarations(rootAfter);
 
             var inClassDetector = new InClassExtractMethodDetector(treeBefore, treeAfter);
 
@@ -66,13 +66,6 @@ namespace warnings.detection
                 }    
             }
             return refactorings.Any();
-        }
-
-        private IEnumerable<SyntaxNode> GetClasses(SyntaxNode root)
-        {
-            // Get all the classes contained in a root node, do NOT parse into the method declaration.
-            return root.DescendantNodes(n => n.Kind != SyntaxKind.MethodDeclaration).
-                Where(n => n.Kind == SyntaxKind.ClassDeclaration);
         }
 
         public IEnumerable<IManualRefactoring> GetRefactorings()

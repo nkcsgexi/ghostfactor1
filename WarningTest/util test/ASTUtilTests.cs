@@ -31,9 +31,9 @@ namespace WarningTest
         public void TestMethod1()
         {
             foo();
-            ASTUtil.getClassDeclarations(tree);
-            ClassDeclarationSyntax classDec = ASTUtil.getClassDeclarations(tree).First();
-            IEnumerable<MethodDeclarationSyntax> methodDecs = ASTUtil.getMethodDeclarations(classDec);
+            ASTUtil.GetClassDeclarations(tree.GetRoot());
+            SyntaxNode classDec = ASTUtil.GetClassDeclarations(tree.GetRoot()).First();
+            var methodDecs = (IEnumerable<MethodDeclarationSyntax>) ASTUtil.GetMethodsDeclarations(classDec);
             var caller = methodDecs.Where(dec => dec.Identifier.Value.Equals("TestMethod1")).First();
             var callee1 = methodDecs.Where(dec => dec.Identifier.Value.Equals("foo")).First();
             var callee2 = methodDecs.Where(dec => dec.Identifier.Value.Equals("bar")).First();
@@ -65,7 +65,7 @@ namespace WarningTest
                 First(m => m.Identifier.Value.Equals("bar"));
             var invocation = caller.DescendantNodes().OfType<InvocationExpressionSyntax>().
                 First();
-            String afterFlatten = ASTUtil.flattenMethodInvocation(caller, callee, invocation);
+            String afterFlatten = ASTUtil.FlattenMethodInvocation(caller, callee, invocation);
             Assert.IsTrue(afterFlatten.Contains("private void foo"));
             Assert.IsTrue(afterFlatten.Contains("int i;"));
             Assert.IsTrue(afterFlatten.Contains("int j;"));

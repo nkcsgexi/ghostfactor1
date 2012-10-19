@@ -20,6 +20,8 @@ namespace warnings.analyzer
         void SetDocument(IDocument document);
         IEnumerable<ISymbol> GetFlowInData();
         IEnumerable<ISymbol> GetFlowOutData();
+        IEnumerable<ISymbol> GetWrittenData();
+        IEnumerable<ISymbol> GetReadData();
     }
 
 
@@ -35,54 +37,6 @@ namespace warnings.analyzer
         void SetExpression(SyntaxNode expression);
     }
 
-
-    internal class StatementsesDataFlowAnalyzer : IStatementsDataFlowAnalyzer
-    {
-        private static int ANALYZER_COUNT = 0;
-
-        public static int GetCount()
-        {
-            return ANALYZER_COUNT;
-        }
-
-        private ISemanticModel model;
-
-        private IEnumerable<SyntaxNode> statements;
-
-        internal StatementsesDataFlowAnalyzer()
-        {  
-            Interlocked.Increment(ref ANALYZER_COUNT);
-        }
-
-        ~StatementsesDataFlowAnalyzer()
-        {
-            Interlocked.Decrement(ref ANALYZER_COUNT);
-        }
-
-    
-        public void SetDocument(IDocument document)
-        {
-            model = document.GetSemanticModel();
-        }
-
-
-        public void SetStatements(IEnumerable<SyntaxNode> statements)
-        {
-            this.statements = statements.OrderBy(s => s.Span.Start);
-        }
-
-        public IEnumerable<ISymbol> GetFlowInData()
-        {
-            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
-            return analysis.DataFlowsIn;
-        }
-
-        public IEnumerable<ISymbol> GetFlowOutData()
-        {
-            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
-            return analysis.DataFlowsOut;
-        }
-    }
 
     internal class ExpressionDataFlowAnalyzer : IExpressionDataFlowAnalyzer
     {
@@ -123,10 +77,82 @@ namespace warnings.analyzer
             return analysis.DataFlowsOut;
         }
 
+        public IEnumerable<ISymbol> GetWrittenData()
+        {
+            var analysis = model.AnalyzeExpressionDataFlow(expression);
+            return analysis.WrittenInside;
+        }
+
+        public IEnumerable<ISymbol> GetReadData()
+        {
+            var analysis = model.AnalyzeExpressionDataFlow(expression);
+            return analysis.ReadInside;
+        }
+
         public IEnumerable<ISymbol> GetFlowInData()
         {
             var analysis = model.AnalyzeExpressionDataFlow(expression);
             return analysis.DataFlowsIn;
+        }
+    }
+
+    internal class StatementsDataFlowAnalyzer : IStatementsDataFlowAnalyzer
+    {
+        private static int ANALYZER_COUNT = 0;
+
+        public static int GetCount()
+        {
+            return ANALYZER_COUNT;
+        }
+
+        private ISemanticModel model;
+
+        private IEnumerable<SyntaxNode> statements;
+
+        internal StatementsDataFlowAnalyzer()
+        {
+            Interlocked.Increment(ref ANALYZER_COUNT);
+        }
+
+        ~StatementsDataFlowAnalyzer()
+        {
+            Interlocked.Decrement(ref ANALYZER_COUNT);
+        }
+
+
+        public void SetDocument(IDocument document)
+        {
+            model = document.GetSemanticModel();
+        }
+
+
+        public void SetStatements(IEnumerable<SyntaxNode> statements)
+        {
+            this.statements = statements.OrderBy(s => s.Span.Start);
+        }
+
+        public IEnumerable<ISymbol> GetFlowInData()
+        {
+            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
+            return analysis.DataFlowsIn;
+        }
+
+        public IEnumerable<ISymbol> GetFlowOutData()
+        {
+            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
+            return analysis.DataFlowsOut;
+        }
+
+        public IEnumerable<ISymbol> GetWrittenData()
+        {
+            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
+            return analysis.WrittenInside;
+        }
+
+        public IEnumerable<ISymbol> GetReadData()
+        {
+            IRegionDataFlowAnalysis analysis = model.AnalyzeStatementsDataFlow(statements.First(), statements.Last());
+            return analysis.ReadInside;
         }
     }
 }
