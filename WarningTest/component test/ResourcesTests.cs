@@ -15,7 +15,7 @@ namespace WarningTest
         [TestMethod]
         public void TestMethod1()
         {
-            var icon = ResourcePool.getIcon();
+            var icon = ResourcePool.GetIcon();
             Assert.IsNotNull(icon);
         }
     }

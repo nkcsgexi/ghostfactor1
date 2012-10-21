@@ -20,7 +20,9 @@ namespace warnings.analyzer
         SyntaxToken GetMethodName();
         String GetQualifiedName();
 
+
         /* Statement related queries. */
+        SyntaxNode GetBlock();
         IEnumerable<SyntaxNode> GetStatements();
         IEnumerable<SyntaxNode> GetStatementsByIndexRange(int start, int end);
         IEnumerable<SyntaxNode> GetStatementsBefore(int position);
@@ -40,6 +42,7 @@ namespace warnings.analyzer
         SyntaxNode ChangeReturnValue(string symbolName);
         SyntaxNode ChangeReturnType(string typeName);
         SyntaxNode AddParameters(IEnumerable<Tuple<string, string>> parameters);
+ 
     }
 
     internal class MethodDeclarationAnalyzer : IMethodDeclarationAnalyzer
@@ -83,6 +86,11 @@ namespace warnings.analyzer
 
             // Combine the RefactoringType's qualified name and the method's identifier.
             return qualifiedAnalyzer.GetOutsideTypeQualifiedName() + "." + method.Identifier.ValueText;
+        }
+
+        public SyntaxNode GetBlock()
+        {
+            return method.Body;
         }
 
         public IEnumerable<SyntaxNode> GetStatements()

@@ -162,7 +162,7 @@ namespace warnings.conditions
 
             public ImageSource Icon
             {
-                get { return ResourcePool.getIcon(); }
+                get { return ResourcePool.GetIcon(); }
             }
 
             public string Description
@@ -244,7 +244,7 @@ namespace warnings.conditions
 
             public ImageSource Icon
             {
-                get { return ResourcePool.getIcon(); }
+                get { return ResourcePool.GetIcon(); }
             }
 
             public string Description

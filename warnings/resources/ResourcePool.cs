@@ -16,7 +16,7 @@ namespace warnings.resources
     public static class ResourcePool
     {
         /* Get the image source of the red R icon. */
-        public static ImageSource getIcon()
+        public static ImageSource GetIcon()
         {
             var bmp = new Bitmap(Resources.redr);
             var converter = new Bitmap2SourceConverter();

@@ -7,6 +7,7 @@ using System.Text;
 using Roslyn.Compilers;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
+using warnings.analyzer;
 
 namespace warnings.util
 {
@@ -107,6 +108,25 @@ namespace warnings.util
             // Do not need to parse into the method.
             return root.DescendantNodes(n => n.Kind != SyntaxKind.MethodDeclaration).
                 Where(n => n.Kind == SyntaxKind.MethodDeclaration);
+        }
+
+        /* Check whether two method declarations have the same name. */
+        public static bool AreMethodsNameSame(SyntaxNode method1, SyntaxNode method2)
+        {
+            var analyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
+            analyzer.SetMethodDeclaration(method1);
+            var name1 = analyzer.GetMethodName();
+            analyzer.SetMethodDeclaration(method2);
+            var name2 = analyzer.GetMethodName();
+            return name1.Equals(name2);
+        }
+
+        /* Whether two nodes contain the same code, without considering the space. */
+        public static bool AreSyntaxNodesSame(SyntaxNode node1, SyntaxNode node2)
+        {
+            var text1 = node1.GetFullText().Replace(" ", "");
+            var text2 = node2.GetFullText().Replace(" ", "");
+            return text1.Equals(text2);
         }
     }
 }

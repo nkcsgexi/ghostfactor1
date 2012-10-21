@@ -64,6 +64,6 @@ namespace warnings.refactoring
         SyntaxNode CallerMethodAfter { get; }
         SyntaxNode InlinedMethod { get; }
         SyntaxNode InlinedMethodInvocation { get; }
-        IEnumerable<SyntaxNode> InlinedStatements { get; }
+        IEnumerable<SyntaxNode> InlinedStatementsInMethodAfter { get; }
     }
 }

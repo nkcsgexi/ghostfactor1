@@ -80,5 +80,20 @@ namespace warnings.conditions
             analyzer.SetDocument(document);
             return analyzer.GetFlowOutData();
         }
+
+
+        /* Compare if two lists of symbols contain exactly same symbols, same means names are same. */
+        public static bool CompareSymbolListByName(IEnumerable<ISymbol> list1, IEnumerable<ISymbol> list2)
+        {
+            if(GetSymbolListExceptByName(list1, list2).Any())
+            {
+                if(GetSymbolListExceptByName(list2, list1).Any())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
     }
 }

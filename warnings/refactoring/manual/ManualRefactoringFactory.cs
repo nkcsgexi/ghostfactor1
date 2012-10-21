@@ -200,12 +200,12 @@ namespace warnings.refactoring
         private class InlineMethodRefactoring : IInlineMethodRefactoring
         {
             internal InlineMethodRefactoring(SyntaxNode CallerMethodBefore, SyntaxNode CallerMethodAfter,
-               SyntaxNode InlinedMethod, SyntaxNode InlinedMethodInvocation, IEnumerable<SyntaxNode> InlinedStatements)
+               SyntaxNode InlinedMethod, SyntaxNode InlinedMethodInvocation, IEnumerable<SyntaxNode> InlinedStatementsInMethodAfter)
             {
                 this.CallerMethodAfter = CallerMethodAfter;
                 this.CallerMethodBefore = CallerMethodBefore;
                 this.InlinedMethod = InlinedMethod;
-                this.InlinedStatements = InlinedStatements;
+                this.InlinedStatementsInMethodAfter = InlinedStatementsInMethodAfter;
                 this.InlinedMethodInvocation = InlinedMethodInvocation;
             }
 
@@ -232,7 +232,7 @@ namespace warnings.refactoring
 
             public SyntaxNode InlinedMethodInvocation { get; private set; }
 
-            public IEnumerable<SyntaxNode> InlinedStatements { get; private set; }
+            public IEnumerable<SyntaxNode> InlinedStatementsInMethodAfter { get; private set; }
         }
     }
 }
