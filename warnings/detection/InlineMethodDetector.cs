@@ -50,6 +50,8 @@ namespace warnings.refactoring.detection
                 // Get the common class before and after. 
                 var classBefore = pair.Key;
                 var classAfter = pair.Value;
+                logger.Info(classBefore);
+                logger.Info(classAfter);
 
                 // Invoke in class detector to find refactorings.
                 inClassDetector.SetSyntaxNodeBefore(classBefore);
@@ -90,6 +92,7 @@ namespace warnings.refactoring.detection
         /* Inline refactoring detector in the class level. */
         private class InClassInlineMethodDetector : IRefactoringDetector, IBeforeAndAfterSyntaxNodeKeeper
         {
+            private readonly Logger logger;
             private readonly List<IManualRefactoring> refactorings;
             private readonly SyntaxTree treeBefore;
             private readonly SyntaxTree treeAfter;
@@ -100,6 +103,7 @@ namespace warnings.refactoring.detection
 
             internal InClassInlineMethodDetector(SyntaxTree treeBefore, SyntaxTree treeAfter)
             {
+                logger = NLoggerUtil.GetNLogger(typeof (InClassInlineMethodDetector));
                 refactorings = new List<IManualRefactoring>();
                 this.treeBefore = treeBefore;
                 this.treeAfter = treeAfter;
@@ -138,6 +142,8 @@ namespace warnings.refactoring.detection
                             inMethodDetector.SetSyntaxNodeAfter(pair.Value);
                             inMethodDetector.SetRemovedMethod(removed);
                             inMethodDetector.SetRemovedInvocations(invocations);
+                            logger.Info(pair.Key);
+                            logger.Info(pair.Value);
 
                             // If a refactoring is detected, add it to the list.
                             if(inMethodDetector.HasRefactoring())
@@ -168,7 +174,8 @@ namespace warnings.refactoring.detection
             /* Inline method refactoring detector in the method level. */
             private class InMethodInlineRefactoringDetector : IRefactoringDetector, IBeforeAndAfterSyntaxNodeKeeper
             {
-                private readonly static int COUNT_THRESHHOLD = 2;
+                private readonly static int COUNT_THRESHHOLD = 1;
+                private readonly Logger logger;
                 private readonly List<IManualRefactoring> refactorings; 
                 private readonly SyntaxTree treeBefore;
                 private readonly SyntaxTree treeAfter;
@@ -181,6 +188,7 @@ namespace warnings.refactoring.detection
 
                 internal InMethodInlineRefactoringDetector(SyntaxTree treeBefore, SyntaxTree treeAfter)
                 {
+                    this.logger = NLoggerUtil.GetNLogger(typeof (InMethodInlineRefactoringDetector));
                     this.refactorings = new List<IManualRefactoring>();
                     this.treeBefore = treeBefore;
                     this.treeAfter = treeAfter;
@@ -192,7 +200,8 @@ namespace warnings.refactoring.detection
 
                     // Get the inlined statements.
                     var inlinedStatements = GetLongestNeigboredStatements(GetCommonStatements(methodAfter, methodRemoved));
-                    
+                    logger.Info("Longest common statements length: " + inlinedStatements.Count());
+
                     // If the inlined statements are above threshhold, an inline method refactoring is detected.
                     if (inlinedStatements.Count() > COUNT_THRESHHOLD)
                     {
@@ -250,6 +259,7 @@ namespace warnings.refactoring.detection
                         {
                             if(IsStatementsSame(afterStatement, inlinedStatement))
                             {
+                                logger.Info("Common statement: " + inlinedStatement);
                                 commonStatements.Add(afterStatement);
                             }
                         }

@@ -59,6 +59,7 @@
     <Compile Include="analyzer test\TypeHierarchyAnalyzerTests.cs" />
     <Compile Include="component test\GhostWorkQueueTests.cs" />
     <Compile Include="fakesource\TypeHierarchyFakeSource.cs" />
+    <Compile Include="refactoring detector test\InlineMethodRefactoringTests.cs" />
     <Compile Include="refactoring detector test\SimpleExtractMethodTests.cs" />
     <Compile Include="retriever test\MethodInvocationRetrieverTests.cs" />
     <Compile Include="retriever test\TypableRetrieverTests.cs" />
@@ -76,6 +77,8 @@
     <Compile Include="fakesource\MethodAnalyzerExample.cs" />
     <Content Include="fakesource\ChangeMethodSignatureAfter.txt" />
     <Content Include="fakesource\ChangeMethodSignatureBefore.txt" />
+    <Content Include="fakesource\InlineMethodAfter.txt" />
+    <Content Include="fakesource\InlineMethodBefore.txt" />
     <Content Include="fakesource\RenameDetectorExampleAfter.txt" />
     <Content Include="fakesource\RenameDetectorExampleBefore.txt" />
     <Compile Include="fakesource\SyntaxNodesAnalyzerExamples.cs" />

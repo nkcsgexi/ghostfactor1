@@ -62,6 +62,9 @@ namespace warnings.refactoring.detection
             return  new ChangeMethodSignatureDetector();
         }
 
-
+        public static IExternalRefactoringDetector CreateInlineMethodDetector()
+        {
+            return new InlineMethodDetector();
+        }
     }
 }

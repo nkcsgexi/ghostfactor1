@@ -95,7 +95,8 @@ namespace warnings.analyzer
 
         public IEnumerable<SyntaxNode> GetStatements()
         {
-            var statements = ASTUtil.GetStatementsInNode(method);  
+            var block = (BlockSyntax) GetBlock();
+            var statements = block.Statements;  
             return statements.OrderBy(n => n.Span.Start).AsEnumerable();
          }
 

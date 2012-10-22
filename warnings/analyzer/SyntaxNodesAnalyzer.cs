@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Documents;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Services;
+using warnings.util;
 
 namespace warnings.analyzer
 {
@@ -30,6 +32,7 @@ namespace warnings.analyzer
             return ANALYZER_COUNT;
         }
 
+        private readonly Logger logger = NLoggerUtil.GetNLogger(typeof (ISyntaxNodesAnalyzer));
         private IEnumerable<SyntaxNode> nodes;
         
         internal SyntaxNodesAnalyzer()
@@ -73,6 +76,7 @@ namespace warnings.analyzer
             var sortedNodes = RemoveSubNodes().OrderBy(n => n.Span.Start);
             var breakIndexes = new List<int>();
             var analyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
+            logger.Debug("Sourted node count: " + sortedNodes.Count());
 
             // Iterate all the nodes, if one is not neighborred with its previous one, add to the break indexes.
             for (int i = 1; i < sortedNodes.Count(); i++)
@@ -173,10 +177,14 @@ namespace warnings.analyzer
             // All the node in the list is likely to be parent.
             foreach (var parentNode in nodes)
             {
+                logger.Debug("Parent Node: " + parentNode);       
+                var containedByParentNode = nodes.Where(n => parentNode.DescendantNodes().Contains(n));
+         
                 // Add all the nodes that are contained in the range and not the same node with the parent.
-                nodesContainedByOtherNode.AddRange
-                    (nodes.Where(s => !s.Span.Equals(parentNode.Span) && parentNode.Span.Contains(s.Span)));
+                nodesContainedByOtherNode.AddRange(containedByParentNode);
             }
+
+            logger.Debug("Sub nodes count: " + nodesContainedByOtherNode.Count);
 
             // Remove the contained nodes from the original list and return it.
             return nodes.Except(nodesContainedByOtherNode).AsEnumerable();
