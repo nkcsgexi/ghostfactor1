@@ -5,7 +5,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using BlackHen.Threading;
 using Roslyn.Services;
-using warnings.components.search;
 using warnings.components.ui;
 
 namespace warnings.components
@@ -25,17 +24,22 @@ namespace warnings.components
         public static readonly IHistorySavingComponent historyComponent = HistorySavingComponent.GetInstance();
 
         /* Component for traversing the source code history and looking for manual rename refactoring. */
-        public static readonly IFactorComponent searchRenameComponent = SearchRenameComponent.getInstance();
+        public static readonly ISearchRefactoringComponent searchRenameComponent = SearchRenameComponent.GetInstance();
 
         /* Component for traversing the source code history and looking for manual extract method refactorings. */
-        public static readonly IFactorComponent searchExtractMethodComponent = SearchExtractMethodComponent.getInstance();
+        public static readonly ISearchRefactoringComponent searchExtractMethodComponent = SearchExtractMethodComponent.getInstance();
 
         /* Component searching in the history records for change method signature refactoring that cannot trigger compiler issues. */
-        public static readonly IFactorComponent searchChangeMethodSignatureComponent =
+        public static readonly ISearchRefactoringComponent searchChangeMethodSignatureComponent =
             SearchChangeMethodSignatureComponent.GetInstance();
         
+        /* Component searches for performed inline method refactorings. */
+        public static readonly ISearchRefactoringComponent searchInlineMethodComponent =
+            SearchInlineMethodComponent.GetInstance();
+
+        
         /* Component for checking the conditions of detected manual refactorings. */
-        public static readonly IFactorComponent conditionCheckingComponent = ConditionCheckingComponent.GetInstance();
+        public static readonly IConditionCheckingComponent conditionCheckingComponent = ConditionCheckingComponent.GetInstance();
 
         /* Component for keeping track of all the refactoring issues and posting them to the editor.*/
         public static readonly ICodeIssueComputersRepository RefactoringCodeIssueComputerComponent =
@@ -50,14 +54,6 @@ namespace warnings.components
             // Start the history keeping component.
             historyComponent.Start();
             
-            // Start the searching refactoring components.
-            searchRenameComponent.Start();
-            searchExtractMethodComponent.Start();
-            searchChangeMethodSignatureComponent.Start();
-
-            // Start condition checker.
-            conditionCheckingComponent.Start();
-
             // Initiate and start search real document component.
             searchRealDocumentComponent = SearchRealDocumentComponent.GetInstance(solution);
 

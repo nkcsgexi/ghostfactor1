@@ -20,6 +20,8 @@ namespace warnings.configuration
                     return true;
                 case RefactoringType.CHANGE_METHOD_SIGNATURE:
                     return true;
+                case RefactoringType.INLINE_METHOD:
+                    return true;
                 default:
                     throw new Exception("Unknown Refactoring Type.");
             }
@@ -51,6 +53,8 @@ namespace warnings.configuration
                 case RefactoringType.EXTRACT_METHOD:
                     return 30;
                 case RefactoringType.CHANGE_METHOD_SIGNATURE:
+                    return 30;
+                case RefactoringType.INLINE_METHOD:
                     return 30;
                 default:
                     throw new Exception("Unknown Refactoring Type.");

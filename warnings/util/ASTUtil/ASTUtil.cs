@@ -59,10 +59,7 @@ namespace warnings.util
         /* Get all the invocations of callee in the body of caller method. */
         public static IEnumerable<InvocationExpressionSyntax> GetAllInvocationsInMethod
             (SyntaxNode caller, SyntaxNode callee, SyntaxTree tree)
-        {
-            // Where the results are stored.
-            var results = new List<InvocationExpressionSyntax>();
-            
+        {    
             // Create semantic model of the given tree.
             SemanticModel model = CreateSemanticModel(tree);
 
@@ -127,6 +124,12 @@ namespace warnings.util
             var text1 = node1.GetFullText().Replace(" ", "");
             var text2 = node2.GetFullText().Replace(" ", "");
             return text1.Equals(text2);
+        }
+
+        /* Get an instance of read-only syntax list by given the enumerable of nodes. */
+        public static SyntaxList<SyntaxNode> GetSyntaxList(IEnumerable<SyntaxNode> nodes)
+        {
+            return Syntax.List(nodes);
         }
     }
 }

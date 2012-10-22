@@ -68,7 +68,7 @@ namespace warnings.conditions
             }
 
             /* Code issue computer for parameter checking results. */
-            private class ParameterCheckingCodeIssueComputer : ICodeIssueComputer
+            private class ParameterCheckingCodeIssueComputer : ValidCodeIssueComputer
             {
                 /* Declaration of the extracted method. */
                 private SyntaxNode declaration;
@@ -83,7 +83,7 @@ namespace warnings.conditions
                     this.typeNameTuples = typeNameTuples;
                 }
 
-                public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
+                public override IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
                 {
                     // If the node is not method invocation, does not proceed.
                     if (node.Kind == SyntaxKind.InvocationExpression)
@@ -104,7 +104,7 @@ namespace warnings.conditions
                     }
                 }
 
-                public bool Equals(ICodeIssueComputer o)
+                public override bool Equals(ICodeIssueComputer o)
                 {
                     // If the other is not in the same RefactoringType, return false
                     if (o is ParameterCheckingCodeIssueComputer)
@@ -253,9 +253,8 @@ namespace warnings.conditions
                             {
                                 // Update root
                                 var root = (SyntaxNode) document.GetSyntaxRoot();
-                                var updatedRoot = new InvocationsAddArgumentsRewriter(invocations,
-                                                                                      typeNameTuples.Select(t => t.Item2))
-                                    .Visit(root);
+                                var updatedRoot = new InvocationsAddArgumentsRewriter(invocations, typeNameTuples.Select(t => t.Item2)).
+                                    Visit(root);
 
                                 // Update solution by update the document.
                                 solution = solution.UpdateDocument(document.Id, updatedRoot);
@@ -291,7 +290,7 @@ namespace warnings.conditions
                     }
                 }
 
-                public RefactoringType RefactoringType
+                public override RefactoringType RefactoringType
                 {
                     get { return RefactoringType.EXTRACT_METHOD; }
                 }

@@ -15,12 +15,12 @@ using warnings.util;
 namespace warnings.components
 {
     /* This component is for detecting manual extract method refactoring in the code history. */
-    public class SearchExtractMethodComponent : SearchRefactoringComponent
+    internal class SearchExtractMethodComponent : SearchRefactoringComponent
     {
         /* Singleton this component. */
-        private static IFactorComponent instance = new SearchExtractMethodComponent();
+        private static ISearchRefactoringComponent instance = new SearchExtractMethodComponent();
 
-        public static IFactorComponent getInstance()
+        public static ISearchRefactoringComponent getInstance()
         {
             return instance;
         }
@@ -38,49 +38,53 @@ namespace warnings.components
         {
             return NLoggerUtil.GetNLogger(typeof (SearchExtractMethodComponent));
         }
-    }
 
-
-    /* The kind of work item for search extract method component. */
-    public class SearchExtractMethodWorkitem : SearchRefactoringWorkitem
-    {
-        public SearchExtractMethodWorkitem(ICodeHistoryRecord latestRecord) : base(latestRecord)
+        public override void StartRefactoringSearch(ICodeHistoryRecord record)
         {
+             Enqueue(new SearchExtractMethodWorkitem(record));
         }
 
-        protected override IExternalRefactoringDetector getRefactoringDetector()
+        /* The kind of work item for search extract method component. */
+        private class SearchExtractMethodWorkitem : SearchRefactoringWorkitem
         {
-            return RefactoringDetectorFactory.CreateExtractMethodDetector();
-        }
+            public SearchExtractMethodWorkitem(ICodeHistoryRecord latestRecord)
+                : base(latestRecord)
+            {
+            }
 
-        protected override int getSearchDepth()
-        {
-            return GlobalConfigurations.GetSearchDepth(RefactoringType.EXTRACT_METHOD);
-        }
+            protected override IExternalRefactoringDetector GetRefactoringDetector()
+            {
+                return RefactoringDetectorFactory.CreateExtractMethodDetector();
+            }
 
-        protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after, 
-            IEnumerable<IManualRefactoring> refactorings)
-        {
-            logger.Info("\n Extract Method dectected.");
-            logger.Info("\n Before: \n" + before.GetSource());
-            logger.Info("\n After: \n" + after.GetSource());
+            protected override int GetSearchDepth()
+            {
+                return GlobalConfigurations.GetSearchDepth(RefactoringType.EXTRACT_METHOD);
+            }
 
-            // Get the first refactoring detected.
-            IManualRefactoring refactoring = refactorings.First();
+            protected override void OnRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,
+                IEnumerable<IManualRefactoring> refactorings)
+            {
+                logger.Info("\n Extract Method dectected.");
+                logger.Info("\n Before: \n" + before.GetSource());
+                logger.Info("\n After: \n" + after.GetSource());
 
-            // Enqueue workitem for conditions checking component.
-            GhostFactorComponents.conditionCheckingComponent.Enqueue
-                (new ConditionCheckWorkItem(before, after, refactoring));
-        }
+                // Get the first refactoring detected.
+                IManualRefactoring refactoring = refactorings.First();
 
-        protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
-        {
-            //logger.Info("No extract method detected.");
-        }
+                // Enqueue workitem for conditions checking component.
+                GhostFactorComponents.conditionCheckingComponent.CheckRefactoringCondition(before, after, refactoring);
+            }
 
-        public override Logger GetLogger()
-        {
-            return NLoggerUtil.GetNLogger(typeof(SearchExtractMethodWorkitem));
+            protected override void OnNoRefactoringDetected(ICodeHistoryRecord record)
+            {
+                //logger.Info("No extract method detected.");
+            }
+
+            public override Logger GetLogger()
+            {
+                return NLoggerUtil.GetNLogger(typeof(SearchExtractMethodWorkitem));
+            }
         }
     }
 }

@@ -9,7 +9,6 @@ using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
 using warnings.analyzer;
-using warnings.components.search;
 using warnings.configuration;
 using warnings.refactoring;
 using warnings.source;
@@ -183,21 +182,26 @@ namespace warnings.components
                 if (GlobalConfigurations.IsSupported(RefactoringType.EXTRACT_METHOD))
                 {
                     // Search for extract method refactoring.
-                    GhostFactorComponents.searchExtractMethodComponent.Enqueue(new SearchExtractMethodWorkitem(record));
+                    GhostFactorComponents.searchExtractMethodComponent.StartRefactoringSearch(record);
                 }
                 
                 if(GlobalConfigurations.IsSupported(RefactoringType.RENAME))
                 {
                     // Search for rename refacotoring.
-                    GhostFactorComponents.searchRenameComponent.Enqueue(new SearchRenameWorkItem(record));
+                    GhostFactorComponents.searchRenameComponent.StartRefactoringSearch(record);
                 }
 
                if(GlobalConfigurations.IsSupported(RefactoringType.CHANGE_METHOD_SIGNATURE))
                {
                    // Search for change method signature refactorings.
-                   GhostFactorComponents.searchChangeMethodSignatureComponent.Enqueue(
-                       new SearchChangeMethodSignatureWorkItem(record));
+                   GhostFactorComponents.searchChangeMethodSignatureComponent.StartRefactoringSearch(record);
                }
+
+                if(GlobalConfigurations.IsSupported(RefactoringType.INLINE_METHOD))
+                {
+                    // Search for inline method refactorings.
+                    GhostFactorComponents.searchInlineMethodComponent.StartRefactoringSearch(record);
+                }
             }
             
             /* 

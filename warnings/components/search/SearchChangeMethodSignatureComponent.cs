@@ -16,13 +16,13 @@ using warnings.source;
 using warnings.source.history;
 using warnings.util;
 
-namespace warnings.components.search
+namespace warnings.components
 {
-    class SearchChangeMethodSignatureComponent : SearchRefactoringComponent
+    internal class SearchChangeMethodSignatureComponent : SearchRefactoringComponent
     {
-        private static readonly IFactorComponent instance = new SearchChangeMethodSignatureComponent();
+        private static readonly ISearchRefactoringComponent instance = new SearchChangeMethodSignatureComponent();
 
-        public static IFactorComponent GetInstance()
+        public static ISearchRefactoringComponent GetInstance()
         {
             return instance;
         }
@@ -36,49 +36,50 @@ namespace warnings.components.search
         {
             return NLoggerUtil.GetNLogger(typeof (SearchChangeMethodSignatureComponent));
         }
-    }
 
-    class SearchChangeMethodSignatureWorkItem : SearchRefactoringWorkitem
-    {
-        public SearchChangeMethodSignatureWorkItem(ICodeHistoryRecord latestRecord) : base(latestRecord)
+        public override void StartRefactoringSearch(ICodeHistoryRecord record)
         {
+            Enqueue(new SearchChangeMethodSignatureWorkItem(record));
         }
 
-        protected override IExternalRefactoringDetector getRefactoringDetector()
+        private class SearchChangeMethodSignatureWorkItem : SearchRefactoringWorkitem
         {
-            return RefactoringDetectorFactory.CreateChangeMethodSignatureDetector();
+            public SearchChangeMethodSignatureWorkItem(ICodeHistoryRecord latestRecord)
+                : base(latestRecord)
+            {
+            }
+
+            protected override IExternalRefactoringDetector GetRefactoringDetector()
+            {
+                return RefactoringDetectorFactory.CreateChangeMethodSignatureDetector();
+            }
+
+            protected override int GetSearchDepth()
+            {
+                return GlobalConfigurations.GetSearchDepth(RefactoringType.CHANGE_METHOD_SIGNATURE);
+            }
+
+            protected override void OnRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,
+                                                          IEnumerable<IManualRefactoring> refactorings)
+            {
+                logger.Info("Change Method Signature Detected.");
+                logger.Info("Before:\n" + before.GetSource());
+                logger.Info("After:\n" + after.GetSource());
+
+                // Enqueue the condition checking process for this detected refactoring.
+                GhostFactorComponents.conditionCheckingComponent.CheckRefactoringCondition(before, after, refactorings.First());
+            }
+
+            protected override void OnNoRefactoringDetected(ICodeHistoryRecord record)
+            {
+                //logger.Info("No change method signature detected.");
+            }
+
+            public override Logger GetLogger()
+            {
+                return NLoggerUtil.GetNLogger(typeof (SearchChangeMethodSignatureWorkItem));
+            }
+
         }
-
-        protected override int getSearchDepth()
-        {
-            return GlobalConfigurations.GetSearchDepth(RefactoringType.CHANGE_METHOD_SIGNATURE);
-        }
-
-        protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,
-            IEnumerable<IManualRefactoring> refactorings)
-        {
-            logger.Info("Change Method Signature Detected.");
-            logger.Info("Before:\n" + before.GetSource());
-            logger.Info("After:\n" + after.GetSource());
-
-            // Enqueue the condition checking process for this detected refactoring.
-            GhostFactorComponents.conditionCheckingComponent.Enqueue(
-                new ConditionCheckWorkItem(before, after, refactorings.First()));
-        }
-
-        protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
-        {
-            //logger.Info("No change method signature detected.");
-        }
-
-        public override Logger GetLogger()
-        {
-            return NLoggerUtil.GetNLogger(typeof (SearchChangeMethodSignatureWorkItem));
-        }
-
-        
-
-     
-
     }
 }

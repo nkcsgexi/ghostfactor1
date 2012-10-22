@@ -12,8 +12,14 @@ using warnings.util;
 
 namespace warnings.components
 {
+    public interface ISearchRefactoringComponent : IFactorComponent, ILoggerKeeper
+    {
+        void StartRefactoringSearch(ICodeHistoryRecord record);
+    }
+
+
     /* Component for searching a manual refactoring in the code history. */
-    public abstract class SearchRefactoringComponent : IFactorComponent, ILoggerKeeper
+    internal abstract class SearchRefactoringComponent : ISearchRefactoringComponent
     {
         /* Queue for handling all the detection */
         private readonly WorkQueue queue;
@@ -56,10 +62,13 @@ namespace warnings.components
 
         /* Get the logger of this class. */
         public abstract Logger GetLogger();
+
+        /* Start the searching of performed refactorings. */
+        public abstract void StartRefactoringSearch(ICodeHistoryRecord record);
     }
 
     /* The kind of work item for search refactoring component. */
-    public abstract class SearchRefactoringWorkitem : WorkItem, ILoggerKeeper
+    internal abstract class SearchRefactoringWorkitem : WorkItem, ILoggerKeeper
     {
         /* The latest code history record from where the detector trace back. */
         private readonly ICodeHistoryRecord latestRecord;
@@ -77,7 +86,7 @@ namespace warnings.components
             try
             {
                 // get the detector, a detector compare two versions of a single file.
-                IExternalRefactoringDetector detector = getRefactoringDetector();
+                IExternalRefactoringDetector detector = GetRefactoringDetector();
 
                 // The detector shall always have latestRecord as the source after.
                 detector.SetSourceAfter(latestRecord.GetSource());
@@ -85,8 +94,8 @@ namespace warnings.components
                 // The current record shall be latestRecord initially.
                 ICodeHistoryRecord currentRecord = latestRecord;
 
-                // we only look back up to the bound given by getSearchDepth()
-                for (int i = 0; i < getSearchDepth(); i++)
+                // we only look back up to the bound given by GetSearchDepth()
+                for (int i = 0; i < GetSearchDepth(); i++)
                 {
                     // No record before current, then break.s
                     if (!currentRecord.HasPreviousRecord())
@@ -101,13 +110,13 @@ namespace warnings.components
                     // Detect manual refactoring.
                     if (detector.HasRefactoring())
                     {
-                        onRefactoringDetected(currentRecord, latestRecord, detector.GetRefactorings());
+                        OnRefactoringDetected(currentRecord, latestRecord, detector.GetRefactorings());
 
                         // If refactoring detected, return directly.
                         return;
                     }
                 }
-                onNoRefactoringDetected(latestRecord);
+                OnNoRefactoringDetected(latestRecord);
             }
             catch (Exception e)
             {
@@ -115,19 +124,18 @@ namespace warnings.components
             }
         }
         
-        protected abstract IExternalRefactoringDetector getRefactoringDetector();
+        protected abstract IExternalRefactoringDetector GetRefactoringDetector();
 
         /* Get the number of record we look back to find a manual refactoring. */
-        protected abstract int getSearchDepth();
+        protected abstract int GetSearchDepth();
         
         /* Called when manual refactoring is detected. */
-        protected abstract void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after, 
+        protected abstract void OnRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after, 
             IEnumerable<IManualRefactoring> refactorings);
         
         /* Called when no manual refactoring is detected. */
-        protected abstract void onNoRefactoringDetected(ICodeHistoryRecord after);
+        protected abstract void OnNoRefactoringDetected(ICodeHistoryRecord after);
         
         public abstract Logger GetLogger();
     }
-
 }

@@ -74,6 +74,7 @@ namespace warnings.util
         private static string EXTRACT_METHOD = "Extract method";
         private static string RENAME = "Rename";
         private static string CHANGE_METHOD_SIGNATURE = "Change method signature";
+        private static string INLINE_METHOD = "Inline method";
         private static string UNKNOW = "Unknown refactoring type";
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
@@ -87,6 +88,8 @@ namespace warnings.util
                     return EXTRACT_METHOD;
                 case RefactoringType.CHANGE_METHOD_SIGNATURE:
                     return CHANGE_METHOD_SIGNATURE;
+                case RefactoringType.INLINE_METHOD:
+                    return INLINE_METHOD;
                 default:
                     return UNKNOW;
             }

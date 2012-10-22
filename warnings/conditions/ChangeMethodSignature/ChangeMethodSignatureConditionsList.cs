@@ -7,7 +7,7 @@ using warnings.refactoring;
 
 namespace warnings.conditions
 {
-    class ChangeMethodSignatureConditionsList : IRefactoringConditionsList
+    internal partial class ChangeMethodSignatureConditionsList : RefactoringConditionsList
     {
         private static IRefactoringConditionsList list;
         public static IRefactoringConditionsList GetInstance()
@@ -16,19 +16,17 @@ namespace warnings.conditions
                 list = new ChangeMethodSignatureConditionsList();
             return list;
         }
-    
-        public RefactoringType RefactoringType
+
+        protected override IEnumerable<IRefactoringConditionChecker> GetAllConditionCheckers()
         {
-            get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
+            var checkers = new List<IRefactoringConditionChecker>();
+            checkers.Add(UnupdatedMethodSignatureChecker.GetInstance());
+            return checkers;
         }
 
-        public IEnumerable<ICodeIssueComputer> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input)
+        public override RefactoringType RefactoringType
         {
-            var results = new List<ICodeIssueComputer>();
-
-            results.Add(UnupdatedMethodSignatureChecker.GetInstance().CheckCondition(before, after, input));
-
-            return results.AsEnumerable();
+            get { return RefactoringType.CHANGE_METHOD_SIGNATURE; }
         }
     }
 }

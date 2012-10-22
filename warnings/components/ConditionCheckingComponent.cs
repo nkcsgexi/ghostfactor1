@@ -13,12 +13,17 @@ using warnings.util;
 
 namespace warnings.components
 {
-    /* The component to handle condition checkings for all the refactoring types. */
-    internal class ConditionCheckingComponent : IFactorComponent
+    public interface IConditionCheckingComponent : IFactorComponent
     {
-        private static IFactorComponent instance = new ConditionCheckingComponent();
-       
-        public static IFactorComponent GetInstance()
+        void CheckRefactoringCondition(ICodeHistoryRecord before, ICodeHistoryRecord after, IManualRefactoring refactoring);
+    }
+
+    /* The component to handle condition checkings for all the refactoring types. */
+    internal class ConditionCheckingComponent : IConditionCheckingComponent
+    {
+        private static IConditionCheckingComponent instance = new ConditionCheckingComponent();
+
+        public static IConditionCheckingComponent GetInstance()
         {
             return instance;
         }
@@ -46,7 +51,6 @@ namespace warnings.components
 
         public void Enqueue(IWorkItem item)
         {
-            logger.Info("enqueue");
             queue.Add(item);
         }
 
@@ -63,80 +67,93 @@ namespace warnings.components
         public void Start()
         {
         }
-    }
 
-    /* The work item to be pushed to the condition checking component. */
-    class ConditionCheckWorkItem : WorkItem
-    {
-        // The refactoring instance from detector. 
-        private readonly IManualRefactoring refactoring;
-        
-        // A document instance whose code is identical the detector's before code.
-        private readonly IDocument after;
-        
-        // A document instance whose code is identical to the detector's after code.
-        private readonly IDocument before;
-
-        public String DocumentKey { private set; get; }
-
-        private readonly Logger logger;
-
-        public ConditionCheckWorkItem(ICodeHistoryRecord before, ICodeHistoryRecord after, IManualRefactoring refactoring)
+        public void CheckRefactoringCondition(ICodeHistoryRecord before, ICodeHistoryRecord after, IManualRefactoring refactoring)
         {
-            this.before = before.Convert2Document();
-            this.after = after.Convert2Document();
-            this.DocumentKey = before.GetKey();
-            this.refactoring = refactoring;
-            logger = NLoggerUtil.GetNLogger(typeof (ConditionCheckWorkItem));
+            Enqueue(new ConditionCheckWorkItem(before, after, refactoring));
         }
 
-        public override void Perform()
+        /* The work item to be pushed to the condition checking component. */
+        private class ConditionCheckWorkItem : WorkItem
         {
-            try
+            // The refactoring instance from detector. 
+            private readonly IManualRefactoring refactoring;
+
+            // A document instance whose code is identical the detector's before code.
+            private readonly IDocument after;
+
+            // A document instance whose code is identical to the detector's after code.
+            private readonly IDocument before;
+
+            public String DocumentKey { private set; get; }
+
+            private readonly Logger logger;
+
+            public ConditionCheckWorkItem(ICodeHistoryRecord before, ICodeHistoryRecord after, IManualRefactoring refactoring)
             {
-                // The refactoring instance was generated from pure strings, need to map them to real 
-                // docuement to facilitate semantic analyze.
-                refactoring.MapToDocuments(before, after);
-                IEnumerable<ICodeIssueComputer> computers = Enumerable.Empty<ICodeIssueComputer>();
-                switch (refactoring.RefactoringType)
-                {
-                    // Checking all conditions for extract method.
-                    case RefactoringType.EXTRACT_METHOD:
-                        logger.Info("Checking conditions for extract method.");
-                        computers = ConditionCheckingFactory.GetExtractMethodConditionsList().
-                            CheckAllConditions(before, after, refactoring);
-                        break;
-
-                    // Checking all conditions for rename.
-                    case RefactoringType.RENAME:
-                        logger.Info("Checking conditions for rename.");
-                        computers = ConditionCheckingFactory.GetRenameConditionsList().
-                            CheckAllConditions(before, after, refactoring);
-                        break;
-
-                    // Checking conditions for change method signature.
-                    case RefactoringType.CHANGE_METHOD_SIGNATURE:
-                        logger.Info("Checking conditions for change method signature.");
-                        computers = ConditionCheckingFactory.GetChangeMethodSignatureConditionsList().
-                            CheckAllConditions(before, after, refactoring);
-                        break;
-
-                    default:
-                        logger.Fatal("Unknown refactoring RefactoringType for conditions checking.");
-                        break;
-                }
-
-                // Add issue computers to the issue component.
-                GhostFactorComponents.RefactoringCodeIssueComputerComponent.AddCodeIssueComputers(computers);
-            }catch(Exception e)
-            {
-                // All exception shall go to the fatal log.
-                logger.Fatal(e);
+                this.before = before.Convert2Document();
+                this.after = after.Convert2Document();
+                this.DocumentKey = before.GetKey();
+                this.refactoring = refactoring;
+                logger = NLoggerUtil.GetNLogger(typeof(ConditionCheckWorkItem));
             }
 
-           
+            public override void Perform()
+            {
+                try
+                {
+                    // The refactoring instance was generated from pure strings, need to map them to real 
+                    // docuement to facilitate semantic analyze.
+                    refactoring.MapToDocuments(before, after);
+                    IEnumerable<ICodeIssueComputer> computers = Enumerable.Empty<ICodeIssueComputer>();
+                    switch (refactoring.RefactoringType)
+                    {
+                        // Checking all conditions for extract method.
+                        case RefactoringType.EXTRACT_METHOD:
+                            logger.Info("Checking conditions for extract method.");
+                            computers = ConditionCheckingFactory.GetExtractMethodConditionsList().
+                                CheckAllConditions(before, after, refactoring);
+                            break;
+
+                        // Checking all conditions for rename.
+                        case RefactoringType.RENAME:
+                            logger.Info("Checking conditions for rename.");
+                            computers = ConditionCheckingFactory.GetRenameConditionsList().
+                                CheckAllConditions(before, after, refactoring);
+                            break;
+
+                        // Checking conditions for change method signature.
+                        case RefactoringType.CHANGE_METHOD_SIGNATURE:
+                            logger.Info("Checking conditions for change method signature.");
+                            computers = ConditionCheckingFactory.GetChangeMethodSignatureConditionsList().
+                                CheckAllConditions(before, after, refactoring);
+                            break;
+
+                        // Checking conditions for inline method refactorings.
+                        case RefactoringType.INLINE_METHOD:
+                            logger.Info("Checking conditions for inline method.");
+                            computers = ConditionCheckingFactory.GetInlineMethodConditionsList().
+                                CheckAllConditions(before, after, refactoring);
+                            break;
+
+                        default:
+                            logger.Fatal("Unknown refactoring RefactoringType for conditions checking.");
+                            break;
+                    }
+
+                    // Add issue computers to the issue component.
+                    GhostFactorComponents.RefactoringCodeIssueComputerComponent.AddCodeIssueComputers(computers);
+                }
+                catch (Exception e)
+                {
+                    // All exception shall go to the fatal log.
+                    logger.Fatal(e);
+                }
+            }
         }
     }
+
+    
 }
 
 

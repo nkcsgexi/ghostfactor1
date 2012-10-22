@@ -14,12 +14,12 @@ using warnings.util;
 namespace warnings.components
 {
     /* Component for detecting manually conducted rename refactoring. */
-    class SearchRenameComponent : SearchRefactoringComponent
+    internal class SearchRenameComponent : SearchRefactoringComponent
     {
         /* Singleton this component. */
-        private static IFactorComponent instance = new SearchRenameComponent();
+        private static ISearchRefactoringComponent instance = new SearchRenameComponent();
 
-        public static IFactorComponent getInstance()
+        public static ISearchRefactoringComponent GetInstance()
         {
             return instance;
         }
@@ -31,48 +31,54 @@ namespace warnings.components
 
         public override string GetName()
         {
-            return "SearchRenameComponent";
+            return "Search Rename Component";
         }
 
         public override Logger GetLogger()
         {
             return NLoggerUtil.GetNLogger(typeof (SearchRenameComponent));
         }
-    }
 
-    /* Item to be schedule to rename searching component. */
-    public class SearchRenameWorkItem : SearchRefactoringWorkitem
-    {
-        public SearchRenameWorkItem(ICodeHistoryRecord latestRecord) : base(latestRecord)
+        public override void StartRefactoringSearch(ICodeHistoryRecord record)
         {
+            Enqueue(new SearchRenameWorkItem(record));
         }
 
-        protected override IExternalRefactoringDetector getRefactoringDetector()
+        /* Item to be schedule to rename searching component. */
+        private class SearchRenameWorkItem : SearchRefactoringWorkitem
         {
-            return RefactoringDetectorFactory.CreateRenameDetector();
-        }
+            public SearchRenameWorkItem(ICodeHistoryRecord latestRecord)
+                : base(latestRecord)
+            {
+            }
 
-        protected override int getSearchDepth()
-        {
-            return GlobalConfigurations.GetSearchDepth(RefactoringType.RENAME);
-        }
+            protected override IExternalRefactoringDetector GetRefactoringDetector()
+            {
+                return RefactoringDetectorFactory.CreateRenameDetector();
+            }
 
-        protected override void onRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,
-            IEnumerable<IManualRefactoring> refactorings)
-        {
-            logger.Info("Rename dectected.");
-            logger.Info("\nBefore: \n" + before.GetSource());
-            logger.Info("\nAfter: \n" + after.GetSource());
-        }
+            protected override int GetSearchDepth()
+            {
+                return GlobalConfigurations.GetSearchDepth(RefactoringType.RENAME);
+            }
 
-        protected override void onNoRefactoringDetected(ICodeHistoryRecord record)
-        {
-            //logger.Info("No Rename Detected.");
-        }
+            protected override void OnRefactoringDetected(ICodeHistoryRecord before, ICodeHistoryRecord after,
+                IEnumerable<IManualRefactoring> refactorings)
+            {
+                logger.Info("Rename dectected.");
+                logger.Info("\nBefore: \n" + before.GetSource());
+                logger.Info("\nAfter: \n" + after.GetSource());
+            }
 
-        public override Logger GetLogger()
-        {
-            return NLoggerUtil.GetNLogger(typeof (SearchRenameWorkItem));
+            protected override void OnNoRefactoringDetected(ICodeHistoryRecord record)
+            {
+                //logger.Info("No Rename Detected.");
+            }
+
+            public override Logger GetLogger()
+            {
+                return NLoggerUtil.GetNLogger(typeof(SearchRenameWorkItem));
+            }
         }
     }
 }

@@ -27,6 +27,7 @@ namespace warnings.conditions
     public interface IRefactoringConditionsList : IHasRefactoringType
     {
         IEnumerable<ICodeIssueComputer> CheckAllConditions(IDocument before, IDocument after, IManualRefactoring input);
+        int GetCheckerCount();
     }
 
     /* Refactoring conditions for a specific refactoring RefactoringType is stored in.*/
@@ -40,6 +41,11 @@ namespace warnings.conditions
             // Check all conditions, and push the results into the list.
             results.AddRange(GetAllConditionCheckers().Select(checker => checker.CheckCondition(before, after, input)));
             return results.AsEnumerable();
+        }
+
+        public int GetCheckerCount()
+        {
+            return GetAllConditionCheckers().Count();
         }
 
         protected abstract IEnumerable<IRefactoringConditionChecker> GetAllConditionCheckers();
@@ -69,5 +75,13 @@ namespace warnings.conditions
         {
             get { return RefactoringType.UNKOWN; }
         }
+    }
+
+    /* Any code issue computers that really have content shall derive from this abstract class. */
+    public abstract class ValidCodeIssueComputer : ICodeIssueComputer
+    {
+        public abstract bool Equals(ICodeIssueComputer other);
+        public abstract RefactoringType RefactoringType { get; }
+        public abstract IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node);
     }
 }

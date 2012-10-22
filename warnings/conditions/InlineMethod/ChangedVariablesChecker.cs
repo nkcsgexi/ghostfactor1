@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Windows.Media;
+using NLog;
 using Roslyn.Compilers.CSharp;
 using Roslyn.Compilers.Common;
 using Roslyn.Services;
@@ -19,6 +20,8 @@ namespace warnings.conditions
     {
         private class ChangedVariableValuesChecker : InlineMethodConditionsChecker
         {
+            private readonly Logger logger = NLoggerUtil.GetNLogger(typeof(ChangedVariableValuesChecker));
+
             public override ICodeIssueComputer CheckInlineMethodCondition(IDocument before, IDocument after, 
                 IInlineMethodRefactoring refactoring)
             {
@@ -36,10 +39,16 @@ namespace warnings.conditions
                 // Calculate the symbols that are removed by inlining method.
                 var missingSymbols = ConditionCheckersUtils.GetSymbolListExceptByName(writtenSymbolsBeforeInline,
                     writtenSymbolsAfterInline);
-                
+
+                // Remove 'this' symbol, it is trivial to include.
+                addedSymbols = ConditionCheckersUtils.RemoveThisSymbol(addedSymbols);
+                missingSymbols = ConditionCheckersUtils.RemoveThisSymbol(missingSymbols);
+
                 // If found any missing and additional symbols, return a code issue computer.
                 if(addedSymbols.Any() || missingSymbols.Any())
                 {
+                    logger.Info("Additional changed symbols: " + StringUtil.ConcatenateAll(",", addedSymbols.Select(s => s.Name)));
+                    logger.Info("Missing changed symbols: " + StringUtil.ConcatenateAll(",", missingSymbols.Select(s => s.Name)));
                     return new ModifiedFlowOutData(refactoring.CallerMethodAfter, refactoring.InlinedStatementsInMethodAfter, 
                         addedSymbols, missingSymbols);
                 }
@@ -54,8 +63,8 @@ namespace warnings.conditions
                 return parent;
             }
 
-          
-            private class ModifiedFlowOutData : ICodeIssueComputer
+
+            private class ModifiedFlowOutData : ValidCodeIssueComputer
             {
                 private readonly IEnumerable<ISymbol> missingSymbols;
                 private readonly IEnumerable<ISymbol> addedSymbols;
@@ -71,7 +80,7 @@ namespace warnings.conditions
                     this.missingSymbols = missingSymbols;
                 }
 
-                public bool Equals(ICodeIssueComputer o)
+                public override bool Equals(ICodeIssueComputer o)
                 {
                     if(o is ModifiedFlowOutData)
                     {
@@ -87,12 +96,12 @@ namespace warnings.conditions
                     return false;
                 }
 
-                public RefactoringType RefactoringType
+                public override RefactoringType RefactoringType
                 {
                     get { return RefactoringType.INLINE_METHOD; }
                 }
 
-                public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
+                public override IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
                 {
                     // The node should be a statement instance and the document is correct.
                     if(node is StatementSyntax && IsDocumentRight(document))
@@ -194,6 +203,7 @@ namespace warnings.conditions
 
                 private class ModifiedFlowOutDataFix : ICodeAction
                 {
+                    private readonly Logger logger;
                     private readonly IDocument document;
                     private readonly SyntaxNode method;
                     private readonly IEnumerable<SyntaxNode> inlinedStatements;
@@ -203,6 +213,7 @@ namespace warnings.conditions
                     internal ModifiedFlowOutDataFix(IDocument document, SyntaxNode method, IEnumerable<SyntaxNode> inlinedStatements, 
                         IEnumerable<ISymbol> addedSymbols, IEnumerable<ISymbol> missingSymbols)
                     {
+                        this.logger = NLoggerUtil.GetNLogger(typeof (ModifiedFlowOutDataFix));
                         this.document = document;
                         this.method = method;
                         this.inlinedStatements = inlinedStatements;
@@ -234,10 +245,19 @@ namespace warnings.conditions
 
                         // Update method by changing the inlined statements with updated statements. 
                         var updatedMethod = UpdateStatements(method, inlinedStatements, modifidStatements);
+                        
+                        logger.Debug("Inlined statements are:" + Environment.NewLine + StringUtil.ConcatenateAll
+                            (Environment.NewLine, inlinedStatements.Select(s => s.GetText())));
+                        logger.Debug("After Fixing, inlined statements are:" + Environment.NewLine + StringUtil.ConcatenateAll
+                            (Environment.NewLine, modifidStatements.Select(s => s.GetText())));
+                        logger.Debug(updatedMethod);
 
                         // Update root and document, return the code edition. 
                         var root = (SyntaxNode) document.GetSyntaxRoot();
+
+
                         var updatedRoot = root.ReplaceNodes(new[] {method}, (node1, node2) => updatedMethod);
+                    
                         return new CodeActionEdit(document.UpdateSyntaxRoot(updatedRoot));
                     }
 
@@ -279,27 +299,38 @@ namespace warnings.conditions
                         // Get the start and end position of these inlined statements.
                         var start = statements.IndexOf((StatementSyntax) originalStatements.First());
                         var end = statements.IndexOf((StatementSyntax) originalStatements.Last());
-                        
+                        logger.Debug("Start: " + start);
+                        logger.Debug("End: " + end);
+
                         // New updated statements.
-                        var updatedStatements = new SyntaxList<StatementSyntax>();
+                        var updatedStatements = new List<SyntaxNode>();
                         
                         // Copy the statements before inlined statements to the updated statements list.
                         for (int i = 0; i < start; i ++ )
                         {
                             updatedStatements.Add(statements.ElementAt(i));
                         }
+                        
+                        // Get the trivia of the last statement.
+                        var leadingSpace = updatedStatements.Last().GetLeadingTrivia();
+                        var trailingSpace = updatedStatements.Last().GetTrailingTrivia();
+
 
                         // Copy the udpated inlined statements to the list.
-                        updatedStatements.Add(newStatements.Select(s => (StatementSyntax)s).ToArray());
+                        updatedStatements.AddRange(newStatements.Select(s => ((StatementSyntax)s).
+                            WithLeadingTrivia(leadingSpace).WithTrailingTrivia(trailingSpace)).ToArray());
                         
                         // Copy the statements after the inlined statements back to the list.
                         for(int i = end + 1; i< statements.Count; i++ )
                         {
                             updatedStatements.Add(statements.ElementAt(i));
                         }
+                        logger.Debug("Updated statements count:" + updatedStatements.Count);
 
                         // Get a new block with the updated statement list.
-                        var updatedBlock = block.Update(block.OpenBraceToken, updatedStatements, block.CloseBraceToken);
+                        var updatedBlock = block.Update(block.OpenBraceToken, ASTUtil.GetSyntaxList(updatedStatements), 
+                            block.CloseBraceToken);
+                        logger.Debug("Updated block:" + Environment.NewLine + updatedBlock.GetText());
 
                         // Update the block in the method.
                         return new BlockRewriter(updatedBlock).Visit(method);

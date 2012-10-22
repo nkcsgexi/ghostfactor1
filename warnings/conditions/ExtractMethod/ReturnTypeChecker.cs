@@ -120,7 +120,7 @@ namespace warnings.conditions
 
             /* Code issue computers for the checking results of retrun RefactoringType.*/
 
-            private class ReturnTypeCheckingResult : ICodeIssueComputer
+            private class ReturnTypeCheckingResult : ValidCodeIssueComputer
             {
                 /* The RefactoringType/name tuples for missing return values. */
                 private IEnumerable<Tuple<string, string>> typeNameTuples;
@@ -135,7 +135,7 @@ namespace warnings.conditions
                     this.typeNameTuples = typeNameTuples;
                 }
 
-                public IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
+                public override IEnumerable<CodeIssue> ComputeCodeIssues(IDocument document, SyntaxNode node)
                 {
                     // If the given node is not method invocation, return directly.
                     if (node.Kind == SyntaxKind.InvocationExpression)
@@ -159,7 +159,7 @@ namespace warnings.conditions
                     }
                 }
 
-                public bool Equals(ICodeIssueComputer o)
+                public override bool Equals(ICodeIssueComputer o)
                 {
                     // If the other is not in the same RefactoringType, return false
                     if (o is ReturnTypeCheckingResult)
@@ -177,7 +177,7 @@ namespace warnings.conditions
                     return false;
                 }
 
-                public RefactoringType RefactoringType
+                public override RefactoringType RefactoringType
                 {
                     get { return RefactoringType.EXTRACT_METHOD; }
                 }

@@ -87,7 +87,9 @@ namespace warnings.analyzer
 
         public SyntaxNode MapToAnotherDocument(IDocument target)
         {
-            return (SyntaxNode)target.GetSyntaxRoot().DescendantNodes().First(n => n.Span.Equals(node.Span));
+            // Do not need to parse into the node that does not include the node.
+            return (SyntaxNode)target.GetSyntaxRoot().DescendantNodes(n => n.Span.Contains(node.Span)).
+                First(n => n.Span.Equals(node.Span));
         }
 
         public string DumpTree()

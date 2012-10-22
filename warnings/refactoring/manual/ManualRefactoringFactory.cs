@@ -216,7 +216,24 @@ namespace warnings.refactoring
 
             public void MapToDocuments(IDocument before, IDocument after)
             {
-                throw new NotImplementedException();
+                var analyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
+
+                // Map syntax node to the before document.
+                analyzer.SetSyntaxNode(CallerMethodBefore);
+                CallerMethodBefore = analyzer.MapToAnotherDocument(before);
+                analyzer.SetSyntaxNode(InlinedMethod);
+                InlinedMethod = analyzer.MapToAnotherDocument(before);
+                analyzer.SetSyntaxNode(InlinedMethodInvocation);
+                InlinedMethodInvocation = analyzer.MapToAnotherDocument(before);
+
+                // Map syntax node to the after document.
+                analyzer.SetSyntaxNode(CallerMethodAfter);
+                CallerMethodAfter = analyzer.MapToAnotherDocument(after);
+
+                // Map inlined statements
+                var nodesAnalyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
+                nodesAnalyzer.SetSyntaxNodes(InlinedStatementsInMethodAfter);
+                InlinedStatementsInMethodAfter = nodesAnalyzer.MapToAnotherDocument(after);
             }
 
             public SyntaxNode GetIssuedNode()

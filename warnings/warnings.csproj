@@ -124,6 +124,7 @@
     <Compile Include="components\HistorySavingComponent.cs" />
     <Compile Include="components\IFactorComponent.cs" />
     <Compile Include="components\ComponentTimer.cs" />
+    <Compile Include="components\search\SearchInlineMethodComponent.cs" />
     <Compile Include="components\search\SearchRealDocumentComponent.cs" />
     <Compile Include="components\search\SearchChangeMethodSignatureComponent.cs" />
     <Compile Include="components\search\SearchExtractMethodComponent.cs" />

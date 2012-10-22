@@ -14,7 +14,7 @@ namespace warnings.conditions
             public override ICodeIssueComputer CheckInlineMethodCondition(IDocument before, IDocument after,
                 IInlineMethodRefactoring refactoring)
             {
-                return null;
+                return new NullCodeIssueComputer();
             }
         }
     }
