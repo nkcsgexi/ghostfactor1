@@ -85,6 +85,32 @@ namespace WarningTest.refactoring_detector_test
             logger.Info(updatedDocument.GetSyntaxRoot().GetText());
         }
 
+
+        [TestMethod]
+        public void TestMethod3()
+        {
+            Assert.IsTrue(detector.HasRefactoring());
+            var refactoring = (IInlineMethodRefactoring) detector.GetRefactorings().ElementAt(2);
+            Assert.IsNotNull(refactoring);
+            refactoring.MapToDocuments(documentBefore, documentAfter);
+            var computers = checkersList.CheckAllConditions(documentBefore, documentAfter, refactoring).
+                Where(c => c is ValidCodeIssueComputer);
+            Assert.IsTrue(computers.Any());
+            Assert.IsTrue(computers.Count() == 1);
+            var issues = ComputerAllCodeIssues(computers.First(), documentAfter);
+            Assert.IsTrue(issues.Count() == refactoring.InlinedStatementsInMethodAfter.Count());
+            for (int i = 0; i < issues.Count(); i++)
+            {
+                var issue = issues.ElementAt(i);
+                Assert.IsTrue(issue.Description.StartsWith("Inlined methodAfter may fail to change variables:"));
+            }
+            var action = issues.First().Actions.First();
+            var updatedDoc = UpdateDocumentByCodeAction(documentAfter, action);
+            logger.Info(updatedDoc.GetSyntaxRoot().GetText());
+        }
+
+
+
         private IEnumerable<CodeIssue> ComputerAllCodeIssues(ICodeIssueComputer computer, IDocument document)
         {
             var root = (SyntaxNode)document.GetSyntaxRoot();

@@ -22,5 +22,14 @@ namespace WarningTest.fakesource
 			i = i + 1;
 			int j = i;
 		}
+
+		public void method3()
+		{
+			int i;
+			int k;
+			k ++;
+			k ++;
+			int j = i;
+		}
 	}
 }

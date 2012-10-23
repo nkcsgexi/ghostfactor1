@@ -98,9 +98,9 @@ namespace warnings.conditions
         /* Get the statement that is enclosing the given node. */
         public static SyntaxNode GetStatementEnclosingNode(SyntaxNode node)
         {
-            SyntaxNode parent;
-            for (parent = node; parent != null && !(parent is StatementSyntax); parent = parent.Parent) ;
-            return parent;
+            var analyzer = AnalyzerFactory.GetSyntaxNodeAnalyzer();
+            analyzer.SetSyntaxNode(node);
+            return analyzer.GetClosestAncestor(n => n is StatementSyntax);
         }
 
 

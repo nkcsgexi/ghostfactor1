@@ -19,6 +19,9 @@ namespace warnings.analyzer
         /* Are the nodes neighbors, means no code in between. */
         bool IsNeighborredWith(SyntaxNode another);
 
+        /* Get the first ancestor of the node that met with the given condition. */
+        SyntaxNode GetClosestAncestor(Predicate<SyntaxNode> condition);
+
         /* Get the common parent of these two nodes. */
         SyntaxNode GetCommonParent(SyntaxNode another);
 
@@ -71,6 +74,15 @@ namespace warnings.analyzer
                 // and n should not overlap with node and another node. 
                 && !n.Span.OverlapsWith(node.Span)
                 && !n.Span.OverlapsWith(another.Span));
+        }
+
+        public SyntaxNode GetClosestAncestor(Predicate<SyntaxNode> condition)
+        {
+            SyntaxNode ancestor;
+
+            // Iteratively get parent node until the node met with the given condition.
+            for (ancestor = node; ancestor != null && ! condition.Invoke(ancestor); ancestor = ancestor.Parent) ;
+            return ancestor;
         }
 
         public SyntaxNode GetCommonParent(SyntaxNode another)
