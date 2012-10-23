@@ -25,6 +25,7 @@ namespace WarningTest.refactoring_detector_test
         private readonly string codeBefore;
         private readonly IDocument documentAfter;
         private readonly IDocument documentBefore;
+        private readonly IExternalRefactoringDetector dummyDetector;
 
 
         public InlineMethodRefactoringTests()
@@ -39,6 +40,10 @@ namespace WarningTest.refactoring_detector_test
             
             detector.SetSourceBefore(codeBefore);
             detector.SetSourceAfter(codeAfter);
+
+            this.dummyDetector = RefactoringDetectorFactory.CreateDummyInlineMethodDetector();
+            dummyDetector.SetSourceBefore(codeBefore);
+            dummyDetector.SetSourceAfter(codeAfter);
         }
 
         [TestMethod]
@@ -102,13 +107,35 @@ namespace WarningTest.refactoring_detector_test
             for (int i = 0; i < issues.Count(); i++)
             {
                 var issue = issues.ElementAt(i);
-                Assert.IsTrue(issue.Description.StartsWith("Inlined methodAfter may fail to change variables:"));
+                Assert.IsTrue(issue.Description.StartsWith("Inlined method may fail to change variables:"));
             }
             var action = issues.First().Actions.First();
             var updatedDoc = UpdateDocumentByCodeAction(documentAfter, action);
             logger.Info(updatedDoc.GetSyntaxRoot().GetText());
         }
 
+        [TestMethod]
+        public void TestMethod4()
+        {
+            Assert.IsTrue(dummyDetector.HasRefactoring());
+            var refactoring = (IInlineMethodRefactoring)dummyDetector.GetRefactorings().ElementAt(0);
+            Assert.IsNotNull(refactoring);
+        }
+
+        [TestMethod]
+        public void TestMethod5()
+        {
+            Assert.IsTrue(dummyDetector.HasRefactoring());
+            var refactoring = (IInlineMethodRefactoring)dummyDetector.GetRefactorings().ElementAt(1);
+            Assert.IsNotNull(refactoring);
+        }
+        [TestMethod]
+        public void TestMethod6()
+        {
+            Assert.IsTrue(dummyDetector.HasRefactoring());
+            var refactoring = (IInlineMethodRefactoring)dummyDetector.GetRefactorings().ElementAt(2);
+            Assert.IsNotNull(refactoring);
+        }
 
 
         private IEnumerable<CodeIssue> ComputerAllCodeIssues(ICodeIssueComputer computer, IDocument document)

@@ -40,6 +40,12 @@ namespace warnings.refactoring.detection
 
     }
 
+    internal interface IInternalRefactoringDetector : IRefactoringDetector, IBeforeAndAfterSyntaxNodeKeeper
+    {
+        
+    }
+
+
     public static class RefactoringDetectorFactory
     {
         public static IExternalRefactoringDetector CreateRenameDetector()
@@ -52,7 +58,7 @@ namespace warnings.refactoring.detection
             return new ExtractMethodDetector();
         }
 
-        public static IExternalRefactoringDetector CreateSimpleExtractMethodDetector()
+        public static IExternalRefactoringDetector CreateDummyExtractMethodDetector()
         {
             return new SimpleExtractMethodDetector();
         }
@@ -64,7 +70,12 @@ namespace warnings.refactoring.detection
 
         public static IExternalRefactoringDetector CreateInlineMethodDetector()
         {
-            return new InlineMethodDetector();
+            return new InlineMethodDetector(InMethodInlineDetectorFactory.GetFineGrainedDetector());
+        }
+
+        public static IExternalRefactoringDetector CreateDummyInlineMethodDetector()
+        {
+            return new InlineMethodDetector(InMethodInlineDetectorFactory.GetDummyDetector());
         }
     }
 }

@@ -24,7 +24,7 @@ namespace WarningTest.refactoring_detector_test
             this.logger = NLoggerUtil.GetNLogger(typeof (SimpleExtractMethodTests));
             this.sourceBefore = FileUtil.ReadAllText(TestUtil.GetFakeSourceFolder() + "SimpleExtractMethodBefore.txt");
             this.sourceAfter = FileUtil.ReadAllText(TestUtil.GetFakeSourceFolder() + "SimpleExtractMethodAfter.txt");
-            this.detector = RefactoringDetectorFactory.CreateSimpleExtractMethodDetector();
+            this.detector = RefactoringDetectorFactory.CreateDummyExtractMethodDetector();
         }
 
         [TestMethod]

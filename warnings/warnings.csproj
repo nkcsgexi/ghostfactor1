@@ -149,7 +149,8 @@
     <Compile Include="configuration\GlobalConfigurations.cs" />
     <Compile Include="detection\ChangeMethodSignatureDetector.cs" />
     <Compile Include="detection\extract method\SimpleExtractMethodDetector.cs" />
-    <Compile Include="detection\InlineMethodDetector.cs" />
+    <Compile Include="detection\inline\InlineMethodDetector.cs" />
+    <Compile Include="detection\inline\InMethodInlineDetector.cs" />
     <Compile Include="detection\RefactoringDetectionUtils.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

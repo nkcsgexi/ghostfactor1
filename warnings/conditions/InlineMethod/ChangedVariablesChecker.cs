@@ -130,12 +130,12 @@ namespace warnings.conditions
                     var sb = new StringBuilder();
                     if (addedSymbols.Any())
                     {
-                        sb.AppendLine("Inlined methodAfter may change variables: " +
+                        sb.AppendLine("Inlined method may change variables: " +
                                       StringUtil.ConcatenateAll(",", addedSymbols.Select(s => s.Name)));
                     }
                     if (missingSymbols.Any())
                     {
-                        sb.AppendLine("Inlined methodAfter may fail to change variables: " +
+                        sb.AppendLine("Inlined method may fail to change variables: " +
                                       StringUtil.ConcatenateAll(",", missingSymbols.Select(s => s.Name)));
                     }
                     return sb.ToString();

@@ -12,15 +12,17 @@ namespace warnings.refactoring.detection
     internal class InlineMethodDetector : IExternalRefactoringDetector
     {
         private readonly Logger logger;
+        private readonly IInMethodInlineDetector inMethodDetector;
 
         private string sourceAfter;
         private string sourceBefore;
         private List<IManualRefactoring> refactorings;
- 
-        internal InlineMethodDetector()
+       
+        internal InlineMethodDetector(IInMethodInlineDetector inMethodDetector)
         {
-            logger = NLoggerUtil.GetNLogger(typeof (InlineMethodDetector));
-            refactorings = new List<IManualRefactoring>();
+            this.logger = NLoggerUtil.GetNLogger(typeof (InlineMethodDetector));
+            this.refactorings = new List<IManualRefactoring>();
+            this.inMethodDetector = inMethodDetector;
         }
 
         public bool HasRefactoring()
@@ -42,7 +44,7 @@ namespace warnings.refactoring.detection
             // Get the class pairs with common class name
             var commonNodePairs = RefactoringDetectionUtils.GetCommonNodePairs(classesBefore, classesAfter,
                 RefactoringDetectionUtils.GetClassDeclarationNameComparer());
-            var inClassDetector = new InClassInlineMethodDetector(treeBefore, treeAfter);
+            var inClassDetector = new InClassInlineMethodDetector(treeBefore, treeAfter, inMethodDetector);
 
             // For each pair of common class.
             foreach (var pair in commonNodePairs)
@@ -90,23 +92,26 @@ namespace warnings.refactoring.detection
         }
 
         /* Inline refactoring detector in the class level. */
-        private class InClassInlineMethodDetector : IRefactoringDetector, IBeforeAndAfterSyntaxNodeKeeper
+        private class InClassInlineMethodDetector : IInternalRefactoringDetector
         {
             private readonly Logger logger;
             private readonly List<IManualRefactoring> refactorings;
             private readonly SyntaxTree treeBefore;
             private readonly SyntaxTree treeAfter;
+            private readonly IInMethodInlineDetector inMethodDetector;
 
             private SyntaxNode beforeClass; 
             private SyntaxNode afterClass;
-            
 
-            internal InClassInlineMethodDetector(SyntaxTree treeBefore, SyntaxTree treeAfter)
+
+            internal InClassInlineMethodDetector(SyntaxTree treeBefore, SyntaxTree treeAfter,
+                IInMethodInlineDetector inMethodDetector)
             {
                 logger = NLoggerUtil.GetNLogger(typeof (InClassInlineMethodDetector));
                 refactorings = new List<IManualRefactoring>();
                 this.treeBefore = treeBefore;
                 this.treeAfter = treeAfter;
+                this.inMethodDetector = inMethodDetector;
             }
 
             public bool HasRefactoring()
@@ -123,8 +128,7 @@ namespace warnings.refactoring.detection
 
                 // Get the methods that are in the before version but are not in the after version.
                 var removedMethodsBefore = methodsBefore.Except(commonMethodsPairs.Select(p => p.Key));
-                var inMethodDetector = new InMethodInlineRefactoringDetector(treeBefore, treeAfter);
-
+            
                 // For each removed method.
                 foreach (var removed in removedMethodsBefore)
                 {
@@ -169,117 +173,6 @@ namespace warnings.refactoring.detection
             public void SetSyntaxNodeAfter(SyntaxNode after)
             {
                 this.afterClass = after;
-            }
-
-            /* Inline method refactoring detector in the method level. */
-            private class InMethodInlineRefactoringDetector : IRefactoringDetector, IBeforeAndAfterSyntaxNodeKeeper
-            {
-                private readonly static int COUNT_THRESHHOLD = 1;
-                private readonly Logger logger;
-                private readonly List<IManualRefactoring> refactorings; 
-                private readonly SyntaxTree treeBefore;
-                private readonly SyntaxTree treeAfter;
-
-                private SyntaxNode methodBefore;
-                private SyntaxNode methodAfter;
-                private SyntaxNode methodRemoved;
-                private IEnumerable<SyntaxNode> invocationsRemoved;
-                
-
-                internal InMethodInlineRefactoringDetector(SyntaxTree treeBefore, SyntaxTree treeAfter)
-                {
-                    this.logger = NLoggerUtil.GetNLogger(typeof (InMethodInlineRefactoringDetector));
-                    this.refactorings = new List<IManualRefactoring>();
-                    this.treeBefore = treeBefore;
-                    this.treeAfter = treeAfter;
-                }
-
-                public bool HasRefactoring()
-                {
-                    refactorings.Clear();
-
-                    // Get the inlined statements.
-                    var inlinedStatements = GetLongestNeigboredStatements(GetCommonStatements(methodAfter, methodRemoved));
-                    logger.Info("Longest common statements length: " + inlinedStatements.Count());
-
-                    // If the inlined statements are above threshhold, an inline method refactoring is detected.
-                    if (inlinedStatements.Count() > COUNT_THRESHHOLD)
-                    {
-                        var refactoring = ManualRefactoringFactory.CreateManualInlineMethodRefactoring
-                            // Only considering the first invocation.
-                            (methodBefore, methodAfter, methodRemoved, invocationsRemoved.First(), inlinedStatements);
-                        refactorings.Add(refactoring);
-                        return true;
-                    }
-                    return false;
-                }
-
-                public IEnumerable<IManualRefactoring> GetRefactorings()
-                {
-                    return refactorings;
-                }
-
-                public void SetSyntaxNodeBefore(SyntaxNode before)
-                {
-                    this.methodBefore = before;
-                }
-
-                public void SetSyntaxNodeAfter(SyntaxNode after)
-                {
-                    this.methodAfter = after;
-                }
-
-                public void SetRemovedMethod(SyntaxNode methodRemoved)
-                {
-                    this.methodRemoved = methodRemoved;
-                }
-
-                public void SetRemovedInvocations(IEnumerable<SyntaxNode> invocationsRemoved)
-                {
-                    this.invocationsRemoved = invocationsRemoved;
-                }
-
-                private IEnumerable<SyntaxNode> GetCommonStatements(SyntaxNode methodAfter, SyntaxNode inlinedMethod)
-                {
-                    // Get all the statements in the caller after inlining. 
-                    var methodAnalyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
-                    methodAnalyzer.SetMethodDeclaration(methodAfter);
-                    var afterMethodStatements = methodAnalyzer.GetStatements();
-
-                    // Get all the statements in the inlined method.
-                    methodAnalyzer.SetMethodDeclaration(inlinedMethod);
-                    var inlinedMethodStatements = methodAnalyzer.GetStatements();
-                    var commonStatements = new List<SyntaxNode>();
-                    
-                    // Get the statements in the caller method after inlining that also appear in the
-                    // inlined method.
-                    foreach (var afterStatement in afterMethodStatements)
-                    {
-                        foreach (var inlinedStatement in inlinedMethodStatements)
-                        {
-                            if(IsStatementsSame(afterStatement, inlinedStatement))
-                            {
-                                logger.Info("Common statement: " + inlinedStatement);
-                                commonStatements.Add(afterStatement);
-                            }
-                        }
-                    }
-                    return commonStatements;
-                }
-
-                private bool IsStatementsSame(SyntaxNode n1, SyntaxNode n2)
-                {
-                    var s1 = n1.GetText().Replace(" ", "");
-                    var s2 = n2.GetText().Replace(" ", "");
-                    return s1.Equals(s2);
-                }
-
-                private IEnumerable<SyntaxNode> GetLongestNeigboredStatements(IEnumerable<SyntaxNode> statements)
-                {
-                    var analyzer = AnalyzerFactory.GetSyntaxNodesAnalyzer();
-                    analyzer.SetSyntaxNodes(statements);
-                    return analyzer.GetLongestNeighborredNodesGroup();
-                }
             }
         }
     }
