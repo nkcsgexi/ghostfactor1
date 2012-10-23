@@ -84,6 +84,11 @@ namespace warnings.analyzer
             return new TypeHierarchyAnalyzer();
         }
 
+        public static IReturnStatementAnalyzer GetReturnStatementAnalyzer()
+        {
+            return new ReturnStatementAnalyzer();
+        }
+
         public static String GetAnalyzersCountInfo()
         {
             var sb = new StringBuilder(Environment.NewLine);

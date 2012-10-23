@@ -26,7 +26,7 @@ namespace warnings.conditions
                 IInlineMethodRefactoring refactoring)
             {
                 // Get the out going symbols before the method is inlined.
-                var writtenSymbolsBeforeInline = ConditionCheckersUtils.GetFlowOutData(GetStatementEnclosingInvocation
+                var writtenSymbolsBeforeInline = ConditionCheckersUtils.GetFlowOutData(ConditionCheckersUtils.GetStatementEnclosingNode
                     (refactoring.InlinedMethodInvocation), before);
 
                 // Get the out going symbols after the method is inlined.
@@ -49,32 +49,30 @@ namespace warnings.conditions
                 {
                     logger.Info("Additional changed symbols: " + StringUtil.ConcatenateAll(",", addedSymbols.Select(s => s.Name)));
                     logger.Info("Missing changed symbols: " + StringUtil.ConcatenateAll(",", missingSymbols.Select(s => s.Name)));
-                    return new ModifiedFlowOutData(refactoring.CallerMethodAfter, refactoring.InlinedStatementsInMethodAfter, 
-                        addedSymbols, missingSymbols);
+                    return new ModifiedFlowOutData(refactoring.CallerMethodAfter, refactoring.InlinedMethod, refactoring.InlinedMethodInvocation,
+                        refactoring.InlinedStatementsInMethodAfter, addedSymbols, missingSymbols);
                 }
                 return new NullCodeIssueComputer();
             }
 
-            /* Get the statement that is enclosing the given method invocation. */
-            private SyntaxNode GetStatementEnclosingInvocation(SyntaxNode invocation)
-            {
-                SyntaxNode parent;
-                for (parent = invocation; parent != null && !(parent is StatementSyntax); parent = parent.Parent);
-                return parent;
-            }
-
+    
 
             private class ModifiedFlowOutData : ValidCodeIssueComputer
             {
                 private readonly IEnumerable<ISymbol> missingSymbols;
                 private readonly IEnumerable<ISymbol> addedSymbols;
                 private readonly SyntaxNode methodAfter;
+                private readonly SyntaxNode inlinedMethod;
+                private readonly SyntaxNode inlinedMethodInvocation;
                 private readonly IEnumerable<SyntaxNode> inlinedStatements;
+          
 
-                internal ModifiedFlowOutData( SyntaxNode methodAfter, IEnumerable<SyntaxNode> inlinedStatements,
-                    IEnumerable<ISymbol> addedSymbols, IEnumerable<ISymbol> missingSymbols)
+                internal ModifiedFlowOutData(SyntaxNode methodAfter, SyntaxNode inlinedMethod, SyntaxNode inlinedMethodInvocation,
+                    IEnumerable<SyntaxNode> inlinedStatements, IEnumerable<ISymbol> addedSymbols, IEnumerable<ISymbol> missingSymbols)
                 {
                     this.methodAfter = methodAfter;
+                    this.inlinedMethod = inlinedMethod;
+                    this.inlinedMethodInvocation = inlinedMethodInvocation;
                     this.inlinedStatements = inlinedStatements;
                     this.addedSymbols = addedSymbols;
                     this.missingSymbols = missingSymbols;
@@ -106,21 +104,21 @@ namespace warnings.conditions
                     // The node should be a statement instance and the document is correct.
                     if(node is StatementSyntax && IsDocumentRight(document))
                     {
-                        // Get the method containing the node.
+                        // Get the methodAfter containing the node.
                         var method = GetContainingMethod(node);
 
-                        // If the outside method can be found and the method has the same name with the inlined method.
+                        // If the outside methodAfter can be found and the methodAfter has the same name with the inlined methodAfter.
                         if(method != null && ASTUtil.AreMethodsNameSame(method, methodAfter))
                         {
-                            // Get the statements in the found method that map with detected inlined statements.
+                            // Get the statements in the found methodAfter that map with detected inlined statements.
                             var statements = GetCurrentInlinedStatements(method);
 
                             // If current node is among these statemens, return a code issue at the node.
                             if(statements.Contains(node))
                             {
                                 yield return new CodeIssue(CodeIssue.Severity.Error, node.Span, GetDescription(), 
-                                    new ICodeAction[]{new ModifiedFlowOutDataFix(document, methodAfter, inlinedStatements, 
-                                        addedSymbols, missingSymbols)});
+                                    new ICodeAction[]{new ModifiedFlowOutDataFix(document, methodAfter, inlinedMethod, inlinedMethodInvocation, 
+                                        inlinedStatements, addedSymbols, missingSymbols)});
                             }
                         }   
                     }
@@ -132,21 +130,21 @@ namespace warnings.conditions
                     var sb = new StringBuilder();
                     if (addedSymbols.Any())
                     {
-                        sb.AppendLine("Inlined method may change variable " +
+                        sb.AppendLine("Inlined methodAfter may change variables: " +
                                       StringUtil.ConcatenateAll(",", addedSymbols.Select(s => s.Name)));
                     }
                     if (missingSymbols.Any())
                     {
-                        sb.AppendLine("Inlined method may fail to change " +
+                        sb.AppendLine("Inlined methodAfter may fail to change variables: " +
                                       StringUtil.ConcatenateAll(",", missingSymbols.Select(s => s.Name)));
                     }
                     return sb.ToString();
                 }
 
-                /* Is the document where the inline method refactoring happened? */
+                /* Is the document where the inline methodAfter refactoring happened? */
                 private bool IsDocumentRight(IDocument document)
                 {
-                    // Get the qualified name of the type that encloses the method.
+                    // Get the qualified name of the type that encloses the methodAfter.
                     var analyzer = AnalyzerFactory.GetQualifiedNameAnalyzer();
                     analyzer.SetSyntaxNode(methodAfter);
                     var containingMethodName = analyzer.GetOutsideTypeQualifiedName();
@@ -159,7 +157,7 @@ namespace warnings.conditions
                     return documentContainedNames.Contains(containingMethodName);
                 }
 
-                /* Get the method that encloses a syntax node. */
+                /* Get the methodAfter that encloses a syntax node. */
                 private SyntaxNode GetContainingMethod(SyntaxNode node)
                 {
                     SyntaxNode method;
@@ -167,12 +165,12 @@ namespace warnings.conditions
                     return method;
                 }
 
-                /* Get statements in the current method that map with the previously detected inlined statements. */
+                /* Get statements in the current methodAfter that map with the previously detected inlined statements. */
                 private IEnumerable<SyntaxNode> GetCurrentInlinedStatements(SyntaxNode method)
                 {
                     var list = new List<SyntaxNode>();
                     
-                    // Get statements in the current method. 
+                    // Get statements in the current methodAfter. 
                     var analyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
                     analyzer.SetMethodDeclaration(method);
                     var statements = analyzer.GetStatements();
@@ -205,17 +203,23 @@ namespace warnings.conditions
                 {
                     private readonly Logger logger;
                     private readonly IDocument document;
-                    private readonly SyntaxNode method;
+                    private readonly SyntaxNode methodAfter;
+                    private readonly SyntaxNode inlinedMethod;
+                    private readonly SyntaxNode inlinedMethodInvocation;
                     private readonly IEnumerable<SyntaxNode> inlinedStatements;
                     private readonly IEnumerable<ISymbol> addedSymbols;
                     private readonly IEnumerable<ISymbol> missingSymbols;
-
-                    internal ModifiedFlowOutDataFix(IDocument document, SyntaxNode method, IEnumerable<SyntaxNode> inlinedStatements, 
+                    
+                    internal ModifiedFlowOutDataFix(IDocument document, SyntaxNode methodAfter, 
+                        SyntaxNode inlinedMethod, SyntaxNode inlinedMethodInvocation,
+                        IEnumerable<SyntaxNode> inlinedStatements, 
                         IEnumerable<ISymbol> addedSymbols, IEnumerable<ISymbol> missingSymbols)
                     {
                         this.logger = NLoggerUtil.GetNLogger(typeof (ModifiedFlowOutDataFix));
                         this.document = document;
-                        this.method = method;
+                        this.methodAfter = methodAfter;
+                        this.inlinedMethod = inlinedMethod;
+                        this.inlinedMethodInvocation = inlinedMethodInvocation;
                         this.inlinedStatements = inlinedStatements;
                         this.addedSymbols = addedSymbols;
                         this.missingSymbols = missingSymbols;
@@ -237,14 +241,11 @@ namespace warnings.conditions
                         // If missing symbols that should be modified, add statement to fix this problem.
                         if(missingSymbols.Any())
                         {
-                            foreach (var s in missingSymbols)
-                            {
-                                modifidStatements = AddMissingSymbolsFixStatements(modifidStatements, s);
-                            }
+                            modifidStatements = AddMissingSymbolsFixStatements(modifidStatements);
                         }
 
-                        // Update method by changing the inlined statements with updated statements. 
-                        var updatedMethod = UpdateStatements(method, inlinedStatements, modifidStatements);
+                        // Update methodAfter by changing the inlined statements with updated statements. 
+                        var updatedMethod = UpdateMethodStatements(methodAfter, inlinedStatements, modifidStatements);
                         
                         logger.Debug("Inlined statements are:" + Environment.NewLine + StringUtil.ConcatenateAll
                             (Environment.NewLine, inlinedStatements.Select(s => s.GetText())));
@@ -254,19 +255,65 @@ namespace warnings.conditions
 
                         // Update root and document, return the code edition. 
                         var root = (SyntaxNode) document.GetSyntaxRoot();
-
-
-                        var updatedRoot = root.ReplaceNodes(new[] {method}, (node1, node2) => updatedMethod);
-                    
+                        var updatedRoot = root.ReplaceNodes(new[] {methodAfter}, (node1, node2) => updatedMethod);
                         return new CodeActionEdit(document.UpdateSyntaxRoot(updatedRoot));
                     }
 
 
-                    private IEnumerable<SyntaxNode> AddMissingSymbolsFixStatements(IEnumerable<SyntaxNode> statements, 
-                        ISymbol symbol)
+                    private IEnumerable<SyntaxNode> AddMissingSymbolsFixStatements(IEnumerable<SyntaxNode> statements)
                     {
-                        throw new NotImplementedException();
+                        // Get the statement where the invocation of the inline method is.
+                        var invokingStatement = ConditionCheckersUtils.GetStatementEnclosingNode(inlinedMethodInvocation);
+                        
+                        // Get the return statements of the inlined method.
+                        var analyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
+                        analyzer.SetMethodDeclaration(inlinedMethod);
+                        var returnStatements = analyzer.GetReturnStatements();
+
+                        // Select the most meaningful returned expression.
+                        var returnedExpression = GetMeaningfulReturnedExpression(returnStatements);
+                        
+                        // If the returned expression can be found.
+                        if(returnedExpression != null)
+                        {
+                            // Construct a fixing statement, the fixing statement is simply copying the statement of invocation, and
+                            // replace the invocation with the returned expression in the body of the inlined method. The expression will be
+                            // enclosed by a pair of parentheses before replacement.
+                            var fixingStatement = invokingStatement.ReplaceNodes(new[] { inlinedMethodInvocation }, 
+                                (node1, node2) => AddParenthesesToExpression(returnedExpression));
+                            var updatedStatements = new List<SyntaxNode>();
+                            updatedStatements.AddRange(statements);
+                            updatedStatements.Add(fixingStatement);
+                            return updatedStatements;
+                        }
+                        return statements;
                     }
+
+                    /* 
+                     * For all the given return statements, select the ones that are returning non null. If there are multiple such statements, return
+                     * the last one in the method body.
+                     */
+                    private SyntaxNode GetMeaningfulReturnedExpression(IEnumerable<SyntaxNode> returnStatements)
+                    {
+                        var list = new List<SyntaxNode>();
+                        var analyzer = AnalyzerFactory.GetReturnStatementAnalyzer();
+                        foreach (var statement in returnStatements)
+                        {
+                            analyzer.SetReturnStatement(statement);
+                            if(!analyzer.IsReturningNull())
+                            {
+                                list.Add(analyzer.GetReturnedExpression());
+                            }
+                        }
+                        return list.Last();
+                    }
+
+                    /* Add a pair of parentheses to a given expression. */
+                    private SyntaxNode AddParenthesesToExpression(SyntaxNode expression)
+                    {
+                        return Syntax.ParseExpression("(" + expression.GetText() + ")");
+                    }
+
 
                     private IEnumerable<SyntaxNode> AddAddedSymbolsFixStatements(IEnumerable<SyntaxNode> statements, ISymbol s)
                     {
@@ -287,10 +334,10 @@ namespace warnings.conditions
                         return list;
                     }
 
-                    private SyntaxNode UpdateStatements(SyntaxNode method, IEnumerable<SyntaxNode> originalStatements, 
+                    private SyntaxNode UpdateMethodStatements(SyntaxNode method, IEnumerable<SyntaxNode> originalStatements, 
                         IEnumerable<SyntaxNode> newStatements)
                     {
-                        // Get the block and the statements in the block of the given method.
+                        // Get the block and the statements in the block of the given methodAfter.
                         var analyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
                         analyzer.SetMethodDeclaration(method);
                         var block = (BlockSyntax) analyzer.GetBlock();
@@ -315,7 +362,6 @@ namespace warnings.conditions
                         var leadingSpace = updatedStatements.Last().GetLeadingTrivia();
                         var trailingSpace = updatedStatements.Last().GetTrailingTrivia();
 
-
                         // Copy the udpated inlined statements to the list.
                         updatedStatements.AddRange(newStatements.Select(s => ((StatementSyntax)s).
                             WithLeadingTrivia(leadingSpace).WithTrailingTrivia(trailingSpace)).ToArray());
@@ -332,7 +378,7 @@ namespace warnings.conditions
                             block.CloseBraceToken);
                         logger.Debug("Updated block:" + Environment.NewLine + updatedBlock.GetText());
 
-                        // Update the block in the method.
+                        // Update the block in the methodAfter.
                         return new BlockRewriter(updatedBlock).Visit(method);
                     }
 
@@ -358,7 +404,7 @@ namespace warnings.conditions
 
                     public string Description
                     {
-                        get { return "Fix the changed data by inlining method."; }
+                        get { return "Fix the changed data by inlining methodAfter."; }
                     }
                 }
             }

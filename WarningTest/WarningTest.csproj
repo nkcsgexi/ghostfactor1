@@ -56,6 +56,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="analyzer test\MethodInvocationAnalyzerTests.cs" />
+    <Compile Include="analyzer test\ReturnStatementAnalyzerTests.cs" />
     <Compile Include="analyzer test\SolutionAnalyzerTests.cs" />
     <Compile Include="analyzer test\TypeHierarchyAnalyzerTests.cs" />
     <Compile Include="component test\GhostWorkQueueTests.cs" />

@@ -95,5 +95,14 @@ namespace warnings.conditions
             return false;
         }
 
+        /* Get the statement that is enclosing the given node. */
+        public static SyntaxNode GetStatementEnclosingNode(SyntaxNode node)
+        {
+            SyntaxNode parent;
+            for (parent = node; parent != null && !(parent is StatementSyntax); parent = parent.Parent) ;
+            return parent;
+        }
+
+
     }
 }
