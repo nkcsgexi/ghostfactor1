@@ -153,8 +153,8 @@ namespace warnings.refactoring.detection
         {
             public override bool HasRefactoring()
             {
-                var refactoring = ManualRefactoringFactory.CreateManualInlineMethodRefactoring(methodBefore, methodAfter, 
-                    methodRemoved, invocationsRemoved.First(), null);
+                var refactoring = ManualRefactoringFactory.CreateSimpleInlineMethodRefactoring(methodBefore, methodAfter, 
+                    methodRemoved);
                 refactorings.Add(refactoring);
                 return true;
             }

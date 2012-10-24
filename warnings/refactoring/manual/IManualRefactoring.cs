@@ -18,10 +18,9 @@ namespace warnings.refactoring
         // Map the refactoring a new pair of document, whose code are identical to the 
         // original sources from where the refactoring is detected. 
         void MapToDocuments(IDocument before, IDocument after);
-
-        // Get the node where the issue should show.
-        SyntaxNode GetIssuedNode();
     }
+
+
 
     /* public interface for communicateing a manual extract method refactoring.*/
     public interface IManualExtractMethodRefactoring : IManualRefactoring
@@ -38,6 +37,14 @@ namespace warnings.refactoring
         /* Expression to extract in the original code. */
         SyntaxNode ExtractedExpression { get; }
 
+    }
+    
+    /* Describing a simply detected extract method refactoring. */
+    public interface ISimpleExtractMethodRefactoring : IManualRefactoring
+    {
+        SyntaxNode callerBefore { get; }
+        SyntaxNode callerAfter { get; }
+        SyntaxNode addedMethod { get; }
     }
 
     /* public interface for communicating a manual rename refactoring. */
@@ -65,5 +72,13 @@ namespace warnings.refactoring
         SyntaxNode InlinedMethod { get; }
         SyntaxNode InlinedMethodInvocation { get; }
         IEnumerable<SyntaxNode> InlinedStatementsInMethodAfter { get; }
+    }
+
+    /* Interface used for describing a simply detected inline method refactoring. */
+    public interface ISimpleInlineMethodRefactoring: IManualRefactoring
+    {
+        SyntaxNode callerBefore { get; }
+        SyntaxNode callerAfter { get; }
+        SyntaxNode methodRemoved { get; }
     }
 }

@@ -9,21 +9,22 @@ using warnings.util;
 
 namespace warnings.refactoring
 {
-    public class ManualRefactoringFactory
+    public partial class ManualRefactoringFactory
     {
         /* Create a manual extract method refactoring that extracts statements. */
-        public static IManualExtractMethodRefactoring CreateManualExtractMethodRefactoring(SyntaxNode declaration, 
+        public static IManualExtractMethodRefactoring CreateManualExtractMethodRefactoring(SyntaxNode declaration,
             SyntaxNode invocation, IEnumerable<SyntaxNode> statements)
         {
             return new ManualExtractMethodRefactoring(declaration, invocation, statements);
         }
 
         /* Create a manual extract method refacoting that extracts a expression. */
-        public static IManualExtractMethodRefactoring CreateManualExtractMethodRefactoring( SyntaxNode declaration, 
+        public static IManualExtractMethodRefactoring CreateManualExtractMethodRefactoring(SyntaxNode declaration,
             SyntaxNode invocation, SyntaxNode expression)
         {
             return new ManualExtractMethodRefactoring(declaration, invocation, expression);
         }
+
 
         /* 
          * Create a manual rename refactoring, the token (of RefactoringType identifier token) is where the rename is performed on,
@@ -42,10 +43,12 @@ namespace warnings.refactoring
         }
 
         /* Create an instance of manual inline method refactoring. */
-        public static IInlineMethodRefactoring CreateManualInlineMethodRefactoring(SyntaxNode methodBefore, SyntaxNode methodAfter, SyntaxNode methodInlined, 
-            SyntaxNode inlinedMethodInvocation,IEnumerable<SyntaxNode> inlinedStatements)
+        public static IInlineMethodRefactoring CreateManualInlineMethodRefactoring(SyntaxNode methodBefore,
+            SyntaxNode methodAfter,SyntaxNode methodInlined,SyntaxNode inlinedMethodInvocation,
+                IEnumerable<SyntaxNode> inlinedStatements)
         {
-            return new InlineMethodRefactoring(methodBefore, methodAfter, methodInlined, inlinedMethodInvocation, inlinedStatements);
+            return new InlineMethodRefactoring(methodBefore, methodAfter, methodInlined, inlinedMethodInvocation,
+                inlinedStatements);
         }
 
         private class ManualRenameRefactoring : IManualRenameRefactoring
@@ -67,11 +70,6 @@ namespace warnings.refactoring
             public void MapToDocuments(IDocument before, IDocument after)
             {
                 throw new NotImplementedException();
-            }
-
-            public SyntaxNode GetIssuedNode()
-            {
-                return node;
             }
         }
 
@@ -96,7 +94,7 @@ namespace warnings.refactoring
             }
 
             internal ManualExtractMethodRefactoring(SyntaxNode declaration, SyntaxNode invocation,
-                                                    IEnumerable<SyntaxNode> statements)
+                IEnumerable<SyntaxNode> statements)
             {
                 ExtractedMethodDeclaration = declaration;
                 ExtractMethodInvocation = invocation;
@@ -113,17 +111,17 @@ namespace warnings.refactoring
             }
 
             /* Output the information of a detected extract method refactoring for testing and log purposes.*/
+
             public string ToString()
             {
                 var sb = new StringBuilder();
-                sb.AppendLine("Manual Extract Method Refactoring:");
+                sb.AppendLine("Extract Method Refactoring:");
                 sb.AppendLine("Extracted Method Declaration:\n" + ExtractedMethodDeclaration);
-                sb.AppendLine("Extracted Method Invocation:\n" + ExtractMethodInvocation);
                 if (ExtractedStatements == null)
                     sb.AppendLine("Extracted Expression:\n" + ExtractedExpression);
                 else
                     sb.AppendLine("Extracted Statements:\n" +
-                        StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
+                                  StringUtil.ConcatenateAll("\n", ExtractedStatements.Select(s => s.GetText())));
                 return sb.ToString();
             }
 
@@ -154,17 +152,11 @@ namespace warnings.refactoring
                     ExtractedStatements = nodesAnalyzer.MapToAnotherDocument(before);
                 }
             }
-
-            public SyntaxNode GetIssuedNode()
-            {
-                return ExtractMethodInvocation;
-            }
         }
 
         /* Describing a change method signature refactoring. */
         private class ChangeMethodSignatureRefactoring : IChangeMethodSignatureRefactoring
         {
-
             public ChangeMethodSignatureRefactoring(SyntaxNode ChangedMethodDeclaration,
                 List<Tuple<int, int>> ParametersMap)
             {
@@ -184,11 +176,6 @@ namespace warnings.refactoring
                 ChangedMethodDeclaration = analyzer.MapToAnotherDocument(after);
             }
 
-            public SyntaxNode GetIssuedNode()
-            {
-                throw new NotImplementedException();
-            }
-
             /* Method declaration after the changed declaration, should map to the after document. */
             public SyntaxNode ChangedMethodDeclaration { get; private set; }
 
@@ -200,7 +187,8 @@ namespace warnings.refactoring
         private class InlineMethodRefactoring : IInlineMethodRefactoring
         {
             internal InlineMethodRefactoring(SyntaxNode CallerMethodBefore, SyntaxNode CallerMethodAfter,
-               SyntaxNode InlinedMethod, SyntaxNode InlinedMethodInvocation, IEnumerable<SyntaxNode> InlinedStatementsInMethodAfter)
+                SyntaxNode InlinedMethod, SyntaxNode InlinedMethodInvocation,
+                    IEnumerable<SyntaxNode> InlinedStatementsInMethodAfter)
             {
                 this.CallerMethodAfter = CallerMethodAfter;
                 this.CallerMethodBefore = CallerMethodBefore;
@@ -236,9 +224,17 @@ namespace warnings.refactoring
                 InlinedStatementsInMethodAfter = nodesAnalyzer.MapToAnotherDocument(after);
             }
 
-            public SyntaxNode GetIssuedNode()
+            public string ToString()
             {
-                throw new NotImplementedException();
+                var sb = new StringBuilder();
+                sb.AppendLine("Inline method refactoring:");
+                sb.AppendLine("Caller method before:");
+                sb.AppendLine(CallerMethodBefore.GetText());
+                sb.AppendLine("Caller method after:");
+                sb.AppendLine(CallerMethodAfter.GetText());
+                sb.AppendLine("Inlined method:");
+                sb.AppendLine(InlinedMethod.GetText());
+                return sb.ToString();
             }
 
             public SyntaxNode CallerMethodBefore { get; private set; }

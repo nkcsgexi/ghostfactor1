@@ -98,7 +98,7 @@ namespace warnings.detection
             private readonly Logger logger;
             private readonly SyntaxTree treeBefore;
             private readonly SyntaxTree treeAfter;
-            private readonly List<IManualExtractMethodRefactoring> refactorings; 
+            private readonly List<IManualRefactoring> refactorings; 
             
             private SyntaxNode classAfter;
             private SyntaxNode classBefore;
@@ -109,7 +109,7 @@ namespace warnings.detection
                 this.logger = NLoggerUtil.GetNLogger(typeof (InClassExtractMethodDetector));
                 this.treeBefore = treeBefore;
                 this.treeAfter = treeAfter;
-                this.refactorings = new List<IManualExtractMethodRefactoring>();
+                this.refactorings = new List<IManualRefactoring>();
             }
 
             public bool HasRefactoring()
@@ -122,9 +122,9 @@ namespace warnings.detection
 
                 // Get the methods added and in common, both represented by methods after. 
                 var addedMethods = GetMethodsAdded(methodsBefore, methodsAfter);
-                var commonMethods = GetCommonMethods(methodsBefore, methodsAfter);
+                var commonMethodPairs = GetCommonMethodPairs(methodsBefore, methodsAfter);
 
-                foreach (var commonMethod in commonMethods)
+                foreach (var pair in commonMethodPairs)
                 {
                     foreach (var addedMethod in addedMethods)
                     {
@@ -132,14 +132,14 @@ namespace warnings.detection
                         if (!IsMethodPublic(addedMethod))
                         {
                             // Get the invocations of the added method in the body of the common method.
-                            var invocations = ASTUtil.GetAllInvocationsInMethod(commonMethod, addedMethod, treeAfter);
+                            var invocations = ASTUtil.GetAllInvocationsInMethod(pair[1], addedMethod, treeAfter);
 
                             // If invocations are not empty
                             if (invocations.Any())
                             {
                                 // Create a refactoring instance and added it to the refactoring list.
-                                var refactoring = ManualRefactoringFactory.CreateManualExtractMethodRefactoring(addedMethod,
-                                        invocations.First(), GetStatements(addedMethod));
+                                var refactoring = ManualRefactoringFactory.CreateSimpleExtractMethodRefactoring
+                                    (pair[0], pair[1], addedMethod);
                                 refactorings.Add(refactoring);
                             }
                         }
@@ -169,14 +169,6 @@ namespace warnings.detection
                 return methodDec.Modifiers.Any(m => m.Kind == SyntaxKind.PublicKeyword);
             }
 
-            private IEnumerable<SyntaxNode> GetStatements(SyntaxNode method)
-            {
-                var analyzer = AnalyzerFactory.GetMethodDeclarationAnalyzer();
-                analyzer.SetMethodDeclaration(method);
-                return analyzer.GetStatements();
-            }
-
-
             /* Get new methods added in the after methods list to the before methods list.*/
             private IEnumerable<SyntaxNode> GetMethodsAdded(IEnumerable<SyntaxNode> methodsBefore, 
                 IEnumerable<SyntaxNode> methodsAfter)
@@ -184,7 +176,7 @@ namespace warnings.detection
                 var addedMethods = new List<SyntaxNode>();
                 foreach (SyntaxNode after in methodsAfter)
                 {
-                    if(!methodsBefore.Any(before => IfTwoMethodsSame(before, after)))
+                    if(!methodsBefore.Any(before => AreTwoMethodsNamesSame(before, after)))
                     {
                         addedMethods.Add(after);
                     }
@@ -192,27 +184,26 @@ namespace warnings.detection
                 return addedMethods;
             }
 
-            /* Get common methods in the method lists before and after, represented by methods in the after list. */
-            private IEnumerable<SyntaxNode> GetCommonMethods(IEnumerable<SyntaxNode> methodsBefore, 
+            /*
+             * Get common methods in the method lists before and after, result in a list of SyntaxNode[]. Each SyntaxNode[] has
+             * two element, element at 0 is in the methodsBefore and element at 1 is in the methodsAfter.
+             */
+            private IEnumerable<SyntaxNode[]> GetCommonMethodPairs(IEnumerable<SyntaxNode> methodsBefore, 
                 IEnumerable<SyntaxNode> methodsAfter)
             {
-                var commonMethods = new List<SyntaxNode>();
-                foreach (SyntaxNode after in methodsAfter)
-                {
-                    if(methodsBefore.Any(before => IfTwoMethodsSame(before, after)))
-                    {
-                        commonMethods.Add(after);
-                    }
-                }
-                return commonMethods;
+                return methodsBefore.Join(methodsAfter, GetMethodName, GetMethodName, (beforeMethod, afterMethod) => 
+                    new []{beforeMethod, afterMethod});
+            }
+
+            private string GetMethodName(SyntaxNode method)
+            {
+                return ((MethodDeclarationSyntax)method).Identifier.ValueText;
             }
 
 
-            private bool IfTwoMethodsSame(SyntaxNode before, SyntaxNode after)
+            private bool AreTwoMethodsNamesSame(SyntaxNode before, SyntaxNode after)
             {
-                var idBefore = ((MethodDeclarationSyntax) before).Identifier.ValueText;
-                var idAfter = ((MethodDeclarationSyntax) after).Identifier.ValueText;
-                return idBefore.Equals(idAfter);
+                return GetMethodName(before).Equals(GetMethodName(after));
             }
 
 

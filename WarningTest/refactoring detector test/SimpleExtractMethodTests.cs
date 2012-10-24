@@ -43,8 +43,8 @@ namespace WarningTest.refactoring_detector_test
             detector.SetSourceBefore(sourceBefore);
             Assert.IsTrue(detector.HasRefactoring());
             Assert.IsTrue(detector.GetRefactorings().Count() == 1);
-            var refactoring = (IManualExtractMethodRefactoring) detector.GetRefactorings().First();
-            var method = (MethodDeclarationSyntax) refactoring.ExtractedMethodDeclaration;
+            var refactoring = (ISimpleExtractMethodRefactoring)detector.GetRefactorings().First();
+            var method = (MethodDeclarationSyntax) refactoring.addedMethod;
             Assert.IsTrue(method.Identifier.ValueText.Equals("bar"));
         }
 

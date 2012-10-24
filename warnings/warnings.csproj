@@ -161,6 +161,7 @@
     <Compile Include="analyzer\retriever\RenamablesRetriever.cs" />
     <Compile Include="analyzer\retriever\RetrieverFactory.cs" />
     <Compile Include="analyzer\retriever\TypablesRetriever.cs" />
+    <Compile Include="refactoring\manual\SimpleManualRefactoringFactory.cs" />
     <Compile Include="ui\RefactoringQuickFix.cs" />
     <Compile Include="detection\extract method\ExtractMethodDetector.cs" />
     <Compile Include="detection\rename\RenameDetector.cs" />

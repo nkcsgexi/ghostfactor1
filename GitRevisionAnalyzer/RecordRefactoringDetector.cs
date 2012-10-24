@@ -31,7 +31,8 @@ namespace GitRevisionAnalyzer
         /* Several detectors.*/
         private static readonly IExternalRefactoringDetector[] externalRefactoringDetectors = new IExternalRefactoringDetector[] 
         { 
-            RefactoringDetectorFactory.CreateExtractMethodDetector() 
+            RefactoringDetectorFactory.CreateDummyExtractMethodDetector(),
+            RefactoringDetectorFactory.CreateDummyInlineMethodDetector()
         };
 
         private readonly Logger logger;
@@ -170,7 +171,7 @@ namespace GitRevisionAnalyzer
         private string HandleDetectedRefactoring(string before, string after, IManualRefactoring refactoring)
         {
             // Get the folder and the file name for this detected refactoring.
-            string refactoringDirectory = DETECTED_REFACTORINGS_ROOT + solutionName;
+            string refactoringDirectory = DETECTED_REFACTORINGS_ROOT + solutionName + "/" + GetRefactoringType(refactoring);
             string refactoringFilePath = refactoringDirectory + "/" + fileName + refactoringsCount + ".txt";
 
             // If the directory does not exist, create it.
@@ -193,5 +194,12 @@ namespace GitRevisionAnalyzer
             // Return the saved refactoring file path.
             return refactoringFilePath;
         }
+
+        private string GetRefactoringType(IManualRefactoring refactoring)
+        {
+            var converter = new RefactoringType2StringConverter();
+            return (string)converter.Convert(refactoring.RefactoringType, null, null, null);
+        }
+
     }
 }
